@@ -127,11 +127,20 @@ func (o *NrUserLogin) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 
 	//
 	id6 := int64(7)
-	name6 := "大类列表"
-	routerUrl6 := "/category/list"
+	name6 := "子类列表"
+	routerUrl6 := "/subCategory/list"
 	temp.Name = &name6
 	temp.ID = &id6
 	temp.RouterURL = &routerUrl6
+	routers = append(routers, temp)
+
+	//
+	id7 := int64(8)
+	name7 := "大类列表"
+	routerUrl7 := "/category/list"
+	temp.Name = &name7
+	temp.ID = &id7
+	temp.RouterURL = &routerUrl7
 	routers = append(routers, temp)
 
 	response.Routers = routers
