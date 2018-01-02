@@ -7,7 +7,7 @@ package album
 
 import (
 	"net/http"
-
+"tingtingbackend/models"
 	middleware "github.com/go-openapi/runtime/middleware"
 )
 
@@ -51,8 +51,15 @@ func (o *AlbumUpload) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	res := o.Handler.Handle(Params) // actually handle the request
+	//Params.Icon.Read()
 
-	o.Context.Respond(rw, r, route.Produces, route, res)
+	//res := o.Handler.Handle(Params) // actually handle the request
+
+	var ok AlbumUploadOK
+	var response models.InlineResponse20016
+    ok.SetPayload(&response)
+
+
+	o.Context.Respond(rw, r, route.Produces, route, ok)
 
 }
