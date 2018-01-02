@@ -81,3 +81,38 @@ func (m *Router) UnmarshalBinary(b []byte) error {
 	*m = res
 	return nil
 }
+
+
+// Router router
+// swagger:model Router
+type DynamicRouter struct {
+	ID *int64 `json:"id" gorm:"AUTO_INCREMENT"`
+	// name
+	// Required: true
+	Name *string `json:"name"`
+
+	// router Url
+	// Required: true
+	Router_URL *string `json:"router_url"`
+
+	Parent_Name * string `json:"parent_name"`
+
+	Parent_Id * int64 `json:"parent_id"`
+
+	Children *[] ChildrenRouter `json:"children"`
+}
+
+type ChildrenRouter struct {
+	ID *int64 `json:"id" gorm:"AUTO_INCREMENT"`
+	// name
+	// Required: true
+	Name *string `json:"name"`
+
+	// router Url
+	// Required: true
+	Router_URL *string `json:"router_url"`
+
+	Parent_Name * string `json:"parent_name"`
+
+	Parent_Id * int64 `json:"parent_id"`
+}

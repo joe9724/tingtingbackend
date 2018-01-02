@@ -344,8 +344,9 @@ func (s *Server) Listen() error {
 		s.domainSocketL = domSockListener
 	}
 
+	s.Host = "0.0.0.0"
 	if s.hasScheme(schemeHTTP) {
-		listener, err := net.Listen("tcp", net.JoinHostPort(s.Host, "80"))
+		listener, err := net.Listen("tcp", net.JoinHostPort(s.Host, "81"))
 		if err != nil {
 			return err
 		}
