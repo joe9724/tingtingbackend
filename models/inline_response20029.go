@@ -23,6 +23,8 @@ type InlineResponse20029 struct {
 	Status *Response `json:"status,omitempty"`
 
 	Routers [] Router `json:"routers,omitempty"`
+
+	DynamicRouters [] DynamicRouter `json:"dynamicRouter,omitempty"`
 }
 
 // Validate validates this inline response 200 29

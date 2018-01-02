@@ -71,7 +71,7 @@ func (o *NrUserLogin) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	response.Data = &user
 
 	//routers
-	var routers []models.Router
+	/*var routers []models.Router
 	//routers = append(routers, models.Router{1,"用户列表","/user/list"})
 	//routers = append(routers, models.Router{1,"章节列表","/chapter/list"})
 	var temp models.Router
@@ -144,6 +144,25 @@ func (o *NrUserLogin) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	routers = append(routers, temp)
 
 	response.Routers = routers
+*/
+	//get routers from sql
+	db1,err1 := _var.OpenConnection()
+	if err1!=nil{
+		fmt.Println(err1.Error())
+	}
+	//query
+	var dynamicRouters [] models.DynamicRouter
+	db1.Table("routers").Where(map[string]interface{}{"status":0}).Find(&dynamicRouters)
+
+	for i:=0; i<len(dynamicRouters); i++  {
+		var childrenRouters [] models.ChildrenRouter
+		db1.Table("routers").Where(map[string]interface{}{"status":0}).Where("parent_id=?",dynamicRouters[i].ID).Find(&childrenRouters)
+		dynamicRouters[i].Children = &childrenRouters
+	}
+
+	//data
+	response.DynamicRouters = dynamicRouters
+
 
 	//status
 	var status models.Response
