@@ -7,8 +7,12 @@ package album
 
 import (
 	"net/http"
-
+	_"github.com/jinzhu/gorm"
+	_ "github.com/jinzhu/gorm/dialects/mysql"
 	middleware "github.com/go-openapi/runtime/middleware"
+	"tingtingbackend/models"
+	"fmt"
+	"tingtingbackend/var"
 )
 
 // AlbumDetailHandlerFunc turns a function with the right signature into a album detail handler
@@ -53,8 +57,30 @@ func (o *AlbumDetail) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	res := o.Handler.Handle(Params) // actually handle the request
+	/*res := o.Handler.Handle(Params) // actually handle the request
 
-	o.Context.Respond(rw, r, route.Produces, route, res)
+	o.Context.Respond(rw, r, route.Produces, route, res)*/
+
+	var ok AlbumDetailOK
+	var response models.InlineResponse20019
+
+	db,err := _var.OpenConnection()
+	if err!=nil{
+		fmt.Println(err.Error())
+	}
+	//query
+	var album models.Album
+	db.Table("albums").Where("id=?",Params.AlbumID).First(&album)
+	//data
+	response.Data = &album
+
+	//status
+	var status models.Response
+	status.UnmarshalBinary([]byte(_var.Response200(200,"ok")))
+	response.Status = &status
+
+	ok.SetPayload(&response)
+
+	o.Context.Respond(rw, r, route.Produces, route, ok)
 
 }

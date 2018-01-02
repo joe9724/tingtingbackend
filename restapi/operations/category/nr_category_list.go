@@ -66,7 +66,11 @@ func (o *NrCategoryList) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 		fmt.Println(err.Error())
 	}
 	//query
-	db.Table("sub_category_items").Where(map[string]interface{}{"status":0}).Find(&categoryList).Limit(*(Params.PageSize)).Offset(*(Params.PageIndex)*(*(Params.PageSize)))
+	if (*Params.ParentID == int64(-1)) {
+		db.Table("sub_category_items").Where(map[string]interface{}{"status": 0}).Where("category_id=?",-1).Find(&categoryList).Limit(*(Params.PageSize)).Offset(*(Params.PageIndex) * (*(Params.PageSize)))
+	}else{
+		db.Table("sub_category_items").Where(map[string]interface{}{"status": 0}).Where("category_id=?",Params.ParentID).Find(&categoryList).Limit(*(Params.PageSize)).Offset(*(Params.PageIndex) * (*(Params.PageSize)))
+	}
 	//data
 	response.SubCategoryList = categoryList
 
