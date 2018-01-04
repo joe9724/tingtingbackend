@@ -17,7 +17,7 @@ func Response200(code int64,msg string) (string) {
 }
 
 func OpenConnection() (db *gorm.DB, err error) {
-	db, err = gorm.Open("mysql", "root:root811123@tcp(106.14.2.153:3306)/tingting?charset=utf8&parseTime=True&loc=Local")
+	db, err = gorm.Open("mysql", "root:root811123@tcp(106.14.2.154:3306)/tingting?charset=utf8&parseTime=True&loc=Local")
 	return db,err
 	/*switch os.Getenv("GORM_DIALECT") {
 	case "mysql":
