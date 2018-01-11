@@ -21,6 +21,10 @@ type Category struct {
 	// Required: true
 	Name *string `json:"name"`
 
+	Icon *string `json:"icon"`
+
+	Status *int64 `json:"status"`
+
 	// sub category
 	// Required: true
 	SubCategory CategorySubCategory `json:"subCategory"`
