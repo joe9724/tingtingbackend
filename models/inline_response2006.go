@@ -20,7 +20,7 @@ type InlineResponse2006 struct {
 	ErrList InlineResponse2006ErrList `json:"errList"`
 
 	// status
-	Status *Response `json:"status,omitempty"`
+	Status *Response `json:"status"`
 }
 
 // Validate validates this inline response 200 6

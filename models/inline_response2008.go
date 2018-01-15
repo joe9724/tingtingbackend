@@ -20,7 +20,7 @@ type InlineResponse2008 struct {
 	Search InlineResponse2008Search `json:"search"`
 
 	// status
-	Status *Response `json:"status,omitempty"`
+	Status *Response `json:"status"`
 }
 
 // Validate validates this inline response 200 8

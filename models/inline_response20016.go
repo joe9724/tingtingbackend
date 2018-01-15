@@ -17,7 +17,7 @@ import (
 type InlineResponse20016 struct {
 
 	// return
-	Return *Response `json:"return,omitempty"`
+	Return *Response `json:"return"`
 }
 
 // Validate validates this inline response 200 16

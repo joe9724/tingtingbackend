@@ -16,7 +16,7 @@ import (
 // Chapter chapter
 // swagger:model Chapter
 type Chapter struct {
-	Id int64 `json:"id,omitempty" gorm:"AUTO_INCREMENT"`
+	Id int64 `json:"id" gorm:"AUTO_INCREMENT"`
 	// big cover
 	// Required: true
 	BigCover *string `json:"bigCover"`
@@ -46,14 +46,14 @@ type Chapter struct {
 	ShowIcon *bool `json:"showIcon"`
 
 	// status
-	Status int64 `json:"status,omitempty"`
+	Status int64 `json:"status"`
 
 	// sub title
 	// Required: true
 	SubTitle *string `json:"subTitle"`
 
 	// time
-	Time int64 `json:"time,omitempty"`
+	Time int64 `json:"time"`
 
 	// update tips
 	// Required: true

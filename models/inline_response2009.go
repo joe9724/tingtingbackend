@@ -20,7 +20,7 @@ type InlineResponse2009 struct {
 	Banners InlineResponse2009Banners `json:"banners"`
 
 	// status
-	Status *Response `json:"status,omitempty"`
+	Status *Response `json:"status"`
 }
 
 // Validate validates this inline response 200 9

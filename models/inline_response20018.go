@@ -17,7 +17,7 @@ import (
 type InlineResponse20018 struct {
 
 	// status
-	Status *Response `json:"status,omitempty"`
+	Status *Response `json:"status"`
 }
 
 // Validate validates this inline response 200 18

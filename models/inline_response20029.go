@@ -17,14 +17,14 @@ import (
 type InlineResponse20029 struct {
 
 	// data
-	Data *User `json:"data,omitempty"`
+	Data *User `json:"data"`
 
 	// status
-	Status *Response `json:"status,omitempty"`
+	Status *Response `json:"status"`
 
-	Routers [] Router `json:"routers,omitempty"`
+	Routers [] Router `json:"routers"`
 
-	DynamicRouters [] DynamicRouter `json:"dynamicRouter,omitempty"`
+	DynamicRouters [] DynamicRouter `json:"dynamicRouter"`
 }
 
 // Validate validates this inline response 200 29

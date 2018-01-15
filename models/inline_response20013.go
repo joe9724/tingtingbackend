@@ -20,7 +20,7 @@ type InlineResponse20013 struct {
 	RecordList InlineResponse20013RecordList `json:"recordList"`
 
 	// status
-	Status *Response `json:"status,omitempty"`
+	Status *Response `json:"status"`
 }
 
 // Validate validates this inline response 200 13

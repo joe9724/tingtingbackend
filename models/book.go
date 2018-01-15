@@ -16,43 +16,43 @@ import (
 // swagger:model Book
 type Book struct {
 
-	Id int64 `json:"id,omitempty" gorm:"AUTO_INCREMENT"`
+	Id int64 `json:"id" gorm:"AUTO_INCREMENT"`
 
 	// author avatar
-	AuthorAvatar string `json:"authorAvatar,omitempty"`
+	AuthorAvatar string `json:"authorAvatar"`
 
 	// author name
-	AuthorName string `json:"authorName,omitempty"`
+	AuthorName string `json:"authorName"`
 
 	// clips number
-	ClipsNumber int64 `json:"clipsNumber,omitempty"`
+	ClipsNumber int64 `json:"clipsNumber"`
 
 	// icon
-	Icon string `json:"icon,omitempty"`
+	Icon string `json:"icon"`
 
 	// name
-	Name string `json:"name,omitempty"`
+	Name string `json:"name"`
 
 	// play count
-	PlayCount int64 `json:"playCount,omitempty"`
+	PlayCount int64 `json:"playCount"`
 
 	// show icon
-	ShowIcon bool `json:"showIcon,omitempty"`
+	ShowIcon bool `json:"showIcon"`
 
 	// status
-	Status int64 `json:"status,omitempty"`
+	Status int64 `json:"status"`
 
 	// sub category Id
-	SubCategoryID int64 `json:"subCategoryId,omitempty"`
+	SubCategoryID int64 `json:"subCategoryId"`
 
 	// sub title
-	SubTitle string `json:"subTitle,omitempty"`
+	SubTitle string `json:"subTitle"`
 
 	// summary
-	Summary string `json:"summary,omitempty"`
+	Summary string `json:"summary"`
 
 	// time
-	Time int64 `json:"time,omitempty"`
+	Time int64 `json:"time"`
 }
 
 // Validate validates this book

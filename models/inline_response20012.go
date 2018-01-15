@@ -17,10 +17,10 @@ import (
 type InlineResponse20012 struct {
 
 	// data
-	Data *Msg `json:"data,omitempty"`
+	Data *Msg `json:"data"`
 
 	// status
-	Status *Response `json:"status,omitempty"`
+	Status *Response `json:"status"`
 }
 
 // Validate validates this inline response 200 12

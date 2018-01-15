@@ -20,7 +20,7 @@ type InlineResponse20021 struct {
 	BookList InlineResponse20021BookList `json:"bookList"`
 
 	// status
-	Status *Response `json:"status,omitempty"`
+	Status *Response `json:"status"`
 }
 
 // Validate validates this inline response 200 21

@@ -24,8 +24,10 @@ import (
 	"tingtingbackend/restapi/operations/relation"
 	"tingtingbackend/restapi/operations/report_err"
 	"tingtingbackend/restapi/operations/user"
+	"tingtingbackend/restapi/operations/recharge"
 	_"github.com/didip/tollbooth"
 	_"github.com/didip/tollbooth/limiter"
+
 	_"time"
 	"github.com/rs/cors"
 )
@@ -65,6 +67,9 @@ func configureAPI(api *operations.TingtingBackendAPI) http.Handler {
 	})
 	api.RelationNrRelationCategorySubCategoryListEditHandler = relation.NrRelationCategorySubCategoryListEditHandlerFunc(func(params relation.NrRelationCategorySubCategoryListEditParams) middleware.Responder {
 		return middleware.NotImplemented("operation relation.NrRelationCategorySubCategoryListEdit has not yet been implemented")
+	})
+	api.RechargeNrRechargeDetailHandler = recharge.NrRechargeDetailHandlerFunc(func(params recharge.NrRechargeDetailParams) middleware.Responder {
+		return middleware.NotImplemented("operation recharge.NrRechargeDetail has not yet been implemented")
 	})
 	api.RelationNrRelationAlbumBooklistEditHandler = relation.NrRelationAlbumBooklistEditHandlerFunc(func(params relation.NrRelationAlbumBooklistEditParams) middleware.Responder {
 		return middleware.NotImplemented("operation relation.NrRelationAlbumBooklistEdit has not yet been implemented")
@@ -203,6 +208,9 @@ func configureAPI(api *operations.TingtingBackendAPI) http.Handler {
 	})
 	api.UserSearchHandler = user.SearchHandlerFunc(func(params user.SearchParams) middleware.Responder {
 		return middleware.NotImplemented("operation user.Search has not yet been implemented")
+	})
+	api.RechargeRechargeListHandler = recharge.RechargeListHandlerFunc(func(params recharge.RechargeListParams) middleware.Responder {
+		return middleware.NotImplemented("operation recharge.RechargeList has not yet been implemented")
 	})
 
 	api.ServerShutdown = func() {}

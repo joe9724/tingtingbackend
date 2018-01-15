@@ -17,7 +17,7 @@ import (
 type InlineResponse20015 struct {
 
 	// status
-	Status *Response `json:"status,omitempty"`
+	Status *Response `json:"status"`
 
 	// sub category list
 	SubCategoryList InlineResponse20015SubCategoryList `json:"subCategoryList"`

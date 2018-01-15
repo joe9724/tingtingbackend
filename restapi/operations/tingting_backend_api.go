@@ -31,6 +31,7 @@ import (
 	"tingtingbackend/restapi/operations/relation"
 	"tingtingbackend/restapi/operations/report_err"
 	"tingtingbackend/restapi/operations/user"
+	"tingtingbackend/restapi/operations/recharge"
 )
 
 // NewTingtingBackendAPI creates a new TingtingBackend instance
@@ -63,6 +64,9 @@ func NewTingtingBackendAPI(spec *loads.Document) *TingtingBackendAPI {
 		}),
 		RelationNrRelationCategorySubCategoryListEditHandler: relation.NrRelationCategorySubCategoryListEditHandlerFunc(func(params relation.NrRelationCategorySubCategoryListEditParams) middleware.Responder {
 			return middleware.NotImplemented("operation RelationNrRelationCategorySubCategoryListEdit has not yet been implemented")
+		}),
+		RechargeNrRechargeDetailHandler: recharge.NrRechargeDetailHandlerFunc(func(params recharge.NrRechargeDetailParams) middleware.Responder {
+			return middleware.NotImplemented("operation RechargeNrRechargeDetail has not yet been implemented")
 		}),
 		RelationNrRelationAlbumBooklistEditHandler: relation.NrRelationAlbumBooklistEditHandlerFunc(func(params relation.NrRelationAlbumBooklistEditParams) middleware.Responder {
 			return middleware.NotImplemented("operation RelationNrRelationAlbumBooklistEdit has not yet been implemented")
@@ -205,6 +209,9 @@ func NewTingtingBackendAPI(spec *loads.Document) *TingtingBackendAPI {
 		UserSearchHandler: user.SearchHandlerFunc(func(params user.SearchParams) middleware.Responder {
 			return middleware.NotImplemented("operation UserSearch has not yet been implemented")
 		}),
+		RechargeRechargeListHandler: recharge.RechargeListHandlerFunc(func(params recharge.RechargeListParams) middleware.Responder {
+			return middleware.NotImplemented("operation RechargeRechargeList has not yet been implemented")
+		}),
 	}
 }
 
@@ -244,6 +251,8 @@ type TingtingBackendAPI struct {
 	CategoryNrCategoryListHandler category.NrCategoryListHandler
 	// MemberNrMemberRecordListHandler sets the operation handler for the member record list operation
 	MemberNrMemberRecordListHandler member.NrMemberRecordListHandler
+	// RechargeNrRechargeDetailHandler sets the operation handler for the recharge detail operation
+	RechargeNrRechargeDetailHandler recharge.NrRechargeDetailHandler
 	// RelationNrRelationCategorySubCategoryListEditHandler sets the operation handler for the relation category sub category list edit operation
 	RelationNrRelationCategorySubCategoryListEditHandler relation.NrRelationCategorySubCategoryListEditHandler
 	// RelationNrRelationAlbumBooklistEditHandler sets the operation handler for the relation album booklist edit operation
@@ -340,6 +349,8 @@ type TingtingBackendAPI struct {
 	ReportErrReportErrListHandler report_err.ReportErrListHandler
 	// UserSearchHandler sets the operation handler for the search operation
 	UserSearchHandler user.SearchHandler
+	// RechargeRechargeListHandler sets the operation handler for the recharge list operation
+	RechargeRechargeListHandler recharge.RechargeListHandler
 
 	// ServeError is called when an error is received, there is a default handler
 	// but you can set your own with this
@@ -421,6 +432,14 @@ func (o *TingtingBackendAPI) Validate() error {
 
 	if o.MemberNrMemberRecordListHandler == nil {
 		unregistered = append(unregistered, "member.NrMemberRecordListHandler")
+	}
+
+	if o.RechargeRechargeListHandler == nil {
+		unregistered = append(unregistered, "recharge.RechargeListHandler")
+	}
+
+	if o.RechargeNrRechargeDetailHandler == nil {
+		unregistered = append(unregistered, "recharge.NrRechargeDetailHandler")
 	}
 
 	if o.RelationNrRelationCategorySubCategoryListEditHandler == nil {
@@ -731,6 +750,11 @@ func (o *TingtingBackendAPI) initHandlerCache() {
 	if o.handlers["POST"] == nil {
 		o.handlers["POST"] = make(map[string]http.Handler)
 	}
+	o.handlers["POST"]["/recharge/detail"] = recharge.NewNrRechargeDetail(o.context, o.RechargeNrRechargeDetailHandler)
+
+	if o.handlers["POST"] == nil {
+		o.handlers["POST"] = make(map[string]http.Handler)
+	}
 	o.handlers["POST"]["/relation/Category/subCategoryList/edit"] = relation.NewNrRelationCategorySubCategoryListEdit(o.context, o.RelationNrRelationCategorySubCategoryListEditHandler)
 
 	if o.handlers["POST"] == nil {
@@ -952,6 +976,11 @@ func (o *TingtingBackendAPI) initHandlerCache() {
 		o.handlers["POST"] = make(map[string]http.Handler)
 	}
 	o.handlers["POST"]["/order/list"] = order.NewOrderList(o.context, o.OrderOrderListHandler)
+
+	if o.handlers["POST"] == nil {
+		o.handlers["POST"] = make(map[string]http.Handler)
+	}
+	o.handlers["POST"]["/recharge/list"] = recharge.NewRechargeList(o.context, o.RechargeRechargeListHandler)
 
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)
