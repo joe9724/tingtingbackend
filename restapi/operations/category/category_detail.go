@@ -7,8 +7,12 @@ package category
 
 import (
 	"net/http"
-
+	_"github.com/jinzhu/gorm"
+	_ "github.com/jinzhu/gorm/dialects/mysql"
 	middleware "github.com/go-openapi/runtime/middleware"
+	"tingtingbackend/models"
+	"fmt"
+	"tingtingbackend/var"
 )
 
 // CategoryDetailHandlerFunc turns a function with the right signature into a category detail handler
@@ -53,8 +57,26 @@ func (o *CategoryDetail) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	res := o.Handler.Handle(Params) // actually handle the request
+	var ok CategoryDetailOK
+	var response models.InlineResponse20017
 
-	o.Context.Respond(rw, r, route.Produces, route, res)
+	db,err := _var.OpenConnection()
+	if err!=nil{
+		fmt.Println(err.Error())
+	}
+	//query
+	var category models.Category
+	db.Table("sub_category_items").Where("id=?",Params.CategoryID).First(&category)
+	//data
+	response.Data = &category
+
+	//status
+	var status models.Response
+	status.UnmarshalBinary([]byte(_var.Response200(200,"ok")))
+	response.Status = &status
+
+	ok.SetPayload(&response)
+
+	o.Context.Respond(rw, r, route.Produces, route, ok)
 
 }

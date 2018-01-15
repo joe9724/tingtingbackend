@@ -36,6 +36,8 @@ type SubCategoryItem struct {
 	// status
 	// Required: true
 	Status *int64 `json:"status"`
+
+	Albums_Number *int64 `json:"albums_number"`
 }
 
 // Validate validates this sub category item
@@ -108,6 +110,8 @@ func (m *SubCategoryItem) validateShowicon(formats strfmt.Registry) error {
 
 	return nil
 }
+
+
 
 func (m *SubCategoryItem) validateStatus(formats strfmt.Registry) error {
 
