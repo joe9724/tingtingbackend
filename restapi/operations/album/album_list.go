@@ -69,7 +69,7 @@ func (o *AlbumList) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	db.Where(map[string]interface{}{"status":0}).Find(&albumList).Limit(*(Params.PageSize)).Offset(*(Params.PageIndex)*(*(Params.PageSize)))
 	//data
 	response.AlbumList = albumList
-
+    fmt.Println("haspushed is",albumList[0].HasPushed)
 	//status
 	var status models.Response
 	status.UnmarshalBinary([]byte(_var.Response200(200,"ok")))

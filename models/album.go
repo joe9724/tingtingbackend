@@ -54,6 +54,8 @@ type Album struct {
 
 	// value
 	Value float64 `json:"value,omitempty"`
+
+	HasPushed int64 `json:"hasPushed,omitempty"`
 }
 
 // Validate validates this album
