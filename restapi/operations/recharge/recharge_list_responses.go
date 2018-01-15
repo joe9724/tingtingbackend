@@ -10,7 +10,7 @@ import (
 
 	"github.com/go-openapi/runtime"
 
-	models "backendtest/models"
+	models "tingtingbackend/models"
 )
 
 // RechargeListOKCode is the HTTP code returned for type RechargeListOK

@@ -7,8 +7,12 @@ package recharge
 
 import (
 	"net/http"
-
+	_"github.com/jinzhu/gorm"
+	_ "github.com/jinzhu/gorm/dialects/mysql"
 	middleware "github.com/go-openapi/runtime/middleware"
+	"tingtingbackend/models"
+	"fmt"
+	"tingtingbackend/var"
 )
 
 // RechargeListHandlerFunc turns a function with the right signature into a recharge list handler
@@ -53,8 +57,26 @@ func (o *RechargeList) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	res := o.Handler.Handle(Params) // actually handle the request
+	var ok RechargeListOK
+	var response models.InlineResponse2003
+	var rechargeList models.InlineResponse2003Orders
 
-	o.Context.Respond(rw, r, route.Produces, route, res)
+	db,err := _var.OpenConnection()
+	if err!=nil{
+		fmt.Println(err.Error())
+	}
+	//query
+	db.Table("recharge").Where(map[string]interface{}{"status":0}).Find(&rechargeList).Limit(*(Params.PageSize)).Offset(*(Params.PageIndex)*(*(Params.PageSize)))
+	//data
+	response.Orders = rechargeList
+	//fmt.Println("haspushed is",albumList[0].HasPushed)
+	//status
+	var status models.Response
+	status.UnmarshalBinary([]byte(_var.Response200(200,"ok")))
+	response.Status = &status
+
+	ok.SetPayload(&response)
+
+	o.Context.Respond(rw, r, route.Produces, route, ok)
 
 }
