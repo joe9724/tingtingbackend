@@ -66,7 +66,8 @@ func (o *RechargeList) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 		fmt.Println(err.Error())
 	}
 	//query
-	db.Table("recharge").Where(map[string]interface{}{"status":0}).Find(&rechargeList).Limit(*(Params.PageSize)).Offset(*(Params.PageIndex)*(*(Params.PageSize)))
+	//db.Table("recharge").Where(map[string]interface{}{"status":0}).Find(&rechargeList).Limit(*(Params.PageSize)).Offset(*(Params.PageIndex)*(*(Params.PageSize)))
+	db.Table("recharge").Select("recharge.id, recharge.memberId,recharge.type,recharge.order_no,recharge.status,recharge.time,recharge.value,members.name").Joins("left join members on recharge.memberId = members.id").Find(&rechargeList)
 	//data
 	response.Orders = rechargeList
 	//fmt.Println("haspushed is",albumList[0].HasPushed)
