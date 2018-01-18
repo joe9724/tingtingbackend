@@ -71,7 +71,7 @@ func (o *NrRelationAlbumBooklistEdit) ServeHTTP(rw http.ResponseWriter, r *http.
 	
 	if (*(Params.Body.ActionCode) == 0){ //添加映射
 		//先解析出bookis集合,样式 1,2,3,4,
-		if (strings.Contains(books,",")){
+		if (!strings.Contains(books,",")){
 			db.Exec("insert into album_book_relation(albumId,bookId) values(?,?)",Params.Body.AlbumID,books)
 		}else{
 			temp := strings.Split(books,",")
