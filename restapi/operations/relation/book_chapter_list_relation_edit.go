@@ -7,8 +7,13 @@ package relation
 
 import (
 	"net/http"
-
+	_"github.com/jinzhu/gorm"
+	_ "github.com/jinzhu/gorm/dialects/mysql"
 	middleware "github.com/go-openapi/runtime/middleware"
+	"tingtingbackend/models"
+	"fmt"
+	"tingtingbackend/var"
+	"strings"
 )
 
 // BookChapterListRelationEditHandlerFunc turns a function with the right signature into a book chapter list relation edit handler
@@ -53,8 +58,38 @@ func (o *BookChapterListRelationEdit) ServeHTTP(rw http.ResponseWriter, r *http.
 		return
 	}
 
-	res := o.Handler.Handle(Params) // actually handle the request
+	var ok BookChapterListRelationEditOK
+	var response models.InlineResponse20018
 
-	o.Context.Respond(rw, r, route.Produces, route, res)
+
+	db,err := _var.OpenConnection()
+	if err!=nil{
+		fmt.Println(err.Error())
+	}
+
+	chapters := *(Params.Body.ChapterIds)
+
+	if (*(Params.Body.ActionCode) == 0){ //添加映射
+		//先解析出bookis集合,样式 1,2,3,4,
+		if (!strings.Contains(chapters,",")){
+			db.Exec("insert into book_chapter_relation(bookId,chapterId) values(?,?)",Params.Body.BookID,chapters)
+		}else{
+			temp := strings.Split(chapters,",")
+			for k:=0;k< len(temp);k++ {
+				db.Exec("insert into book_chapter_relation(bookId,chapterId) values(?,?)",Params.Body.BookID,temp[k])
+				fmt.Println("insert into book_chapter_relation(bookId,chapterId) values(?,?)",Params.Body.BookID,temp[k])
+			}
+		}
+	}else{ //去除映射
+		db.Exec("delete from book_chapter_relation where bookId=? and chapterId=?",Params.Body.BookID,chapters)
+	}
+
+	var status models.Response
+	status.UnmarshalBinary([]byte(_var.Response200(200,"ok")))
+	response.Status = &status
+
+	ok.SetPayload(&response)
+
+	o.Context.Respond(rw, r, route.Produces, route, ok)
 
 }

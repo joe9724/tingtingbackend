@@ -66,7 +66,25 @@ func (o *ChapterList) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 		fmt.Println(err.Error())
 	}
 	//query
-	db.Where(map[string]interface{}{"status":0}).Find(&chapterlist).Limit(*(Params.PageSize)).Offset(*(Params.PageIndex)*(*(Params.PageSize)))
+	if Params.Keyword !=nil && Params.BookID!=nil{
+		if(*Params.Keyword == " ") {
+			fmt.Println("1")
+			db.Raw("select id,name  FROM chapters where  id not in (select chapterId from book_chapter_relation  where bookId = ? )", *(Params.BookID)).Find(&chapterlist)
+		}else{
+			fmt.Println("2")
+			db.Raw("select id,name  FROM chapters where name like '%" + *(Params.Keyword)+"%' and id not in (select chapterId from book_chapter_relation  where bookId = ? )", *(Params.BookID)).Find(&chapterlist)
+		}
+	}else{
+		if Params.BookID !=nil{
+			fmt.Println("3")
+			db.Table("chapters").Select("chapters.id, chapters.name").Joins("left join book_chapter_relation on chapters.id = book_chapter_relation.chapterId").Where("book_chapter_relation.bookId =?",*Params.BookID).Find(&chapterlist)
+		}else{
+			fmt.Println("4")
+			db.Where(map[string]interface{}{"status":0}).Find(&chapterlist).Limit(*(Params.PageSize)).Offset(*(Params.PageIndex)*(*(Params.PageSize)))
+		}
+
+	}
+	//db.Where(map[string]interface{}{"status":0}).Find(&chapterlist).Limit(*(Params.PageSize)).Offset(*(Params.PageIndex)*(*(Params.PageSize)))
 	//data
 	response.Chapters = chapterlist
 
