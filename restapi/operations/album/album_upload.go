@@ -137,7 +137,7 @@ func (o *AlbumUpload) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 			album.Cover = "http://tingting-resource.bitekun.xin/resource/image/cover/"+filename+".jpg"
 		}else{
 			code = 402
-			msg = "image format need jpg or png"
+			msg = "image format need jpg or png "
 		}
 
 	}
