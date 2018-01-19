@@ -28,6 +28,8 @@ type Album struct {
 	// icon
 	Icon string `json:"icon"`
 
+	Cover string `json:"cover"`
+
 	// name
 	Name string `json:"name"`
 
