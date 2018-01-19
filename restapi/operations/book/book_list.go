@@ -66,7 +66,26 @@ func (o *BookList) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 		fmt.Println(err.Error())
 	}
 	//query
-	db.Where(map[string]interface{}{"status":0}).Find(&bookList).Limit(*(Params.PageSize)).Offset(*(Params.PageIndex)*(*(Params.PageSize)))
+	if Params.Keyword !=nil && Params.AlbumID!=nil{
+		if(*Params.Keyword == " ") {
+			db.Raw("select id,name  FROM books where  id not in (select bookId from album_book_relation  where albumId = ? )", *(Params.AlbumID)).Find(&bookList)
+		}else{
+			db.Raw("select id,name  FROM books where name like '%" + *(Params.Keyword)+"%' and id not in (select bookId from album_book_relation  where albumId = ? )", *(Params.AlbumID)).Find(&bookList)
+		}
+		//db.Table("books").Select("books.id, books.name").Joins("left join album_book_relation on books.id = album_book_relation.bookId").Where("books.id is null").Find(&bookList)
+		fmt.Println("1")
+		//db.Where(map[string]interface{}{"status":0}).Where("name like ?","%"+*(Params.Keyword)+"%").Not("id",).Find(&bookList).Offset(*(Params.PageIndex)*(*(Params.PageSize)))
+	}else{
+		if Params.AlbumID !=nil{
+			fmt.Println("2")
+			db.Table("books").Select("books.id, books.name").Joins("left join album_book_relation on books.id = album_book_relation.bookId").Where("album_book_relation.albumId =?",*Params.AlbumID).Find(&bookList)
+		}else{
+			fmt.Println("3")
+			db.Where(map[string]interface{}{"status":0}).Find(&bookList).Limit(*(Params.PageSize)).Offset(*(Params.PageIndex)*(*(Params.PageSize)))
+		}
+
+	}
+
 	//data
 	response.BookList = bookList
 

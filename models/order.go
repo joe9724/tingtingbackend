@@ -51,6 +51,8 @@ type Order struct {
 	// value
 	// Required: true
 	Value *float64 `json:"value"`
+
+	Name *string `json:"name"`
 }
 
 // Validate validates this order
