@@ -7,13 +7,13 @@ package category
 
 import (
 	"net/http"
-	"io/ioutil"
+	_"io/ioutil"
 	middleware "github.com/go-openapi/runtime/middleware"
 	"fmt"
 	_"os"
-	"runtime"
+	_"runtime"
 	"time"
-	"strings"
+	_"strings"
 	"tingtingbackend/models"
 	"tingtingbackend/var"
 	"strconv"
@@ -74,7 +74,7 @@ func (o *CategoryUpload) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	fmt.Println("filename is",filename)
 
 	//如果有icon
-	if (Params.Icon!=nil) {
+	/*if (Params.Icon!=nil) {
 		icon, err := ioutil.ReadAll(Params.Icon)
 		if err != nil {
 			fmt.Println("err upload:", err.Error())
@@ -107,6 +107,11 @@ func (o *CategoryUpload) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 			code = 401
 			msg = "image format need jpg or png"
 		}
+	}*/
+
+	if(Params.IconUrl != ""){
+		fmt.Println(Params.IconUrl)
+		category.Icon = &(Params.IconUrl)
 	}
 
 	db,err := _var.OpenConnection()
@@ -114,7 +119,8 @@ func (o *CategoryUpload) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 		fmt.Println(err.Error())
 	}
 
-
+	fmt.Println("Params.Summary is",Params.Summary)
+    category.Summary = Params.Summary
 	category.Name = &(Params.Title)
 	t := int64(-1)
 	category.Category_Id = &t

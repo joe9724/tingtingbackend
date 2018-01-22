@@ -32,6 +32,7 @@ import (
 	"tingtingbackend/restapi/operations/report_err"
 	"tingtingbackend/restapi/operations/user"
 	"tingtingbackend/restapi/operations/recharge"
+	"tingtingbackend/restapi/operations/upload_file"
 )
 
 // NewTingtingBackendAPI creates a new TingtingBackend instance
@@ -175,6 +176,9 @@ func NewTingtingBackendAPI(spec *loads.Document) *TingtingBackendAPI {
 		}),
 		FeedbackFeedbackListHandler: feedback.FeedbackListHandlerFunc(func(params feedback.FeedbackListParams) middleware.Responder {
 			return middleware.NotImplemented("operation FeedbackFeedbackList has not yet been implemented")
+		}),
+		UploadFileFileUploadHandler: upload_file.FileUploadHandlerFunc(func(params upload_file.FileUploadParams) middleware.Responder {
+			return middleware.NotImplemented("operation UploadFileFileUpload has not yet been implemented")
 		}),
 		MemberMemberDetailHandler: member.MemberDetailHandlerFunc(func(params member.MemberDetailParams) middleware.Responder {
 			return middleware.NotImplemented("operation MemberMemberDetail has not yet been implemented")
@@ -331,6 +335,7 @@ type TingtingBackendAPI struct {
 	MemberMemberDetailHandler member.MemberDetailHandler
 	// MemberMemberListHandler sets the operation handler for the member list operation
 	MemberMemberListHandler member.MemberListHandler
+	UploadFileFileUploadHandler upload_file.FileUploadHandler
 	// MemberMemberRecordDetailHandler sets the operation handler for the member record detail operation
 	MemberMemberRecordDetailHandler member.MemberRecordDetailHandler
 	// MsgMsgDetailHandler sets the operation handler for the msg detail operation
@@ -604,6 +609,10 @@ func (o *TingtingBackendAPI) Validate() error {
 
 	if o.MsgMsgDetailHandler == nil {
 		unregistered = append(unregistered, "msg.MsgDetailHandler")
+	}
+
+	if o.UploadFileFileUploadHandler == nil {
+		unregistered = append(unregistered, "upload_file.FileUploadHandler")
 	}
 
 	if o.MsgMsgSendListHandler == nil {
@@ -951,6 +960,11 @@ func (o *TingtingBackendAPI) initHandlerCache() {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}
 	o.handlers["GET"]["/member/record/detail"] = member.NewMemberRecordDetail(o.context, o.MemberMemberRecordDetailHandler)
+
+	if o.handlers["POST"] == nil {
+		o.handlers["POST"] = make(map[string]http.Handler)
+	}
+	o.handlers["POST"]["/file/upload"] = upload_file.NewFileUpload(o.context, o.UploadFileFileUploadHandler)
 
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)

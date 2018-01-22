@@ -54,6 +54,8 @@ type CategoryUploadParams struct {
 	  In: formData
 	*/
 	SubTitle string
+
+	IconUrl string
 	/*
 	  In: formData
 	*/
@@ -88,6 +90,11 @@ func (o *CategoryUploadParams) BindRequest(r *http.Request, route *middleware.Ma
 
 	fdContent, fdhkContent, _ := fds.GetOK("content")
 	if err := o.bindContent(fdContent, fdhkContent, route.Formats); err != nil {
+		res = append(res, err)
+	}
+
+	fdIconUrl, fdhkIconUrl, _ := fds.GetOK("iconUrl")
+	if err := o.bindIconUrl(fdIconUrl, fdhkIconUrl, route.Formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -141,6 +148,23 @@ func (o *CategoryUploadParams) BindRequest(r *http.Request, route *middleware.Ma
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+func (o *CategoryUploadParams) bindIconUrl(rawData []string, hasKey bool, formats strfmt.Registry) error {
+	if !hasKey {
+		return errors.Required("iconUrl", "formData")
+	}
+	var raw string
+	if len(rawData) > 0 {
+		raw = rawData[len(rawData)-1]
+	}
+	if err := validate.RequiredString("iconUrl", "formData", raw); err != nil {
+		return err
+	}
+
+	o.IconUrl = raw
+
 	return nil
 }
 

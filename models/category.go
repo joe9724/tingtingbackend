@@ -25,6 +25,8 @@ type Category struct {
 
 	Status *int64 `json:"status"`
 
+	Summary *string `json:"summary"`
+
 	// sub category
 	// Required: true
 	SubCategory CategorySubCategory `json:"subCategory"`

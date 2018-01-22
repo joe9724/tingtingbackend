@@ -1679,6 +1679,84 @@ func init() {
         }
       }
     },
+    "/file/upload": {
+      "post": {
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "tags": [
+          "UploadFile"
+        ],
+        "summary": "上传文件",
+        "operationId": "file/upload/",
+        "parameters": [
+          {
+            "type": "integer",
+            "format": "int64",
+            "description": "当前登录用户id",
+            "name": "userid",
+            "in": "formData"
+          },
+          {
+            "type": "file",
+            "description": "The file to upload.",
+            "name": "file",
+            "in": "formData"
+          },
+          {
+            "type": "string",
+            "description": "0=icon 1=cover 2=mp3file 3=amrfile 4=其他文件",
+            "name": "type",
+            "in": "formData"
+          },
+          {
+            "type": "integer",
+            "format": "int64",
+            "description": "timestamp",
+            "name": "ts",
+            "in": "formData"
+          },
+          {
+            "type": "string",
+            "description": "valstring",
+            "name": "val",
+            "in": "formData"
+          },
+          {
+            "type": "string",
+            "description": "valstring",
+            "name": "extraInfo1",
+            "in": "formData"
+          },
+          {
+            "type": "string",
+            "description": "valstring",
+            "name": "extraInfo2",
+            "in": "formData"
+          },
+          {
+            "type": "string",
+            "description": "valstring",
+            "name": "extraInfo3",
+            "in": "formData"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功，返回上传文件路径",
+            "schema": {
+              "$ref": "#/definitions/inline_response_200_19"
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
     "/member/detail": {
       "get": {
         "description": "会员详情",
@@ -6623,6 +6701,84 @@ func init() {
             "description": "获取反馈列表",
             "schema": {
               "$ref": "#/definitions/inline_response_200_4"
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/file/upload": {
+      "post": {
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "tags": [
+          "UploadFile"
+        ],
+        "summary": "上传文件",
+        "operationId": "file/upload/",
+        "parameters": [
+          {
+            "type": "integer",
+            "format": "int64",
+            "description": "当前登录用户id",
+            "name": "userid",
+            "in": "formData"
+          },
+          {
+            "type": "file",
+            "description": "The file to upload.",
+            "name": "file",
+            "in": "formData"
+          },
+          {
+            "type": "string",
+            "description": "0=icon 1=cover 2=mp3file 3=amrfile 4=其他文件",
+            "name": "type",
+            "in": "formData"
+          },
+          {
+            "type": "integer",
+            "format": "int64",
+            "description": "timestamp",
+            "name": "ts",
+            "in": "formData"
+          },
+          {
+            "type": "string",
+            "description": "valstring",
+            "name": "val",
+            "in": "formData"
+          },
+          {
+            "type": "string",
+            "description": "valstring",
+            "name": "extraInfo1",
+            "in": "formData"
+          },
+          {
+            "type": "string",
+            "description": "valstring",
+            "name": "extraInfo2",
+            "in": "formData"
+          },
+          {
+            "type": "string",
+            "description": "valstring",
+            "name": "extraInfo3",
+            "in": "formData"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功，返回上传文件路径",
+            "schema": {
+              "$ref": "#/definitions/inline_response_200_19"
             }
           },
           "default": {

@@ -25,6 +25,7 @@ import (
 	"tingtingbackend/restapi/operations/report_err"
 	"tingtingbackend/restapi/operations/user"
 	"tingtingbackend/restapi/operations/recharge"
+	"tingtingbackend/restapi/operations/upload_file"
 	_"github.com/didip/tollbooth"
 	_"github.com/didip/tollbooth/limiter"
 
@@ -178,6 +179,9 @@ func configureAPI(api *operations.TingtingBackendAPI) http.Handler {
 	})
 	api.MemberMemberDetailHandler = member.MemberDetailHandlerFunc(func(params member.MemberDetailParams) middleware.Responder {
 		return middleware.NotImplemented("operation member.MemberDetail has not yet been implemented")
+	})
+	api.UploadFileFileUploadHandler = upload_file.FileUploadHandlerFunc(func(params upload_file.FileUploadParams) middleware.Responder {
+		return middleware.NotImplemented("operation upload_file.FileUpload has not yet been implemented")
 	})
 	api.MemberMemberListHandler = member.MemberListHandlerFunc(func(params member.MemberListParams) middleware.Responder {
 		return middleware.NotImplemented("operation member.MemberList has not yet been implemented")
