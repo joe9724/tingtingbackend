@@ -146,9 +146,11 @@ func (o *AlbumUpload) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	if err!=nil{
 		fmt.Println(err.Error())
 	}
-
-	if(&(Params.Content)!=nil){
-		album.Summary = *(Params.Content)
+	defer db.Close()
+	if(&(Params.Summary)!=nil){
+		fmt.Println("Summary is",Params.Summary)
+		//album.Summary = *(Params.Summary)
+		album.Summary = "summary"
 	}
 
 	album.HasPushed = 0
