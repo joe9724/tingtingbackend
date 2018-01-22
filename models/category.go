@@ -28,6 +28,8 @@ type Category struct {
 	// sub category
 	// Required: true
 	SubCategory CategorySubCategory `json:"subCategory"`
+
+	Category_Id *int64 `json:"category_id"`
 }
 
 // Validate validates this category

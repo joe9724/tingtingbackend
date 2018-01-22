@@ -7,8 +7,12 @@ package category
 
 import (
 	"net/http"
-
+	_"github.com/jinzhu/gorm"
+	_ "github.com/jinzhu/gorm/dialects/mysql"
 	middleware "github.com/go-openapi/runtime/middleware"
+	"tingtingbackend/models"
+	"fmt"
+	"tingtingbackend/var"
 )
 
 // CategoryDeleteHandlerFunc turns a function with the right signature into a category delete handler
@@ -53,8 +57,29 @@ func (o *CategoryDelete) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	res := o.Handler.Handle(Params) // actually handle the request
+	var ok CategoryDeleteOK
+	var response models.InlineResponse20018
 
-	o.Context.Respond(rw, r, route.Produces, route, res)
+	db,err := _var.OpenConnection()
+	if err!=nil{
+		fmt.Println(err.Error())
+	}
+	//query
+	//sql := "update sub_category_items set status=1 where id=?",*(Params.CategoryID)
+	fmt.Println("sql is ","update sub_category_items set status=1 where id=?",*(Params.CategoryID))
+	db.Exec("update sub_category_items set status=1 where id=?",*(Params.CategoryID))
+	//var category models.Category
+	//db.Table("sub_category_items").Where("id=?",Params.CategoryID).First(&category)
+	//data
+	//response.Data = &category
+
+	//status
+	var status models.Response
+	status.UnmarshalBinary([]byte(_var.Response200(200,"ok")))
+	response.Status = &status
+
+	ok.SetPayload(&response)
+
+	o.Context.Respond(rw, r, route.Produces, route, ok)
 
 }

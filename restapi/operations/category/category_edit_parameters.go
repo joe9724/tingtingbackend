@@ -67,6 +67,8 @@ type CategoryEditParams struct {
 	  In: formData
 	*/
 	Userid *int64
+	Status *int64
+	CategoryId *int64
 }
 
 // BindRequest both binds and validates a request, it assumes that complex things implement a Validatable(strfmt.Registry) error interface
@@ -90,8 +92,10 @@ func (o *CategoryEditParams) BindRequest(r *http.Request, route *middleware.Matc
 	}
 
 	cover, coverHeader, err := r.FormFile("cover")
-	if err != nil {
+	if err != nil && err != http.ErrMissingFile {
 		res = append(res, errors.New(400, "reading file %q failed: %v", "cover", err))
+	} else if err == http.ErrMissingFile {
+		// no-op for missing but optional file parameter
 	} else if err := o.bindCover(cover, coverHeader); err != nil {
 		res = append(res, err)
 	} else {
@@ -99,8 +103,10 @@ func (o *CategoryEditParams) BindRequest(r *http.Request, route *middleware.Matc
 	}
 
 	icon, iconHeader, err := r.FormFile("icon")
-	if err != nil {
+	if err != nil && err != http.ErrMissingFile {
 		res = append(res, errors.New(400, "reading file %q failed: %v", "icon", err))
+	} else if err == http.ErrMissingFile {
+		// no-op for missing but optional file parameter
 	} else if err := o.bindIcon(icon, iconHeader); err != nil {
 		res = append(res, err)
 	} else {
@@ -124,6 +130,16 @@ func (o *CategoryEditParams) BindRequest(r *http.Request, route *middleware.Matc
 
 	fdUserid, fdhkUserid, _ := fds.GetOK("userid")
 	if err := o.bindUserid(fdUserid, fdhkUserid, route.Formats); err != nil {
+		res = append(res, err)
+	}
+
+	fdCategoryId, fdhkCategoryId, _ := fds.GetOK("categoryId")
+	if err := o.bindCatgoryId(fdCategoryId, fdhkCategoryId, route.Formats); err != nil {
+		res = append(res, err)
+	}
+
+	fdStatus, fdhkStatus, _ := fds.GetOK("status")
+	if err := o.bindStatus(fdStatus, fdhkStatus, route.Formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -219,6 +235,42 @@ func (o *CategoryEditParams) bindUserid(rawData []string, hasKey bool, formats s
 		return errors.InvalidType("userid", "formData", "int64", raw)
 	}
 	o.Userid = &value
+
+	return nil
+}
+
+func (o *CategoryEditParams) bindCatgoryId(rawData []string, hasKey bool, formats strfmt.Registry) error {
+	var raw string
+	if len(rawData) > 0 {
+		raw = rawData[len(rawData)-1]
+	}
+	if raw == "" { // empty values pass all other validations
+		return nil
+	}
+
+	value, err := swag.ConvertInt64(raw)
+	if err != nil {
+		return errors.InvalidType("categoryId", "formData", "int64", raw)
+	}
+	o.CategoryId = &value
+
+	return nil
+}
+
+func (o *CategoryEditParams) bindStatus(rawData []string, hasKey bool, formats strfmt.Registry) error {
+	var raw string
+	if len(rawData) > 0 {
+		raw = rawData[len(rawData)-1]
+	}
+	if raw == "" { // empty values pass all other validations
+		return nil
+	}
+
+	value, err := swag.ConvertInt64(raw)
+	if err != nil {
+		return errors.InvalidType("status", "formData", "int64", raw)
+	}
+	o.Status = &value
 
 	return nil
 }

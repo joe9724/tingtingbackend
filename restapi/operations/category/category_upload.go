@@ -7,8 +7,16 @@ package category
 
 import (
 	"net/http"
-
+	"io/ioutil"
 	middleware "github.com/go-openapi/runtime/middleware"
+	"fmt"
+	_"os"
+	"runtime"
+	"time"
+	"strings"
+	"tingtingbackend/models"
+	"tingtingbackend/var"
+	"strconv"
 )
 
 // CategoryUploadHandlerFunc turns a function with the right signature into a category upload handler
@@ -51,8 +59,71 @@ func (o *CategoryUpload) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	res := o.Handler.Handle(Params) // actually handle the request
+	var ok CategoryUploadOK
+	var response models.InlineResponse20016
+	var status models.Response
+	var category models.Category
+	var msg string
+	var code int64
+	msg = "ok"
+	code = 200
 
-	o.Context.Respond(rw, r, route.Produces, route, res)
+	var filename string
+	filename = strconv.FormatInt((time.Now().Unix()),10)
+
+	fmt.Println("filename is",filename)
+
+	//如果有icon
+	if (Params.Icon!=nil) {
+		icon, err := ioutil.ReadAll(Params.Icon)
+		if err != nil {
+			fmt.Println("err upload:", err.Error())
+		}
+		fmt.Println(len(icon))
+		// Always returns a valid content-type and "application/octet-stream" if no others seemed to match.
+		contentType := http.DetectContentType(icon)
+		fmt.Println("contentType is", contentType)
+
+		//save
+		var lower string
+		lower = strings.ToLower(contentType)
+		if(strings.Contains(lower,"jp")||(strings.Contains(lower,"pn"))) {
+			if (runtime.GOOS == "windows") {
+				err1 := ioutil.WriteFile(filename+".jpg", icon, 0644)
+				if err1 != nil {
+					fmt.Println(err1.Error())
+				}
+			} else {
+				err1 := ioutil.WriteFile("/root/go/src/resource/image/icon/"+filename+".jpg", icon, 0644)
+				if err1 != nil {
+					fmt.Println(err1.Error())
+				}
+			}
+			temp := "http://tingting-resource.bitekun.xin/resource/image/icon/"+filename+".jpg"
+			category.Icon = &temp
+			code = 200
+			msg = "ok"
+		}else{
+			code = 401
+			msg = "image format need jpg or png"
+		}
+	}
+
+	db,err := _var.OpenConnection()
+	if err!=nil{
+		fmt.Println(err.Error())
+	}
+
+
+	category.Name = &(Params.Title)
+	t := int64(-1)
+	category.Category_Id = &t
+	category.Status = Params.Status
+	//album.User_id = *(Params.MemberID)
+	db.Table("sub_category_items").Create(&category)
+	status.UnmarshalBinary([]byte(_var.Response200(code,msg)))
+	response.Return = &status
+	ok.SetPayload(&response)
+	o.Context.Respond(rw, r, route.Produces, route, ok)
 
 }
