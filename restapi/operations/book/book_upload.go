@@ -151,6 +151,7 @@ func (o *BookUpload) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 		book.Summary = *(Params.Summary)
 	}
 
+	book.Name = Params.Title
 	book.AuthorName = "go"
 	book.AuthorAvatar = "go"
 	book.SubTitle = "go"

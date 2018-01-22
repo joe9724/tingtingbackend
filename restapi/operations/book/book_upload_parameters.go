@@ -90,8 +90,10 @@ func (o *BookUploadParams) BindRequest(r *http.Request, route *middleware.Matche
 	}
 
 	cover, coverHeader, err := r.FormFile("cover")
-	if err != nil {
+	if err != nil && err != http.ErrMissingFile {
 		res = append(res, errors.New(400, "reading file %q failed: %v", "cover", err))
+	} else if err == http.ErrMissingFile {
+		// no-op for missing but optional file parameter
 	} else if err := o.bindCover(cover, coverHeader); err != nil {
 		res = append(res, err)
 	} else {
@@ -99,8 +101,10 @@ func (o *BookUploadParams) BindRequest(r *http.Request, route *middleware.Matche
 	}
 
 	icon, iconHeader, err := r.FormFile("icon")
-	if err != nil {
+	if err != nil && err != http.ErrMissingFile {
 		res = append(res, errors.New(400, "reading file %q failed: %v", "icon", err))
+	} else if err == http.ErrMissingFile {
+		// no-op for missing but optional file parameter
 	} else if err := o.bindIcon(icon, iconHeader); err != nil {
 		res = append(res, err)
 	} else {
