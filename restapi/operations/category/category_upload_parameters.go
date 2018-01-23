@@ -71,6 +71,8 @@ type CategoryUploadParams struct {
 	Userid *int64
 
 	Status *int64
+
+	CategoryId *int64
 }
 
 // BindRequest both binds and validates a request, it assumes that complex things implement a Validatable(strfmt.Registry) error interface
@@ -140,6 +142,11 @@ func (o *CategoryUploadParams) BindRequest(r *http.Request, route *middleware.Ma
 		res = append(res, err)
 	}
 
+	fdCategoryId, fdhkCategoryId, _ := fds.GetOK("categoryId")
+	if err := o.bindCategoryId(fdCategoryId, fdhkCategoryId, route.Formats); err != nil {
+		res = append(res, err)
+	}
+
 	fdStatus, fdhkStatus, _ := fds.GetOK("status")
 	if err := o.bindStatus(fdStatus, fdhkStatus, route.Formats); err != nil {
 		res = append(res, err)
@@ -152,15 +159,12 @@ func (o *CategoryUploadParams) BindRequest(r *http.Request, route *middleware.Ma
 }
 
 func (o *CategoryUploadParams) bindIconUrl(rawData []string, hasKey bool, formats strfmt.Registry) error {
-	if !hasKey {
-		return errors.Required("iconUrl", "formData")
-	}
 	var raw string
 	if len(rawData) > 0 {
 		raw = rawData[len(rawData)-1]
 	}
-	if err := validate.RequiredString("iconUrl", "formData", raw); err != nil {
-		return err
+	if raw == "" { // empty values pass all other validations
+		return nil
 	}
 
 	o.IconUrl = raw
@@ -236,6 +240,24 @@ func (o *CategoryUploadParams) bindTitle(rawData []string, hasKey bool, formats 
 	}
 
 	o.Title = raw
+
+	return nil
+}
+
+func (o *CategoryUploadParams) bindCategoryId(rawData []string, hasKey bool, formats strfmt.Registry) error {
+	var raw string
+	if len(rawData) > 0 {
+		raw = rawData[len(rawData)-1]
+	}
+	if raw == "" { // empty values pass all other validations
+		return nil
+	}
+
+	value, err := swag.ConvertInt64(raw)
+	if err != nil {
+		return errors.InvalidType("categoryId", "formData", "int64", raw)
+	}
+	o.CategoryId = &value
 
 	return nil
 }

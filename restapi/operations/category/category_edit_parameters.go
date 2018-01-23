@@ -69,6 +69,7 @@ type CategoryEditParams struct {
 	Userid *int64
 	Status *int64
 	CategoryId *int64
+	IconUrl string
 }
 
 // BindRequest both binds and validates a request, it assumes that complex things implement a Validatable(strfmt.Registry) error interface
@@ -88,6 +89,11 @@ func (o *CategoryEditParams) BindRequest(r *http.Request, route *middleware.Matc
 
 	fdContent, fdhkContent, _ := fds.GetOK("content")
 	if err := o.bindContent(fdContent, fdhkContent, route.Formats); err != nil {
+		res = append(res, err)
+	}
+
+	fdIconUrl, fdhkIconUrl, _ := fds.GetOK("iconUrl")
+	if err := o.bindIconUrl(fdIconUrl, fdhkIconUrl, route.Formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -159,6 +165,20 @@ func (o *CategoryEditParams) bindContent(rawData []string, hasKey bool, formats 
 	}
 
 	o.Content = &raw
+
+	return nil
+}
+
+func (o *CategoryEditParams) bindIconUrl(rawData []string, hasKey bool, formats strfmt.Registry) error {
+	var raw string
+	if len(rawData) > 0 {
+		raw = rawData[len(rawData)-1]
+	}
+	if raw == "" { // empty values pass all other validations
+		return nil
+	}
+
+	o.IconUrl = raw
 
 	return nil
 }
