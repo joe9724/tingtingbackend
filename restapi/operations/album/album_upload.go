@@ -71,6 +71,11 @@ func (o *AlbumUpload) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 
 	fmt.Println("filename is",filename)
 
+	if(Params.IconUrl != ""){
+		fmt.Println(Params.IconUrl)
+		album.Icon = Params.IconUrl
+	}
+
 	//如果有icon
 	if (Params.Icon!=nil) {
 		icon, err := ioutil.ReadAll(Params.Icon)
@@ -149,8 +154,8 @@ func (o *AlbumUpload) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	defer db.Close()
 	if(&(Params.Summary)!=nil){
 		fmt.Println("Summary is",Params.Summary)
-		//album.Summary = *(Params.Summary)
-		album.Summary = "summary"
+		album.Summary = *(Params.Summary)
+		// album.Summary = "summary"
 	}
 
 	album.HasPushed = 0

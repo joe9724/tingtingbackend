@@ -67,6 +67,10 @@ type BookUploadParams struct {
 	  In: formData
 	*/
 	Userid *int64
+
+	IconUrl string
+
+	AuthorName string
 }
 
 // BindRequest both binds and validates a request, it assumes that complex things implement a Validatable(strfmt.Registry) error interface
@@ -86,6 +90,16 @@ func (o *BookUploadParams) BindRequest(r *http.Request, route *middleware.Matche
 
 	fdContent, fdhkContent, _ := fds.GetOK("content")
 	if err := o.bindContent(fdContent, fdhkContent, route.Formats); err != nil {
+		res = append(res, err)
+	}
+
+	fdAuthorName, fdhkAuthorName, _ := fds.GetOK("authorName")
+	if err := o.bindIconUrl(fdAuthorName, fdhkAuthorName, route.Formats); err != nil {
+		res = append(res, err)
+	}
+
+	fdIconUrl, fdhkIconUrl, _ := fds.GetOK("iconUrl")
+	if err := o.bindIconUrl(fdIconUrl, fdhkIconUrl, route.Formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -157,6 +171,40 @@ func (o *BookUploadParams) bindCover(file multipart.File, header *multipart.File
 }
 
 func (o *BookUploadParams) bindIcon(file multipart.File, header *multipart.FileHeader) error {
+
+	return nil
+}
+
+func (o *BookUploadParams) bindIconUrl(rawData []string, hasKey bool, formats strfmt.Registry) error {
+	if !hasKey {
+		return errors.Required("iconUrl", "formData")
+	}
+	var raw string
+	if len(rawData) > 0 {
+		raw = rawData[len(rawData)-1]
+	}
+	if err := validate.RequiredString("iconUrl", "formData", raw); err != nil {
+		return err
+	}
+
+	o.IconUrl = raw
+
+	return nil
+}
+
+func (o *BookUploadParams) bindAuthorName(rawData []string, hasKey bool, formats strfmt.Registry) error {
+	if !hasKey {
+		return errors.Required("authorName", "formData")
+	}
+	var raw string
+	if len(rawData) > 0 {
+		raw = rawData[len(rawData)-1]
+	}
+	if err := validate.RequiredString("authorName", "formData", raw); err != nil {
+		return err
+	}
+
+	o.AuthorName = raw
 
 	return nil
 }

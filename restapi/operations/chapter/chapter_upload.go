@@ -70,7 +70,10 @@ func (o *ChapterUpload) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	filename = strconv.FormatInt((time.Now().Unix()),10)
 
 	fmt.Println("filename is",filename)
-
+	if(Params.IconUrl != ""){
+		fmt.Println(Params.IconUrl)
+		chapter.Icon = &(Params.IconUrl)
+	}
 	//如果有icon
 	if (Params.Icon!=nil) {
 		icon, err := ioutil.ReadAll(Params.Icon)

@@ -71,6 +71,10 @@ func (o *BookUpload) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 
 	fmt.Println("filename is",filename)
 
+	if(Params.IconUrl != ""){
+		fmt.Println(Params.IconUrl)
+		book.Icon = Params.IconUrl
+	}
 	//如果有icon
 	if (Params.Icon!=nil) {
 		icon, err := ioutil.ReadAll(Params.Icon)
@@ -152,9 +156,9 @@ func (o *BookUpload) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	book.Name = Params.Title
-	book.AuthorName = "go"
-	book.AuthorAvatar = "go"
-	book.SubTitle = "go"
+	book.AuthorName = Params.AuthorName
+	//book.AuthorAvatar = "go"
+	book.SubTitle = Params.Title
 
 	//album.User_id = *(Params.MemberID)
 	db.Create(&book)

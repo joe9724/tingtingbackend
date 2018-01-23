@@ -71,6 +71,8 @@ type AlbumUploadParams struct {
 	  In: formData
 	*/
 	Userid *int64
+
+	IconUrl string
 }
 
 // BindRequest both binds and validates a request, it assumes that complex things implement a Validatable(strfmt.Registry) error interface
@@ -90,6 +92,11 @@ func (o *AlbumUploadParams) BindRequest(r *http.Request, route *middleware.Match
 
 	fdContent, fdhkContent, _ := fds.GetOK("content")
 	if err := o.bindContent(fdContent, fdhkContent, route.Formats); err != nil {
+		res = append(res, err)
+	}
+
+	fdIconUrl, fdhkIconUrl, _ := fds.GetOK("iconUrl")
+	if err := o.bindIconUrl(fdIconUrl, fdhkIconUrl, route.Formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -143,6 +150,23 @@ func (o *AlbumUploadParams) BindRequest(r *http.Request, route *middleware.Match
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+func (o *AlbumUploadParams) bindIconUrl(rawData []string, hasKey bool, formats strfmt.Registry) error {
+	if !hasKey {
+		return errors.Required("iconUrl", "formData")
+	}
+	var raw string
+	if len(rawData) > 0 {
+		raw = rawData[len(rawData)-1]
+	}
+	if err := validate.RequiredString("iconUrl", "formData", raw); err != nil {
+		return err
+	}
+
+	o.IconUrl = raw
+
 	return nil
 }
 
