@@ -73,6 +73,11 @@ type AlbumUploadParams struct {
 	Userid *int64
 
 	IconUrl string
+
+	Status *int64
+
+	AlbumId *int64
+
 }
 
 // BindRequest both binds and validates a request, it assumes that complex things implement a Validatable(strfmt.Registry) error interface
@@ -122,13 +127,24 @@ func (o *AlbumUploadParams) BindRequest(r *http.Request, route *middleware.Match
 		o.Icon = &runtime.File{Data: icon, Header: iconHeader}
 	}
 
+
 	fdPriceValue, fdhkPriceValue, _ := fds.GetOK("priceValue")
 	if err := o.bindPriceValue(fdPriceValue, fdhkPriceValue, route.Formats); err != nil {
 		res = append(res, err)
 	}
 
+	fdStatus, fdhkStatus, _ := fds.GetOK("status")
+	if err := o.bindStatus(fdStatus, fdhkStatus, route.Formats); err != nil {
+		res = append(res, err)
+	}
+
 	fdSubTitle, fdhkSubTitle, _ := fds.GetOK("subTitle")
 	if err := o.bindSubTitle(fdSubTitle, fdhkSubTitle, route.Formats); err != nil {
+		res = append(res, err)
+	}
+
+	fdAlbumId, fdhkAlbumId, _ := fds.GetOK("albumId")
+	if err := o.bindAlbumId(fdAlbumId, fdhkAlbumId, route.Formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -154,15 +170,12 @@ func (o *AlbumUploadParams) BindRequest(r *http.Request, route *middleware.Match
 }
 
 func (o *AlbumUploadParams) bindIconUrl(rawData []string, hasKey bool, formats strfmt.Registry) error {
-	if !hasKey {
-		return errors.Required("iconUrl", "formData")
-	}
 	var raw string
 	if len(rawData) > 0 {
 		raw = rawData[len(rawData)-1]
 	}
-	if err := validate.RequiredString("iconUrl", "formData", raw); err != nil {
-		return err
+	if raw == "" { // empty values pass all other validations
+		return nil
 	}
 
 	o.IconUrl = raw
@@ -208,6 +221,24 @@ func (o *AlbumUploadParams) bindPriceValue(rawData []string, hasKey bool, format
 		return errors.InvalidType("priceValue", "formData", "float64", raw)
 	}
 	o.PriceValue = &value
+
+	return nil
+}
+
+func (o *AlbumUploadParams) bindAlbumId(rawData []string, hasKey bool, formats strfmt.Registry) error {
+	var raw string
+	if len(rawData) > 0 {
+		raw = rawData[len(rawData)-1]
+	}
+	if raw == "" { // empty values pass all other validations
+		return nil
+	}
+
+	value, err := swag.ConvertInt64(raw)
+	if err != nil {
+		return errors.InvalidType("albumId", "formData", "int64", raw)
+	}
+	o.AlbumId = &value
 
 	return nil
 }
@@ -274,6 +305,24 @@ func (o *AlbumUploadParams) bindUserid(rawData []string, hasKey bool, formats st
 		return errors.InvalidType("userid", "formData", "int64", raw)
 	}
 	o.Userid = &value
+
+	return nil
+}
+
+func (o *AlbumUploadParams) bindStatus(rawData []string, hasKey bool, formats strfmt.Registry) error {
+	var raw string
+	if len(rawData) > 0 {
+		raw = rawData[len(rawData)-1]
+	}
+	if raw == "" { // empty values pass all other validations
+		return nil
+	}
+
+	value, err := swag.ConvertInt64(raw)
+	if err != nil {
+		return errors.InvalidType("status", "formData", "int64", raw)
+	}
+	o.Status = &value
 
 	return nil
 }

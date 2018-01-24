@@ -7,16 +7,11 @@ package album
 
 import (
 	"net/http"
-	"io/ioutil"
 	middleware "github.com/go-openapi/runtime/middleware"
 	"fmt"
 	_"os"
-	"runtime"
-	"time"
-	"strings"
 	"tingtingbackend/models"
 	"tingtingbackend/var"
-	"strconv"
 )
 
 // AlbumUploadHandlerFunc turns a function with the right signature into a album upload handler
@@ -66,102 +61,47 @@ func (o *AlbumUpload) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	var msg string
 	var code int64
 
-	var filename string
-	filename = strconv.FormatInt((time.Now().Unix()),10)
-
-	fmt.Println("filename is",filename)
-
-	if(Params.IconUrl != ""){
-		fmt.Println(Params.IconUrl)
-		album.Icon = Params.IconUrl
-	}
-
-	//如果有icon
-	if (Params.Icon!=nil) {
-		icon, err := ioutil.ReadAll(Params.Icon)
-		if err != nil {
-			fmt.Println("err upload:", err.Error())
-		}
-		fmt.Println(len(icon))
-		// Always returns a valid content-type and "application/octet-stream" if no others seemed to match.
-		contentType := http.DetectContentType(icon)
-		fmt.Println("contentType is", contentType)
-
-		//save
-		var lower string
-		lower = strings.ToLower(contentType)
-		if(strings.Contains(lower,"jp")||(strings.Contains(lower,"pn"))) {
-			if (runtime.GOOS == "windows") {
-				err1 := ioutil.WriteFile(filename+".jpg", icon, 0644)
-				if err1 != nil {
-					fmt.Println(err1.Error())
-				}
-			} else {
-				err1 := ioutil.WriteFile("/root/go/src/resource/image/icon/"+filename+".jpg", icon, 0644)
-				if err1 != nil {
-					fmt.Println(err1.Error())
-				}
-			}
-			album.Icon = "http://tingting-resource.bitekun.xin/resource/image/icon/"+filename+".jpg"
-			code = 200
-			msg = "ok"
-		}else{
-			code = 401
-			msg = "image format need jpg or png"
-		}
-	}
-
-	//如果有cover
-	if (Params.Cover!=nil) {
-		cover, err := ioutil.ReadAll(Params.Cover)
-		if err != nil {
-			fmt.Println("err upload:", err.Error())
-		}
-		//fmt.Println(len(icon))
-		// Always returns a valid content-type and "application/octet-stream" if no others seemed to match.
-		contentType := http.DetectContentType(cover)
-		//fmt.Println("contentType is", contentType)
-
-		//save
-		var lower string
-		lower = strings.ToLower(contentType)
-		if(strings.Contains(lower,"jp")||(strings.Contains(lower,"pn"))) {
-			if(runtime.GOOS == "windows") {
-				err1 := ioutil.WriteFile(filename+".jpg", cover, 0644)
-				if err1 != nil {
-					fmt.Println(err1.Error())
-				}
-			}else{
-				err1 := ioutil.WriteFile("/root/go/src/resource/image/cover/"+filename+".jpg", cover, 0644)
-				if err1 != nil {
-					fmt.Println(err1.Error())
-				}
-			}
-			code = 200
-			msg = "ok"
-			album.Cover = "http://tingting-resource.bitekun.xin/resource/image/cover/"+filename+".jpg"
-		}else{
-			code = 402
-			msg = "image format need jpg or png "
-		}
-
-	}
+	msg = "ok"
+	code = 200
 
 	db,err := _var.OpenConnection()
 	if err!=nil{
 		fmt.Println(err.Error())
 	}
-	defer db.Close()
-	if(&(Params.Summary)!=nil){
-		fmt.Println("Summary is",Params.Summary)
-		album.Summary = *(Params.Summary)
-		// album.Summary = "summary"
+	if(Params.IconUrl != ""){
+		fmt.Println(Params.IconUrl)
+		album.Icon = Params.IconUrl
 	}
 
-	album.HasPushed = 0
-	album.Name = Params.Title
-	//album.User_id = *(Params.MemberID)
-	db.Create(&album)
+	//tt:= int64(-1)
+	fmt.Println("Params.AlbumId=",*(Params.AlbumId))
+	if(*(Params.AlbumId) == -1){ //新建
+		fmt.Println("new")
+		fmt.Println("Params.Summary is",Params.Summary)
+		album.Summary = *(Params.Summary)
+		album.Name = Params.Title
+		//t := int64(-1)
+		//album.album_Id = &t
+		album.Status = *(Params.Status)
+		if(Params.IconUrl != ""){
+			album.Icon = Params.IconUrl
+		}
+		//album.User_id = *(Params.MemberID)
+		db.Table("albums").Create(&album)
+	}else{ //更新
+		//fmt.Println("edit")
+		//db.Table("sub_album_items").Where("id=?",*(Params.AlbumId)).Last(&album)
+		if(Params.IconUrl != ""){
+			fmt.Println("1",Params.IconUrl)
+			db.Exec("update albums set name=?,status=?,summary=?,icon=? where id=?",Params.Title,0,*(Params.Summary),Params.IconUrl,&(Params.AlbumId))
+		}else{
+			fmt.Println("2",Params.IconUrl,*(Params.Summary))
+			summary := *(Params.Summary)
+			db.Exec("update albums set name=?,status=?,summary=? where id=?",Params.Title,0,summary,&(Params.AlbumId))
+		}
+
+	}
+
 	status.UnmarshalBinary([]byte(_var.Response200(code,msg)))
 	response.Return = &status
 	ok.SetPayload(&response)

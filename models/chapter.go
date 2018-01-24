@@ -62,6 +62,8 @@ type Chapter struct {
 	// url
 	// Required: true
 	URL *string `json:"url"`
+
+	Summary *string `json:"summary"`
 }
 
 // Validate validates this chapter

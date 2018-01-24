@@ -7,16 +7,11 @@ package chapter
 
 import (
 	"net/http"
-	"io/ioutil"
 	middleware "github.com/go-openapi/runtime/middleware"
 	"fmt"
 	_"os"
-	"runtime"
-	"time"
-	"strings"
 	"tingtingbackend/models"
 	"tingtingbackend/var"
-	"strconv"
 )
 
 // ChapterUploadHandlerFunc turns a function with the right signature into a chapter upload handler
@@ -66,103 +61,49 @@ func (o *ChapterUpload) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	var msg string
 	var code int64
 
-	var filename string
-	filename = strconv.FormatInt((time.Now().Unix()),10)
-
-	fmt.Println("filename is",filename)
-	if(Params.IconUrl != ""){
-		fmt.Println(Params.IconUrl)
-		chapter.Icon = &(Params.IconUrl)
-	}
-	//如果有icon
-	if (Params.Icon!=nil) {
-		icon, err := ioutil.ReadAll(Params.Icon)
-		if err != nil {
-			fmt.Println("err upload:", err.Error())
-		}
-		fmt.Println(len(icon))
-		// Always returns a valid content-type and "application/octet-stream" if no others seemed to match.
-		contentType := http.DetectContentType(icon)
-		fmt.Println("contentType is", contentType)
-
-		//save
-		var lower string
-		lower = strings.ToLower(contentType)
-		if(strings.Contains(lower,"jp")||(strings.Contains(lower,"pn"))) {
-			if (runtime.GOOS == "windows") {
-				err1 := ioutil.WriteFile(filename+".jpg", icon, 0644)
-				if err1 != nil {
-					fmt.Println(err1.Error())
-				}
-			} else {
-				err1 := ioutil.WriteFile("/root/go/src/resource/image/icon/"+filename+".jpg", icon, 0644)
-				if err1 != nil {
-					fmt.Println(err1.Error())
-				}
-			}
-			temp := "http://tingting-resource.bitekun.xin/resource/image/icon/"+filename+".jpg"
-			chapter.Icon = &temp
-			code = 200
-			msg = "ok"
-		}else{
-			code = 401
-			msg = "image format need jpg or png"
-		}
-	}
-
-	//如果有cover
-	if (Params.Cover!=nil) {
-		cover, err := ioutil.ReadAll(Params.Cover)
-		if err != nil {
-			fmt.Println("err upload:", err.Error())
-		}
-		//fmt.Println(len(icon))
-		// Always returns a valid content-type and "application/octet-stream" if no others seemed to match.
-		contentType := http.DetectContentType(cover)
-		//fmt.Println("contentType is", contentType)
-
-		//save
-		var lower string
-		lower = strings.ToLower(contentType)
-		if(strings.Contains(lower,"jp")||(strings.Contains(lower,"pn"))) {
-			if(runtime.GOOS == "windows") {
-				err1 := ioutil.WriteFile(filename+".jpg", cover, 0644)
-				if err1 != nil {
-					fmt.Println(err1.Error())
-				}
-			}else{
-				err1 := ioutil.WriteFile("/root/go/src/resource/image/cover/"+filename+".jpg", cover, 0644)
-				if err1 != nil {
-					fmt.Println(err1.Error())
-				}
-			}
-			code = 200
-			msg = "ok"
-			temp := "http://tingting-resource.bitekun.xin/resource/image/cover/"+filename+".jpg"
-			chapter.BigCover = &temp
-		}else{
-			code = 402
-			msg = "image format need jpg or png "
-		}
-
-	}
+	msg = "ok"
+	code = 200
 
 	db,err := _var.OpenConnection()
 	if err!=nil{
 		fmt.Println(err.Error())
 	}
-
-	if(&(Params.Content)!=nil){
-		chapter.SubTitle = Params.Summary
+	if(Params.IconUrl != ""){
+		fmt.Println(Params.IconUrl)
+		chapter.Icon = &(Params.IconUrl)
 	}
-    chapter.Name = &(Params.Title)
-    //chapter.URL = "xx"
-	//chapter.AuthorName = "go"
-	//chapter.AuthorAvatar = "go"
-	//chapter.SubTitle = "go"
 
-	//album.User_id = *(Params.MemberID)
-	db.Create(&chapter)
+	//tt:= int64(-1)
+	fmt.Println("Params.ChapterId=",*(Params.ChapterId))
+	if(*(Params.ChapterId) == -1){ //新建
+		fmt.Println("new")
+		fmt.Println("Params.Summary is",Params.Summary)
+		chapter.Summary = Params.Summary
+		chapter.Name = &(Params.Title)
+		//chapter.AuthorName = Params.AuthorName
+		//fmt.Println("author is",Params.AuthorName)
+		//t := int64(-1)
+		//chapter.chapter_Id = &t
+		chapter.Status = *(Params.Status)
+		if(Params.IconUrl != ""){
+			chapter.Icon = &(Params.IconUrl)
+		}
+		//chapter.User_id = *(Params.MemberID)
+		db.Table("chapters").Create(&chapter)
+	}else{ //更新
+		//fmt.Println("edit")
+		//db.Table("sub_chapter_items").Where("id=?",*(Params.ChapterId)).Last(&chapter)
+		if(Params.IconUrl != ""){
+			fmt.Println("1",Params.IconUrl)
+			db.Exec("update chapters set name=?,status=?,summary=?,icon=? where id=?",Params.Title,0,*(Params.Summary),Params.IconUrl,&(Params.ChapterId))
+		}else{
+			fmt.Println("2",Params.IconUrl,*(Params.Summary))
+			summary := *(Params.Summary)
+			db.Exec("update chapters set name=?,status=?,summary=? where id=?",Params.Title,0,summary,&(Params.ChapterId))
+		}
+
+	}
+
 	status.UnmarshalBinary([]byte(_var.Response200(code,msg)))
 	response.Return = &status
 	ok.SetPayload(&response)

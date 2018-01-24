@@ -71,6 +71,10 @@ type BookUploadParams struct {
 	IconUrl string
 
 	AuthorName string
+
+	Status *int64
+
+	BookId *int64
 }
 
 // BindRequest both binds and validates a request, it assumes that complex things implement a Validatable(strfmt.Registry) error interface
@@ -94,7 +98,7 @@ func (o *BookUploadParams) BindRequest(r *http.Request, route *middleware.Matche
 	}
 
 	fdAuthorName, fdhkAuthorName, _ := fds.GetOK("authorName")
-	if err := o.bindIconUrl(fdAuthorName, fdhkAuthorName, route.Formats); err != nil {
+	if err := o.bindAuthorName(fdAuthorName, fdhkAuthorName, route.Formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -142,6 +146,16 @@ func (o *BookUploadParams) BindRequest(r *http.Request, route *middleware.Matche
 
 	fdUserid, fdhkUserid, _ := fds.GetOK("userid")
 	if err := o.bindUserid(fdUserid, fdhkUserid, route.Formats); err != nil {
+		res = append(res, err)
+	}
+
+	fdBookId, fdhkBookId, _ := fds.GetOK("bookId")
+	if err := o.bindBookId(fdBookId, fdhkBookId, route.Formats); err != nil {
+		res = append(res, err)
+	}
+
+	fdStatus, fdhkStatus, _ := fds.GetOK("status")
+	if err := o.bindStatus(fdStatus, fdhkStatus, route.Formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -209,6 +223,24 @@ func (o *BookUploadParams) bindAuthorName(rawData []string, hasKey bool, formats
 	return nil
 }
 
+func (o *BookUploadParams) bindBookId(rawData []string, hasKey bool, formats strfmt.Registry) error {
+	var raw string
+	if len(rawData) > 0 {
+		raw = rawData[len(rawData)-1]
+	}
+	if raw == "" { // empty values pass all other validations
+		return nil
+	}
+
+	value, err := swag.ConvertInt64(raw)
+	if err != nil {
+		return errors.InvalidType("categoryId", "formData", "int64", raw)
+	}
+	o.BookId = &value
+
+	return nil
+}
+
 func (o *BookUploadParams) bindSubTitle(rawData []string, hasKey bool, formats strfmt.Registry) error {
 	if !hasKey {
 		return errors.Required("subTitle", "formData")
@@ -271,6 +303,24 @@ func (o *BookUploadParams) bindUserid(rawData []string, hasKey bool, formats str
 		return errors.InvalidType("userid", "formData", "int64", raw)
 	}
 	o.Userid = &value
+
+	return nil
+}
+
+func (o *BookUploadParams) bindStatus(rawData []string, hasKey bool, formats strfmt.Registry) error {
+	var raw string
+	if len(rawData) > 0 {
+		raw = rawData[len(rawData)-1]
+	}
+	if raw == "" { // empty values pass all other validations
+		return nil
+	}
+
+	value, err := swag.ConvertInt64(raw)
+	if err != nil {
+		return errors.InvalidType("status", "formData", "int64", raw)
+	}
+	o.Status = &value
 
 	return nil
 }

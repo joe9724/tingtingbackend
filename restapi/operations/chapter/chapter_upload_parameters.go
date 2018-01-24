@@ -69,6 +69,10 @@ type ChapterUploadParams struct {
 	Userid *int64
 
 	IconUrl string
+
+	Status *int64
+
+	ChapterId *int64
 }
 
 // BindRequest both binds and validates a request, it assumes that complex things implement a Validatable(strfmt.Registry) error interface
@@ -93,6 +97,16 @@ func (o *ChapterUploadParams) BindRequest(r *http.Request, route *middleware.Mat
 
 	fdIconUrl, fdhkIconUrl, _ := fds.GetOK("iconUrl")
 	if err := o.bindIconUrl(fdIconUrl, fdhkIconUrl, route.Formats); err != nil {
+		res = append(res, err)
+	}
+
+	fdChapterId, fdhkChapterId, _ := fds.GetOK("chapterId")
+	if err := o.bindChapterId(fdChapterId, fdhkChapterId, route.Formats); err != nil {
+		res = append(res, err)
+	}
+
+	fdStatus, fdhkStatus, _ := fds.GetOK("status")
+	if err := o.bindStatus(fdStatus, fdhkStatus, route.Formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -169,9 +183,6 @@ func (o *ChapterUploadParams) bindIcon(file multipart.File, header *multipart.Fi
 }
 
 func (o *ChapterUploadParams) bindIconUrl(rawData []string, hasKey bool, formats strfmt.Registry) error {
-	if !hasKey {
-		return errors.Required("iconUrl", "formData")
-	}
 	var raw string
 	if len(rawData) > 0 {
 		raw = rawData[len(rawData)-1]
@@ -247,6 +258,42 @@ func (o *ChapterUploadParams) bindUserid(rawData []string, hasKey bool, formats 
 		return errors.InvalidType("userid", "formData", "int64", raw)
 	}
 	o.Userid = &value
+
+	return nil
+}
+
+func (o *ChapterUploadParams) bindChapterId(rawData []string, hasKey bool, formats strfmt.Registry) error {
+	var raw string
+	if len(rawData) > 0 {
+		raw = rawData[len(rawData)-1]
+	}
+	if raw == "" { // empty values pass all other validations
+		return nil
+	}
+
+	value, err := swag.ConvertInt64(raw)
+	if err != nil {
+		return errors.InvalidType("chapterId", "formData", "int64", raw)
+	}
+	o.ChapterId = &value
+
+	return nil
+}
+
+func (o *ChapterUploadParams) bindStatus(rawData []string, hasKey bool, formats strfmt.Registry) error {
+	var raw string
+	if len(rawData) > 0 {
+		raw = rawData[len(rawData)-1]
+	}
+	if raw == "" { // empty values pass all other validations
+		return nil
+	}
+
+	value, err := swag.ConvertInt64(raw)
+	if err != nil {
+		return errors.InvalidType("status", "formData", "int64", raw)
+	}
+	o.Status = &value
 
 	return nil
 }
