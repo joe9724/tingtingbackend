@@ -60,20 +60,24 @@ func (o *AlbumList) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	var ok AlbumListOK
 	var response models.InlineResponse20020
 	var albumList models.InlineResponse20020AlbumList
+	var count int64
 
 	db,err := _var.OpenConnection()
 	if err!=nil{
 		fmt.Println(err.Error())
 	}
 	//query
-	db.Where(map[string]interface{}{"status":0}).Find(&albumList).Limit(*(Params.PageSize)).Offset(*(Params.PageIndex)*(*(Params.PageSize)))
+	db.Where(map[string]interface{}{"status":0}).Limit(*(Params.PageSize)).Offset(*(Params.PageIndex)*(*(Params.PageSize))).Find(&albumList)
+	db.Table("albums").Where(map[string]interface{}{"status":0}).Count(&count)
 	//data
 	response.AlbumList = albumList
+	fmt.Println("size is",len(albumList))
     fmt.Println("haspushed is",albumList[0].HasPushed)
 	//status
 	var status models.Response
 	status.UnmarshalBinary([]byte(_var.Response200(200,"ok")))
 	response.Status = &status
+	response.Status.TotalCount = count
 
 	ok.SetPayload(&response)
 

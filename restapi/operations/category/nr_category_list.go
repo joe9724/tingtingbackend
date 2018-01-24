@@ -60,6 +60,7 @@ func (o *NrCategoryList) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	var ok CategoryListOK
 	var response models.InlineResponse20015
 	var categoryList models.InlineResponse20015SubCategoryList
+	var count int64
 
 	db,err := _var.OpenConnection()
 	if err!=nil{
@@ -68,8 +69,10 @@ func (o *NrCategoryList) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	//query
 	if (*Params.ParentID == int64(-1)) {
 		db.Table("sub_category_items").Where(map[string]interface{}{"status": 0}).Where("category_id=?",-1).Find(&categoryList).Limit(*(Params.PageSize)).Offset(*(Params.PageIndex) * (*(Params.PageSize)))
+		db.Table("sub_category_items").Where(map[string]interface{}{"status": 0}).Where("category_id=?",-1).Count(&count)
 	}else{
 		db.Table("sub_category_items").Where(map[string]interface{}{"status": 0}).Where("category_id=?",Params.ParentID).Find(&categoryList).Limit(*(Params.PageSize)).Offset(*(Params.PageIndex) * (*(Params.PageSize)))
+		db.Table("sub_category_items").Where(map[string]interface{}{"status": 0}).Where("category_id=?",Params.ParentID).Count(&count)
 	}
 	//data
 	response.SubCategoryList = categoryList
@@ -78,6 +81,7 @@ func (o *NrCategoryList) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	var status models.Response
 	status.UnmarshalBinary([]byte(_var.Response200(200,"ok")))
 	response.Status = &status
+	response.Status.TotalCount = count
 
 	ok.SetPayload(&response)
 

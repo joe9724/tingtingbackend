@@ -24,6 +24,8 @@ type Response struct {
 	// msg
 	// Required: true
 	Msg *string `json:"msg"`
+
+	TotalCount int64 `json:"totalCount"`
 }
 
 // Validate validates this response
