@@ -33,6 +33,7 @@ import (
 	"tingtingbackend/restapi/operations/user"
 	"tingtingbackend/restapi/operations/recharge"
 	"tingtingbackend/restapi/operations/upload_file"
+	"tingtingbackend/restapi/operations/tag"
 )
 
 // NewTingtingBackendAPI creates a new TingtingBackend instance
@@ -216,6 +217,21 @@ func NewTingtingBackendAPI(spec *loads.Document) *TingtingBackendAPI {
 		RechargeRechargeListHandler: recharge.RechargeListHandlerFunc(func(params recharge.RechargeListParams) middleware.Responder {
 			return middleware.NotImplemented("operation RechargeRechargeList has not yet been implemented")
 		}),
+		TagTagDeleteHandler: tag.TagDeleteHandlerFunc(func(params tag.TagDeleteParams) middleware.Responder {
+			return middleware.NotImplemented("operation TagTagDelete has not yet been implemented")
+		}),
+		TagTagDetailHandler: tag.TagDetailHandlerFunc(func(params tag.TagDetailParams) middleware.Responder {
+			return middleware.NotImplemented("operation TagTagDetail has not yet been implemented")
+		}),
+		TagTagEditHandler: tag.TagEditHandlerFunc(func(params tag.TagEditParams) middleware.Responder {
+			return middleware.NotImplemented("operation TagTagEdit has not yet been implemented")
+		}),
+		TagTagListHandler: tag.TagListHandlerFunc(func(params tag.TagListParams) middleware.Responder {
+			return middleware.NotImplemented("operation TagTagList has not yet been implemented")
+		}),
+		TagTagUploadHandler: tag.TagUploadHandlerFunc(func(params tag.TagUploadParams) middleware.Responder {
+			return middleware.NotImplemented("operation TagTagUpload has not yet been implemented")
+		}),
 	}
 }
 
@@ -356,6 +372,15 @@ type TingtingBackendAPI struct {
 	UserSearchHandler user.SearchHandler
 	// RechargeRechargeListHandler sets the operation handler for the recharge list operation
 	RechargeRechargeListHandler recharge.RechargeListHandler
+	TagTagDeleteHandler tag.TagDeleteHandler
+	// TagTagDetailHandler sets the operation handler for the tag detail operation
+	TagTagDetailHandler tag.TagDetailHandler
+	// TagTagEditHandler sets the operation handler for the tag edit operation
+	TagTagEditHandler tag.TagEditHandler
+	// TagTagListHandler sets the operation handler for the tag list operation
+	TagTagListHandler tag.TagListHandler
+	// TagTagUploadHandler sets the operation handler for the tag upload operation
+	TagTagUploadHandler tag.TagUploadHandler
 
 	// ServeError is called when an error is received, there is a default handler
 	// but you can set your own with this
@@ -641,6 +666,26 @@ func (o *TingtingBackendAPI) Validate() error {
 
 	if o.UserSearchHandler == nil {
 		unregistered = append(unregistered, "user.SearchHandler")
+	}
+
+	if o.TagTagDeleteHandler == nil {
+		unregistered = append(unregistered, "tag.TagDeleteHandler")
+	}
+
+	if o.TagTagDetailHandler == nil {
+		unregistered = append(unregistered, "tag.TagDetailHandler")
+	}
+
+	if o.TagTagEditHandler == nil {
+		unregistered = append(unregistered, "tag.TagEditHandler")
+	}
+
+	if o.TagTagListHandler == nil {
+		unregistered = append(unregistered, "tag.TagListHandler")
+	}
+
+	if o.TagTagUploadHandler == nil {
+		unregistered = append(unregistered, "tag.TagUploadHandler")
 	}
 
 	if len(unregistered) > 0 {
@@ -1010,6 +1055,31 @@ func (o *TingtingBackendAPI) initHandlerCache() {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}
 	o.handlers["GET"]["/search"] = user.NewSearch(o.context, o.UserSearchHandler)
+
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/tag/delete"] = tag.NewTagDelete(o.context, o.TagTagDeleteHandler)
+
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/tag/detail"] = tag.NewTagDetail(o.context, o.TagTagDetailHandler)
+
+	if o.handlers["POST"] == nil {
+		o.handlers["POST"] = make(map[string]http.Handler)
+	}
+	o.handlers["POST"]["/tag/edit"] = tag.NewTagEdit(o.context, o.TagTagEditHandler)
+
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/tag/list"] = tag.NewTagList(o.context, o.TagTagListHandler)
+
+	if o.handlers["POST"] == nil {
+		o.handlers["POST"] = make(map[string]http.Handler)
+	}
+	o.handlers["POST"]["/tag/upload"] = tag.NewTagUpload(o.context, o.TagTagUploadHandler)
 
 }
 

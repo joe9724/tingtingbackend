@@ -2983,6 +2983,316 @@ func init() {
         }
       }
     },
+    "/tag/delete": {
+      "get": {
+        "description": "删除专辑",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Tag"
+        ],
+        "summary": "删除专辑",
+        "operationId": "tag/delete",
+        "parameters": [
+          {
+            "type": "integer",
+            "format": "int64",
+            "description": "当前后台登录id",
+            "name": "userid",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "专辑id",
+            "name": "tagId",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "专辑详情",
+            "schema": {
+              "$ref": "#/definitions/inline_response_200_14"
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/tag/detail": {
+      "get": {
+        "description": "专辑详情",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Tag"
+        ],
+        "summary": "专辑详情",
+        "operationId": "tag/detail",
+        "parameters": [
+          {
+            "type": "integer",
+            "format": "int64",
+            "description": "当前后台登录id",
+            "name": "userid",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "专辑id",
+            "name": "tagId",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "专辑详情",
+            "schema": {
+              "$ref": "#/definitions/inline_response_200_33"
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/tag/edit": {
+      "post": {
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "tags": [
+          "Tag"
+        ],
+        "summary": "编辑一个专辑",
+        "operationId": "tag/edit/",
+        "parameters": [
+          {
+            "type": "integer",
+            "format": "int64",
+            "description": "tagid",
+            "name": "tagId",
+            "in": "formData"
+          },
+          {
+            "type": "integer",
+            "format": "int64",
+            "description": "当前登录用户id",
+            "name": "userid",
+            "in": "formData"
+          },
+          {
+            "type": "file",
+            "description": "The file to upload.",
+            "name": "icon",
+            "in": "formData",
+            "required": true
+          },
+          {
+            "type": "file",
+            "description": "The file to upload.",
+            "name": "cover",
+            "in": "formData",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Description of file contents.",
+            "name": "title",
+            "in": "formData",
+            "required": true
+          },
+          {
+            "type": "string",
+            "name": "subTitle",
+            "in": "formData",
+            "required": true
+          },
+          {
+            "type": "string",
+            "name": "summary",
+            "in": "formData"
+          },
+          {
+            "type": "string",
+            "name": "content",
+            "in": "formData"
+          },
+          {
+            "type": "number",
+            "description": "专辑价格",
+            "name": "priceValue",
+            "in": "formData"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "上传成功，返回成功信息",
+            "schema": {
+              "$ref": "#/definitions/inline_response_200_19"
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/tag/list": {
+      "get": {
+        "description": "获取专辑列表",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Tag"
+        ],
+        "summary": "获取专辑列表",
+        "operationId": "tag/list/",
+        "parameters": [
+          {
+            "type": "integer",
+            "format": "int64",
+            "description": "类id",
+            "name": "queryid",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "format": "int64",
+            "description": "类id",
+            "name": "type",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "用户id",
+            "name": "userid",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "format": "int64",
+            "description": "分页索引",
+            "name": "pageIndex",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "format": "int64",
+            "description": "分页尺寸",
+            "name": "pageSize",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "获取专辑列表",
+            "schema": {
+              "$ref": "#/definitions/inline_response_200_34"
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/tag/upload": {
+      "post": {
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "tags": [
+          "Tag"
+        ],
+        "summary": "添加一个tag",
+        "operationId": "tag/upload/",
+        "parameters": [
+          {
+            "type": "integer",
+            "format": "int64",
+            "description": "当前登录用户id",
+            "name": "userid",
+            "in": "formData"
+          },
+          {
+            "type": "file",
+            "description": "The file to upload.",
+            "name": "icon",
+            "in": "formData",
+            "required": true
+          },
+          {
+            "type": "file",
+            "description": "The file to upload.",
+            "name": "cover",
+            "in": "formData",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Description of file contents.",
+            "name": "title",
+            "in": "formData",
+            "required": true
+          },
+          {
+            "type": "string",
+            "name": "subTitle",
+            "in": "formData",
+            "required": true
+          },
+          {
+            "type": "string",
+            "name": "summary",
+            "in": "formData"
+          },
+          {
+            "type": "string",
+            "name": "content",
+            "in": "formData"
+          },
+          {
+            "type": "number",
+            "description": "专辑价格",
+            "name": "priceValue",
+            "in": "formData"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "上传成功，返回成功信息",
+            "schema": {
+              "$ref": "#/definitions/inline_response_200_19"
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
     "/user/delete": {
       "get": {
         "description": "删除用户接口",
@@ -8005,6 +8315,316 @@ func init() {
             "description": "搜索结果",
             "schema": {
               "$ref": "#/definitions/inline_response_200_8"
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/tag/delete": {
+      "get": {
+        "description": "删除专辑",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Tag"
+        ],
+        "summary": "删除专辑",
+        "operationId": "tag/delete",
+        "parameters": [
+          {
+            "type": "integer",
+            "format": "int64",
+            "description": "当前后台登录id",
+            "name": "userid",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "专辑id",
+            "name": "tagId",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "专辑详情",
+            "schema": {
+              "$ref": "#/definitions/inline_response_200_14"
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/tag/detail": {
+      "get": {
+        "description": "专辑详情",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Tag"
+        ],
+        "summary": "专辑详情",
+        "operationId": "tag/detail",
+        "parameters": [
+          {
+            "type": "integer",
+            "format": "int64",
+            "description": "当前后台登录id",
+            "name": "userid",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "专辑id",
+            "name": "tagId",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "专辑详情",
+            "schema": {
+              "$ref": "#/definitions/inline_response_200_33"
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/tag/edit": {
+      "post": {
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "tags": [
+          "Tag"
+        ],
+        "summary": "编辑一个专辑",
+        "operationId": "tag/edit/",
+        "parameters": [
+          {
+            "type": "integer",
+            "format": "int64",
+            "description": "tagid",
+            "name": "tagId",
+            "in": "formData"
+          },
+          {
+            "type": "integer",
+            "format": "int64",
+            "description": "当前登录用户id",
+            "name": "userid",
+            "in": "formData"
+          },
+          {
+            "type": "file",
+            "description": "The file to upload.",
+            "name": "icon",
+            "in": "formData",
+            "required": true
+          },
+          {
+            "type": "file",
+            "description": "The file to upload.",
+            "name": "cover",
+            "in": "formData",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Description of file contents.",
+            "name": "title",
+            "in": "formData",
+            "required": true
+          },
+          {
+            "type": "string",
+            "name": "subTitle",
+            "in": "formData",
+            "required": true
+          },
+          {
+            "type": "string",
+            "name": "summary",
+            "in": "formData"
+          },
+          {
+            "type": "string",
+            "name": "content",
+            "in": "formData"
+          },
+          {
+            "type": "number",
+            "description": "专辑价格",
+            "name": "priceValue",
+            "in": "formData"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "上传成功，返回成功信息",
+            "schema": {
+              "$ref": "#/definitions/inline_response_200_19"
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/tag/list": {
+      "get": {
+        "description": "获取专辑列表",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Tag"
+        ],
+        "summary": "获取专辑列表",
+        "operationId": "tag/list/",
+        "parameters": [
+          {
+            "type": "integer",
+            "format": "int64",
+            "description": "类id",
+            "name": "queryid",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "format": "int64",
+            "description": "类id",
+            "name": "type",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "用户id",
+            "name": "userid",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "format": "int64",
+            "description": "分页索引",
+            "name": "pageIndex",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "format": "int64",
+            "description": "分页尺寸",
+            "name": "pageSize",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "获取专辑列表",
+            "schema": {
+              "$ref": "#/definitions/inline_response_200_34"
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/tag/upload": {
+      "post": {
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "tags": [
+          "Tag"
+        ],
+        "summary": "添加一个tag",
+        "operationId": "tag/upload/",
+        "parameters": [
+          {
+            "type": "integer",
+            "format": "int64",
+            "description": "当前登录用户id",
+            "name": "userid",
+            "in": "formData"
+          },
+          {
+            "type": "file",
+            "description": "The file to upload.",
+            "name": "icon",
+            "in": "formData",
+            "required": true
+          },
+          {
+            "type": "file",
+            "description": "The file to upload.",
+            "name": "cover",
+            "in": "formData",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Description of file contents.",
+            "name": "title",
+            "in": "formData",
+            "required": true
+          },
+          {
+            "type": "string",
+            "name": "subTitle",
+            "in": "formData",
+            "required": true
+          },
+          {
+            "type": "string",
+            "name": "summary",
+            "in": "formData"
+          },
+          {
+            "type": "string",
+            "name": "content",
+            "in": "formData"
+          },
+          {
+            "type": "number",
+            "description": "专辑价格",
+            "name": "priceValue",
+            "in": "formData"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "上传成功，返回成功信息",
+            "schema": {
+              "$ref": "#/definitions/inline_response_200_19"
             }
           },
           "default": {

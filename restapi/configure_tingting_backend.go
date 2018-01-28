@@ -26,6 +26,7 @@ import (
 	"tingtingbackend/restapi/operations/user"
 	"tingtingbackend/restapi/operations/recharge"
 	"tingtingbackend/restapi/operations/upload_file"
+	"tingtingbackend/restapi/operations/tag"
 	_"github.com/didip/tollbooth"
 	_"github.com/didip/tollbooth/limiter"
 
@@ -215,6 +216,21 @@ func configureAPI(api *operations.TingtingBackendAPI) http.Handler {
 	})
 	api.RechargeRechargeListHandler = recharge.RechargeListHandlerFunc(func(params recharge.RechargeListParams) middleware.Responder {
 		return middleware.NotImplemented("operation recharge.RechargeList has not yet been implemented")
+	})
+	api.TagTagDeleteHandler = tag.TagDeleteHandlerFunc(func(params tag.TagDeleteParams) middleware.Responder {
+		return middleware.NotImplemented("operation tag.TagDelete has not yet been implemented")
+	})
+	api.TagTagDetailHandler = tag.TagDetailHandlerFunc(func(params tag.TagDetailParams) middleware.Responder {
+		return middleware.NotImplemented("operation tag.TagDetail has not yet been implemented")
+	})
+	api.TagTagEditHandler = tag.TagEditHandlerFunc(func(params tag.TagEditParams) middleware.Responder {
+		return middleware.NotImplemented("operation tag.TagEdit has not yet been implemented")
+	})
+	api.TagTagListHandler = tag.TagListHandlerFunc(func(params tag.TagListParams) middleware.Responder {
+		return middleware.NotImplemented("operation tag.TagList has not yet been implemented")
+	})
+	api.TagTagUploadHandler = tag.TagUploadHandlerFunc(func(params tag.TagUploadParams) middleware.Responder {
+		return middleware.NotImplemented("operation tag.TagUpload has not yet been implemented")
 	})
 
 	api.ServerShutdown = func() {}
