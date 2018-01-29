@@ -52,6 +52,10 @@ type TagListParams struct {
 	  In: query
 	*/
 	Userid *string
+
+	AlbumId *int64
+
+	Keyword *string
 }
 
 // BindRequest both binds and validates a request, it assumes that complex things implement a Validatable(strfmt.Registry) error interface
@@ -74,6 +78,16 @@ func (o *TagListParams) BindRequest(r *http.Request, route *middleware.MatchedRo
 
 	qQueryid, qhkQueryid, _ := qs.GetOK("queryid")
 	if err := o.bindQueryid(qQueryid, qhkQueryid, route.Formats); err != nil {
+		res = append(res, err)
+	}
+
+	qAlbumid, qhkAlbumid, _ := qs.GetOK("albumId")
+	if err := o.bindAlbumid(qAlbumid, qhkAlbumid, route.Formats); err != nil {
+		res = append(res, err)
+	}
+
+	qKeyword, qhkKeyword, _ := qs.GetOK("keyword")
+	if err := o.bindKeyword(qKeyword, qhkKeyword, route.Formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -129,7 +143,39 @@ func (o *TagListParams) bindPageSize(rawData []string, hasKey bool, formats strf
 	return nil
 }
 
+func (o *TagListParams) bindKeyword(rawData []string, hasKey bool, formats strfmt.Registry) error {
+	var raw string
+	if len(rawData) > 0 {
+		raw = rawData[len(rawData)-1]
+	}
+	if raw == "" { // empty values pass all other validations
+		return nil
+	}
+
+	o.Keyword = &raw
+
+	return nil
+}
+
 func (o *TagListParams) bindQueryid(rawData []string, hasKey bool, formats strfmt.Registry) error {
+	var raw string
+	if len(rawData) > 0 {
+		raw = rawData[len(rawData)-1]
+	}
+	if raw == "" { // empty values pass all other validations
+		return nil
+	}
+
+	value, err := swag.ConvertInt64(raw)
+	if err != nil {
+		return errors.InvalidType("albumId", "query", "int64", raw)
+	}
+	o.AlbumId = &value
+
+	return nil
+}
+
+func (o *TagListParams) bindAlbumid(rawData []string, hasKey bool, formats strfmt.Registry) error {
 	var raw string
 	if len(rawData) > 0 {
 		raw = rawData[len(rawData)-1]

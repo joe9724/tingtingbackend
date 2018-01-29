@@ -60,6 +60,8 @@ type Tag struct {
 
 	// value
 	Value float64 `json:"value,omitempty"`
+
+	Id int64 `json:"id,omitempty"`
 }
 
 // Validate validates this tag

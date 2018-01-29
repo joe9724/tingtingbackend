@@ -66,6 +66,7 @@ func (o *TagDetail) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	}
 	//query
 	var album models.Tag
+	fmt.Println("id is",*(Params.TagID))
 	db.Table("tags").Where("id=?",Params.TagID).First(&album)
 	//data
 	response.Data = &album

@@ -7,9 +7,9 @@ package tag
 
 import (
 	"net/http"
-	_"github.com/jinzhu/gorm"
+	_ "github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
-	middleware "github.com/go-openapi/runtime/middleware"
+	"github.com/go-openapi/runtime/middleware"
 	"tingtingbackend/models"
 	"fmt"
 	"tingtingbackend/var"
@@ -62,20 +62,39 @@ func (o *TagList) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	var albumList models.InlineResponse20034AlbumList
 	var count int64
 
-	db,err := _var.OpenConnection()
-	if err!=nil{
+	db, err := _var.OpenConnection()
+	if err != nil {
 		fmt.Println(err.Error())
 	}
 	//query
-	db.Where(map[string]interface{}{"status":0}).Limit(*(Params.PageSize)).Offset(*(Params.PageIndex)*(*(Params.PageSize))).Find(&albumList)
-	db.Table("albums").Where(map[string]interface{}{"status":0}).Count(&count)
+	if Params.Keyword != nil && Params.AlbumId != nil {
+		if(*Params.Keyword == " ") {
+			fmt.Println("1")
+			db.Raw("select id,name  FROM tags where  id not in (select tagId from tag_album_relation  where albumId = ? )", *(Params.AlbumId)).Limit(*(Params.PageSize)).Offset(*(Params.PageIndex)*(*(Params.PageSize))).Find(&albumList)
+			db.Raw("select id,name  FROM tags where  id not in (select tagId from tag_album_relation  where albumId = ? )", *(Params.AlbumId)).Count(&count)
+		}else{
+			fmt.Println("2")
+			db.Raw("select id,name  FROM tags where name like '%" + *(Params.Keyword)+"%' and id not in (select tagId from tag_album_relation  where albumId = ? )", *(Params.AlbumId)).Limit(*(Params.PageSize)).Offset(*(Params.PageIndex)*(*(Params.PageSize))).Find(&albumList)
+			db.Raw("select id,name  FROM tags where name like '%" + *(Params.Keyword)+"%' and id not in (select tagId from tag_album_relation  where albumId = ? )", *(Params.AlbumId)).Count(&count)
+		}
+	} else {
+		if (Params.AlbumId != nil) { //获取专辑对应的id
+			fmt.Println("3")
+			db.Table("tags").Select("tags.id, tags.name").Joins("left join tag_album_relation on tags.id = tag_album_relation.tagId").Where("tag_album_relation.albumId =?", *Params.AlbumId).Limit(*(Params.PageSize)).Offset(*(Params.PageIndex) * (*(Params.PageSize))).Find(&albumList)
+			db.Table("tags").Select("tags.id, tags.name").Joins("left join tag_album_relation on tags.id = tag_album_relation.tagId").Where("tag_album_relation.albumId =?", *Params.AlbumId).Count(&count)
+		} else {
+			fmt.Println("4")
+			db.Where(map[string]interface{}{"status": 0}).Limit(*(Params.PageSize)).Offset(*(Params.PageIndex) * (*(Params.PageSize))).Find(&albumList)
+			db.Table("albums").Where(map[string]interface{}{"status": 0}).Count(&count)
+		}
+	}
 	//data
 	response.AlbumList = albumList
 	//fmt.Println("size is",len(albumList))
 	//fmt.Println("haspushed is",albumList[0].HasPushed)
 	//status
 	var status models.Response
-	status.UnmarshalBinary([]byte(_var.Response200(200,"ok")))
+	status.UnmarshalBinary([]byte(_var.Response200(200, "ok")))
 	response.Status = &status
 	response.Status.TotalCount = count
 
