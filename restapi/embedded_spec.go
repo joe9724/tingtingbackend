@@ -2335,6 +2335,126 @@ func init() {
         }
       }
     },
+    "/relation/book/taglist/edit": {
+      "post": {
+        "description": "编辑专辑下的书本集合",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Relation"
+        ],
+        "summary": "编辑专辑下的书本集合",
+        "operationId": "/relation/book/taglist/edit",
+        "parameters": [
+          {
+            "description": "/relation/book/taglist/edit",
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/body_2"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "操作成功，返回操作信息",
+            "schema": {
+              "$ref": "#/definitions/inline_response_200_14"
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/relation/album/booklist/edit": {
+      "post": {
+        "description": "编辑专辑下的书本集合",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Relation"
+        ],
+        "summary": "编辑专辑下的书本集合",
+        "operationId": "/relation/album/booklist/edit",
+        "parameters": [
+          {
+            "description": "/relation/album/booklist/edit",
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/body_3"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "操作成功，返回操作信息",
+            "schema": {
+              "$ref": "#/definitions/inline_response_200_14"
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/relation/album/taglist/edit": {
+      "post": {
+        "description": "编辑专辑下的书本集合",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Relation"
+        ],
+        "summary": "编辑专辑下的书本集合",
+        "operationId": "/relation/album/taglist/edit",
+        "parameters": [
+          {
+            "description": "/relation/album/taglist/edit",
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/body_1"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "操作成功，返回操作信息",
+            "schema": {
+              "$ref": "#/definitions/inline_response_200_14"
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
     "/recharge/list": {
       "post": {
         "description": "获取订单列表",
@@ -7972,6 +8092,86 @@ func init() {
         }
       }
     },
+    "/relation/album/booklist/edit": {
+      "post": {
+        "description": "编辑专辑下的书本集合",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Relation"
+        ],
+        "summary": "编辑专辑下的书本集合",
+        "operationId": "/relation/album/booklist/edit",
+        "parameters": [
+          {
+            "description": "/relation/album/booklist/edit",
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/body_3"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "操作成功，返回操作信息",
+            "schema": {
+              "$ref": "#/definitions/inline_response_200_14"
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/relation/album/taglist/edit": {
+      "post": {
+        "description": "编辑专辑下的书本集合",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Relation"
+        ],
+        "summary": "编辑专辑下的书本集合",
+        "operationId": "/relation/album/taglist/edit",
+        "parameters": [
+          {
+            "description": "/relation/album/taglist/edit",
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/body_1"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "操作成功，返回操作信息",
+            "schema": {
+              "$ref": "#/definitions/inline_response_200_14"
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
     "/relation/book/chapterList": {
       "get": {
         "description": "获取书的章节集合",
@@ -8207,6 +8407,46 @@ func init() {
             "description": "报错详情",
             "schema": {
               "$ref": "#/definitions/inline_response_200_7"
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/relation/book/taglist/edit": {
+      "post": {
+        "description": "编辑专辑下的书本集合",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Relation"
+        ],
+        "summary": "编辑专辑下的书本集合",
+        "operationId": "/relation/book/taglist/edit",
+        "parameters": [
+          {
+            "description": "/relation/book/taglist/edit",
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/body_2"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "操作成功，返回操作信息",
+            "schema": {
+              "$ref": "#/definitions/inline_response_200_14"
             }
           },
           "default": {

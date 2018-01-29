@@ -232,6 +232,12 @@ func NewTingtingBackendAPI(spec *loads.Document) *TingtingBackendAPI {
 		TagTagUploadHandler: tag.TagUploadHandlerFunc(func(params tag.TagUploadParams) middleware.Responder {
 			return middleware.NotImplemented("operation TagTagUpload has not yet been implemented")
 		}),
+		RelationNrRelationAlbumTaglistEditHandler: relation.NrRelationAlbumTaglistEditHandlerFunc(func(params relation.NrRelationAlbumTaglistEditParams) middleware.Responder {
+			return middleware.NotImplemented("operation RelationNrRelationAlbumTaglistEdit has not yet been implemented")
+		}),
+		RelationNrRelationBookTaglistEditHandler: relation.NrRelationBookTaglistEditHandlerFunc(func(params relation.NrRelationBookTaglistEditParams) middleware.Responder {
+			return middleware.NotImplemented("operation RelationNrRelationBookTaglistEdit has not yet been implemented")
+		}),
 	}
 }
 
@@ -281,6 +287,10 @@ type TingtingBackendAPI struct {
 	RelationNrRelationSubCategoryAlbumListEditHandler relation.NrRelationSubCategoryAlbumListEditHandler
 	// RelationNrSubCategoryAlbumListRelationHandler sets the operation handler for the sub category album list relation operation
 	RelationNrSubCategoryAlbumListRelationHandler relation.NrSubCategoryAlbumListRelationHandler
+	// RelationNrRelationAlbumTaglistEditHandler sets the operation handler for the relation album taglist edit operation
+	RelationNrRelationAlbumTaglistEditHandler relation.NrRelationAlbumTaglistEditHandler
+	// RelationNrRelationBookTaglistEditHandler sets the operation handler for the relation book taglist edit operation
+	RelationNrRelationBookTaglistEditHandler relation.NrRelationBookTaglistEditHandler
 	// UserNrUserDeleteHandler sets the operation handler for the user delete operation
 	UserNrUserDeleteHandler user.NrUserDeleteHandler
 	// UserNrUserEditPassHandler sets the operation handler for the user edit pass operation
@@ -482,6 +492,14 @@ func (o *TingtingBackendAPI) Validate() error {
 
 	if o.RelationNrRelationSubCategoryAlbumListEditHandler == nil {
 		unregistered = append(unregistered, "relation.NrRelationSubCategoryAlbumListEditHandler")
+	}
+
+	if o.RelationNrRelationAlbumTaglistEditHandler == nil {
+		unregistered = append(unregistered, "relation.NrRelationAlbumTaglistEditHandler")
+	}
+
+	if o.RelationNrRelationBookTaglistEditHandler == nil {
+		unregistered = append(unregistered, "relation.NrRelationBookTaglistEditHandler")
 	}
 
 	if o.RelationNrSubCategoryAlbumListRelationHandler == nil {
@@ -1080,6 +1098,16 @@ func (o *TingtingBackendAPI) initHandlerCache() {
 		o.handlers["POST"] = make(map[string]http.Handler)
 	}
 	o.handlers["POST"]["/tag/upload"] = tag.NewTagUpload(o.context, o.TagTagUploadHandler)
+
+	if o.handlers["POST"] == nil {
+		o.handlers["POST"] = make(map[string]http.Handler)
+	}
+	o.handlers["POST"]["/relation/album/taglist/edit"] = relation.NewNrRelationAlbumTaglistEdit(o.context, o.RelationNrRelationAlbumTaglistEditHandler)
+
+	if o.handlers["POST"] == nil {
+		o.handlers["POST"] = make(map[string]http.Handler)
+	}
+	o.handlers["POST"]["/relation/book/taglist/edit"] = relation.NewNrRelationBookTaglistEdit(o.context, o.RelationNrRelationBookTaglistEditHandler)
 
 }
 

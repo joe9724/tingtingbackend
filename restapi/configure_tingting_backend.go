@@ -73,6 +73,12 @@ func configureAPI(api *operations.TingtingBackendAPI) http.Handler {
 	api.RechargeNrRechargeDetailHandler = recharge.NrRechargeDetailHandlerFunc(func(params recharge.NrRechargeDetailParams) middleware.Responder {
 		return middleware.NotImplemented("operation recharge.NrRechargeDetail has not yet been implemented")
 	})
+	api.RelationNrRelationAlbumTaglistEditHandler = relation.NrRelationAlbumTaglistEditHandlerFunc(func(params relation.NrRelationAlbumTaglistEditParams) middleware.Responder {
+		return middleware.NotImplemented("operation relation.NrRelationAlbumTaglistEdit has not yet been implemented")
+	})
+	api.RelationNrRelationBookTaglistEditHandler = relation.NrRelationBookTaglistEditHandlerFunc(func(params relation.NrRelationBookTaglistEditParams) middleware.Responder {
+		return middleware.NotImplemented("operation relation.NrRelationBookTaglistEdit has not yet been implemented")
+	})
 	api.RelationNrRelationAlbumBooklistEditHandler = relation.NrRelationAlbumBooklistEditHandlerFunc(func(params relation.NrRelationAlbumBooklistEditParams) middleware.Responder {
 		return middleware.NotImplemented("operation relation.NrRelationAlbumBooklistEdit has not yet been implemented")
 	})

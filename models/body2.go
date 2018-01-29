@@ -28,6 +28,10 @@ type Body2 struct {
 	// sub category Id
 	// Required: true
 	SubCategoryID *int64 `json:"subCategoryId"`
+
+	BookIds *string `json:"bookIds"`
+
+	BookID *int64 `json:"bookId"`
 }
 
 // Validate validates this body 2

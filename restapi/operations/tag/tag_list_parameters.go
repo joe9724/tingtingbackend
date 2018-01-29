@@ -55,6 +55,8 @@ type TagListParams struct {
 
 	AlbumId *int64
 
+	BookId *int64
+
 	Keyword *string
 }
 
@@ -83,6 +85,11 @@ func (o *TagListParams) BindRequest(r *http.Request, route *middleware.MatchedRo
 
 	qAlbumid, qhkAlbumid, _ := qs.GetOK("albumId")
 	if err := o.bindAlbumid(qAlbumid, qhkAlbumid, route.Formats); err != nil {
+		res = append(res, err)
+	}
+
+	qBookid, qhkBookid, _ := qs.GetOK("bookId")
+	if err := o.bindBookid(qBookid, qhkBookid, route.Formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -168,7 +175,7 @@ func (o *TagListParams) bindQueryid(rawData []string, hasKey bool, formats strfm
 
 	value, err := swag.ConvertInt64(raw)
 	if err != nil {
-		return errors.InvalidType("albumId", "query", "int64", raw)
+		return errors.InvalidType("queryId", "query", "int64", raw)
 	}
 	o.AlbumId = &value
 
@@ -186,9 +193,27 @@ func (o *TagListParams) bindAlbumid(rawData []string, hasKey bool, formats strfm
 
 	value, err := swag.ConvertInt64(raw)
 	if err != nil {
-		return errors.InvalidType("queryid", "query", "int64", raw)
+		return errors.InvalidType("albumId", "query", "int64", raw)
 	}
-	o.Queryid = &value
+	o.AlbumId = &value
+
+	return nil
+}
+
+func (o *TagListParams) bindBookid(rawData []string, hasKey bool, formats strfmt.Registry) error {
+	var raw string
+	if len(rawData) > 0 {
+		raw = rawData[len(rawData)-1]
+	}
+	if raw == "" { // empty values pass all other validations
+		return nil
+	}
+
+	value, err := swag.ConvertInt64(raw)
+	if err != nil {
+		return errors.InvalidType("bookId", "query", "int64", raw)
+	}
+	o.BookId = &value
 
 	return nil
 }
