@@ -28,6 +28,8 @@ type Banner struct {
 	// type
 	// Required: true
 	Type *int64 `json:"type"`
+
+	Name *string `json:"name"`
 }
 
 // Validate validates this banner
