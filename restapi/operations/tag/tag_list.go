@@ -67,40 +67,7 @@ func (o *TagList) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 		fmt.Println(err.Error())
 	}
 	//query
-	if Params.Keyword == nil {
-		if Params.AlbumId!=nil{
-			fmt.Println("5")
-			db.Table("tags").Select("tags.id, tags.name").Joins("left join tag_album_relation on tags.id = tag_album_relation.tagId").Where("tag_album_relation.albumId =?",*Params.AlbumId).Count(&count)
-			db.Table("tags").Select("tags.id, tags.name").Joins("left join tag_album_relation on tags.id = tag_album_relation.tagId").Where("tag_album_relation.albumId =?",*Params.AlbumId).Limit(*(Params.PageSize)).Offset(*(Params.PageIndex)*(*(Params.PageSize))).Find(&albumList)
-		}else if Params.BookId!=nil{
-			fmt.Println("6")
-			db.Table("tags").Select("tags.id, tags.name").Joins("left join tag_book_relation on tags.id = tag_book_relation.tagId").Where("tag_book_relation.bookId =?",*Params.BookId).Count(&count)
-			db.Table("tags").Select("tags.id, tags.name").Joins("left join tag_book_relation on tags.id = tag_book_relation.tagId").Where("tag_book_relation.bookId =?",*Params.BookId).Limit(*(Params.PageSize)).Offset(*(Params.PageIndex)*(*(Params.PageSize))).Find(&albumList)
-		}
-
-	} else {
-		if (Params.AlbumId != nil) {
-			if (*Params.Keyword == " ") {
-				fmt.Println("1")
-				db.Raw("select id,name  FROM tags where  id not in (select tagId from tag_album_relation  where albumId = ? )", *(Params.AlbumId)).Limit(*(Params.PageSize)).Offset(*(Params.PageIndex) * (*(Params.PageSize))).Find(&albumList)
-				db.Raw("select id,name  FROM tags where  id not in (select tagId from tag_album_relation  where albumId = ? )", *(Params.AlbumId)).Count(&count)
-			} else {
-				fmt.Println("2")
-				db.Raw("select id,name  FROM tags where name like '%" + *(Params.Keyword)+"%' and id not in (select tagId from tag_album_relation  where albumId = ? )", *(Params.AlbumId)).Limit(*(Params.PageSize)).Offset(*(Params.PageIndex) * (*(Params.PageSize))).Find(&albumList)
-				db.Raw("select id,name  FROM tags where name like '%" + *(Params.Keyword)+"%' and id not in (select tagId from tag_album_relation  where albumId = ? )", *(Params.AlbumId)).Count(&count)
-			}
-		} else if (Params.BookId != nil) {
-			if (*Params.Keyword == " ") {
-				fmt.Println("3")
-				db.Raw("select id,name  FROM tags where  id not in (select tagId from tag_book_relation  where bookId = ? )", *(Params.BookId)).Limit(*(Params.PageSize)).Offset(*(Params.PageIndex) * (*(Params.PageSize))).Find(&albumList)
-				db.Raw("select id,name  FROM tags where  id not in (select tagId from tag_book_relation  where bookId = ? )", *(Params.BookId)).Count(&count)
-			} else {
-				fmt.Println("4")
-				db.Raw("select id,name  FROM tags where name like '%" + *(Params.Keyword)+"%' and id not in (select tagId from tag_book_relation  where bookId = ? )", *(Params.BookId)).Limit(*(Params.PageSize)).Offset(*(Params.PageIndex) * (*(Params.PageSize))).Find(&albumList)
-				db.Raw("select id,name  FROM tags where name like '%" + *(Params.Keyword)+"%' and id not in (select tagId from tag_book_relation  where bookId = ? )", *(Params.BookId)).Count(&count)
-			}
-		}
-	}
+	db.Table("tags").Where("status=?",0).Limit(*(Params.PageSize)).Offset(*(Params.PageIndex)*(*(Params.PageSize))).Find(&albumList)
 	//data
 	response.AlbumList = albumList
 	//fmt.Println("size is",len(albumList))
