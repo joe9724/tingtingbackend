@@ -70,6 +70,7 @@ func (o *TagList) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	db.Table("tags").Where("status=?",0).Limit(*(Params.PageSize)).Offset(*(Params.PageIndex)*(*(Params.PageSize))).Find(&albumList)
 	//data
 	response.AlbumList = albumList
+	// 
 	//fmt.Println("size is",len(albumList))
 	//fmt.Println("haspushed is",albumList[0].HasPushed)
 	//status
