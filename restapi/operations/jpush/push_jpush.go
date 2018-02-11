@@ -7,10 +7,18 @@ package jpush
 
 import (
 	"net/http"
-
+	_"github.com/jinzhu/gorm"
+	_ "github.com/jinzhu/gorm/dialects/mysql"
 	middleware "github.com/go-openapi/runtime/middleware"
+	"tingtingbackend/models"
+	"fmt"
+	"tingtingbackend/var"
+	"github.com/ylywyn/jpush-api-go-client"
 )
-
+const (
+	appKey = "85c17e89d58186c1846dff4"
+	secret = "6509a4aa43b27a1ce8235c49"
+)
 // PushJpushHandlerFunc turns a function with the right signature into a push jpush handler
 type PushJpushHandlerFunc func(PushJpushParams) middleware.Responder
 
@@ -53,8 +61,80 @@ func (o *PushJpush) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	res := o.Handler.Handle(Params) // actually handle the request
+	//Platform
+	var pf jpushclient.Platform
+	pf.Add(jpushclient.ANDROID)
+	pf.Add(jpushclient.IOS)
+	//pf.Add(jpushclient.WINPHONE)
+	//pf.All()
 
-	o.Context.Respond(rw, r, route.Produces, route, res)
+	//Audience
+	/*var ad jpushclient.Audience
+	s := []string{"1", "2", "3"}
+	ad.SetTag(s)
+	ad.SetAlias(s)
+	ad.SetID(s)*/
+	//ad.All()
+
+	//Notice
+	var notice jpushclient.Notice
+	notice.SetAlert("alert_test")
+	notice.SetAndroidNotice(&jpushclient.AndroidNotice{Alert: "AndroidNotice"})
+	notice.SetIOSNotice(&jpushclient.IOSNotice{Alert: "IOSNotice"})
+	notice.SetWinPhoneNotice(&jpushclient.WinPhoneNotice{Alert: "WinPhoneNotice"})
+
+	/*var msg jpushclient.Message
+	msg.Title = "Hello"
+	msg.Content = "你是ylywn"*/
+
+	payload := jpushclient.NewPushPayLoad()
+	payload.SetPlatform(&pf)
+	//payload.SetAudience(&ad)
+	//payload.SetMessage(&msg)
+	payload.SetNotice(&notice)
+
+	bytes, _ := payload.ToBytes()
+	fmt.Printf("%s\r\n", string(bytes))
+
+	//push
+	c := jpushclient.NewPushClient(secret, appKey)
+	str, err := c.Send(bytes)
+	if err != nil {
+		fmt.Printf("err:%s", err.Error())
+	} else {
+		fmt.Printf("ok:%s", str)
+	}
+
+	//
+	var ok PushJpushOK
+	var response models.InlineResponse20014
+
+	db,err := _var.OpenConnection()
+	if err!=nil{
+		fmt.Println(err.Error())
+	}
+	//query
+	//var book models.Book
+	//db.Table("albums").Where("id=?",Params.BookID).First(&book)
+    if(*(Params.Type) == 0){  //新版本
+		db.Raw("update init set has_pushed=1 where id=?",Params.ID)
+	}else if(*(Params.Type) == 1){  //消息
+		db.Raw("update msgs set has_pushed=1 where id=?",Params.ID)
+	}else if(*(Params.Type) == 2){  //专辑
+		db.Raw("update albums set has_pushed=1 where id=?",Params.ID)
+	}
+
+	//data
+	//response.Data = &book
+
+
+	//status
+	var status models.Response
+	status.UnmarshalBinary([]byte(_var.Response200(200,"ok")))
+	response.Status = &status
+
+	ok.SetPayload(&response)
+
+	o.Context.Respond(rw, r, route.Produces, route, ok)
 
 }
