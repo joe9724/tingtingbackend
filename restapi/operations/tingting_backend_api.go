@@ -34,6 +34,7 @@ import (
 	"tingtingbackend/restapi/operations/recharge"
 	"tingtingbackend/restapi/operations/upload_file"
 	"tingtingbackend/restapi/operations/tag"
+	"tingtingbackend/restapi/operations/jpush"
 )
 
 // NewTingtingBackendAPI creates a new TingtingBackend instance
@@ -238,6 +239,9 @@ func NewTingtingBackendAPI(spec *loads.Document) *TingtingBackendAPI {
 		RelationNrRelationBookTaglistEditHandler: relation.NrRelationBookTaglistEditHandlerFunc(func(params relation.NrRelationBookTaglistEditParams) middleware.Responder {
 			return middleware.NotImplemented("operation RelationNrRelationBookTaglistEdit has not yet been implemented")
 		}),
+		JpushPushJpushHandler: jpush.PushJpushHandlerFunc(func(params jpush.PushJpushParams) middleware.Responder {
+			return middleware.NotImplemented("operation JpushPushJpush has not yet been implemented")
+		}),
 	}
 }
 
@@ -391,6 +395,7 @@ type TingtingBackendAPI struct {
 	TagTagListHandler tag.TagListHandler
 	// TagTagUploadHandler sets the operation handler for the tag upload operation
 	TagTagUploadHandler tag.TagUploadHandler
+	JpushPushJpushHandler jpush.PushJpushHandler
 
 	// ServeError is called when an error is received, there is a default handler
 	// but you can set your own with this
@@ -624,6 +629,10 @@ func (o *TingtingBackendAPI) Validate() error {
 
 	if o.ChapterChapterListHandler == nil {
 		unregistered = append(unregistered, "chapter.ChapterListHandler")
+	}
+
+	if o.JpushPushJpushHandler == nil {
+		unregistered = append(unregistered, "jpush.PushJpushHandler")
 	}
 
 	if o.ChapterChapterUploadHandler == nil {
@@ -863,6 +872,11 @@ func (o *TingtingBackendAPI) initHandlerCache() {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}
 	o.handlers["GET"]["/user/login"] = user.NewNrUserLogin(o.context, o.UserNrUserLoginHandler)
+
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/push/jpush"] = jpush.NewPushJpush(o.context, o.JpushPushJpushHandler)
 
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)

@@ -29,6 +29,7 @@ import (
 	"tingtingbackend/restapi/operations/tag"
 	_"github.com/didip/tollbooth"
 	_"github.com/didip/tollbooth/limiter"
+	"tingtingbackend/restapi/operations/jpush"
 
 	_"time"
 	"github.com/rs/cors"
@@ -237,6 +238,9 @@ func configureAPI(api *operations.TingtingBackendAPI) http.Handler {
 	})
 	api.TagTagUploadHandler = tag.TagUploadHandlerFunc(func(params tag.TagUploadParams) middleware.Responder {
 		return middleware.NotImplemented("operation tag.TagUpload has not yet been implemented")
+	})
+	api.JpushPushJpushHandler = jpush.PushJpushHandlerFunc(func(params jpush.PushJpushParams) middleware.Responder {
+		return middleware.NotImplemented("operation jpush.PushJpush has not yet been implemented")
 	})
 
 	api.ServerShutdown = func() {}
