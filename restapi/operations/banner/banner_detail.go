@@ -69,7 +69,7 @@ func (o *BannerDetail) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 
 	db.Table("banners").Where("id=?",Params.BannerID).First(&banner)
 	//data
-	response.Data = &album
+	//response.Data = &album
 
 	//status
 	var status models.Response
