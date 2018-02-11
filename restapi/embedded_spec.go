@@ -2245,56 +2245,6 @@ func init() {
         }
       }
     },
-    "/push/jpush": {
-      "get": {
-        "description": "推送",
-        "produces": [
-          "application/json"
-        ],
-        "tags": [
-          "Jpush"
-        ],
-        "summary": "推送",
-        "operationId": "push/jpush",
-        "parameters": [
-          {
-            "type": "integer",
-            "format": "int64",
-            "description": "当前后台登录id",
-            "name": "userid",
-            "in": "query"
-          },
-          {
-            "type": "integer",
-            "format": "int64",
-            "description": "通知id",
-            "name": "id",
-            "in": "query"
-          },
-          {
-            "type": "integer",
-            "format": "int64",
-            "description": "类型 0=album 1=book 2= chapter 3=公告 4=新版本",
-            "name": "type",
-            "in": "query"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "消息详情",
-            "schema": {
-              "$ref": "#/definitions/inline_response_200_14"
-            }
-          },
-          "default": {
-            "description": "error",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
-          }
-        }
-      }
-    },
     "/recharge/detail": {
       "post": {
         "description": "获取充值",
@@ -7747,56 +7697,6 @@ func init() {
             "description": "获取反馈列表",
             "schema": {
               "$ref": "#/definitions/inline_response_200_3"
-            }
-          },
-          "default": {
-            "description": "error",
-            "schema": {
-              "$ref": "#/definitions/Error"
-            }
-          }
-        }
-      }
-    },
-    "/push/jpush": {
-      "get": {
-        "description": "推送",
-        "produces": [
-          "application/json"
-        ],
-        "tags": [
-          "Jpush"
-        ],
-        "summary": "推送",
-        "operationId": "push/jpush",
-        "parameters": [
-          {
-            "type": "integer",
-            "format": "int64",
-            "description": "当前后台登录id",
-            "name": "userid",
-            "in": "query"
-          },
-          {
-            "type": "integer",
-            "format": "int64",
-            "description": "通知id",
-            "name": "id",
-            "in": "query"
-          },
-          {
-            "type": "integer",
-            "format": "int64",
-            "description": "类型 0=album 1=book 2= chapter 3=公告 4=新版本",
-            "name": "type",
-            "in": "query"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "消息详情",
-            "schema": {
-              "$ref": "#/definitions/inline_response_200_14"
             }
           },
           "default": {

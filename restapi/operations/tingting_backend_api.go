@@ -35,6 +35,7 @@ import (
 	"tingtingbackend/restapi/operations/upload_file"
 	"tingtingbackend/restapi/operations/tag"
 	"tingtingbackend/restapi/operations/jpush"
+	"tingtingbackend/restapi/operations/version"
 )
 
 // NewTingtingBackendAPI creates a new TingtingBackend instance
@@ -242,6 +243,21 @@ func NewTingtingBackendAPI(spec *loads.Document) *TingtingBackendAPI {
 		JpushPushJpushHandler: jpush.PushJpushHandlerFunc(func(params jpush.PushJpushParams) middleware.Responder {
 			return middleware.NotImplemented("operation JpushPushJpush has not yet been implemented")
 		}),
+		VersionVersionDeleteHandler: version.VersionDeleteHandlerFunc(func(params version.VersionDeleteParams) middleware.Responder {
+			return middleware.NotImplemented("operation VersionVersionDelete has not yet been implemented")
+		}),
+		VersionVersionDetailHandler: version.VersionDetailHandlerFunc(func(params version.VersionDetailParams) middleware.Responder {
+			return middleware.NotImplemented("operation VersionVersionDetail has not yet been implemented")
+		}),
+		VersionVersionEditHandler: version.VersionEditHandlerFunc(func(params version.VersionEditParams) middleware.Responder {
+			return middleware.NotImplemented("operation VersionVersionEdit has not yet been implemented")
+		}),
+		VersionVersionListHandler: version.VersionListHandlerFunc(func(params version.VersionListParams) middleware.Responder {
+			return middleware.NotImplemented("operation VersionVersionList has not yet been implemented")
+		}),
+		VersionVersionUploadHandler: version.VersionUploadHandlerFunc(func(params version.VersionUploadParams) middleware.Responder {
+			return middleware.NotImplemented("operation VersionVersionUpload has not yet been implemented")
+		}),
 	}
 }
 
@@ -396,6 +412,16 @@ type TingtingBackendAPI struct {
 	// TagTagUploadHandler sets the operation handler for the tag upload operation
 	TagTagUploadHandler tag.TagUploadHandler
 	JpushPushJpushHandler jpush.PushJpushHandler
+
+	VersionVersionDeleteHandler version.VersionDeleteHandler
+	// VersionVersionDetailHandler sets the operation handler for the version detail operation
+	VersionVersionDetailHandler version.VersionDetailHandler
+	// VersionVersionEditHandler sets the operation handler for the version edit operation
+	VersionVersionEditHandler version.VersionEditHandler
+	// VersionVersionListHandler sets the operation handler for the version list operation
+	VersionVersionListHandler version.VersionListHandler
+	// VersionVersionUploadHandler sets the operation handler for the version upload operation
+	VersionVersionUploadHandler version.VersionUploadHandler
 
 	// ServeError is called when an error is received, there is a default handler
 	// but you can set your own with this
@@ -681,6 +707,26 @@ func (o *TingtingBackendAPI) Validate() error {
 
 	if o.OrderOrderListHandler == nil {
 		unregistered = append(unregistered, "order.OrderListHandler")
+	}
+
+	if o.VersionVersionDeleteHandler == nil {
+		unregistered = append(unregistered, "version.VersionDeleteHandler")
+	}
+
+	if o.VersionVersionDetailHandler == nil {
+		unregistered = append(unregistered, "version.VersionDetailHandler")
+	}
+
+	if o.VersionVersionEditHandler == nil {
+		unregistered = append(unregistered, "version.VersionEditHandler")
+	}
+
+	if o.VersionVersionListHandler == nil {
+		unregistered = append(unregistered, "version.VersionListHandler")
+	}
+
+	if o.VersionVersionUploadHandler == nil {
+		unregistered = append(unregistered, "version.VersionUploadHandler")
 	}
 
 	if o.ReportErrReportErrDetailHandler == nil {
@@ -1122,6 +1168,31 @@ func (o *TingtingBackendAPI) initHandlerCache() {
 		o.handlers["POST"] = make(map[string]http.Handler)
 	}
 	o.handlers["POST"]["/relation/book/taglist/edit"] = relation.NewNrRelationBookTaglistEdit(o.context, o.RelationNrRelationBookTaglistEditHandler)
+
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/version/delete"] = version.NewVersionDelete(o.context, o.VersionVersionDeleteHandler)
+
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/version/detail"] = version.NewVersionDetail(o.context, o.VersionVersionDetailHandler)
+
+	if o.handlers["POST"] == nil {
+		o.handlers["POST"] = make(map[string]http.Handler)
+	}
+	o.handlers["POST"]["/version/edit"] = version.NewVersionEdit(o.context, o.VersionVersionEditHandler)
+
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/version/list"] = version.NewVersionList(o.context, o.VersionVersionListHandler)
+
+	if o.handlers["POST"] == nil {
+		o.handlers["POST"] = make(map[string]http.Handler)
+	}
+	o.handlers["POST"]["/version/upload"] = version.NewVersionUpload(o.context, o.VersionVersionUploadHandler)
 
 }
 
