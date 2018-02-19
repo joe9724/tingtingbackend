@@ -7,8 +7,12 @@ package icon
 
 import (
 	"net/http"
-
-	middleware "github.com/go-openapi/runtime/middleware"
+	_ "github.com/jinzhu/gorm"
+	_ "github.com/jinzhu/gorm/dialects/mysql"
+	"github.com/go-openapi/runtime/middleware"
+	"tingtingbackend/models"
+	"fmt"
+	"tingtingbackend/var"
 )
 
 // IconListHandlerFunc turns a function with the right signature into a icon list handler
@@ -53,8 +57,30 @@ func (o *IconList) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	res := o.Handler.Handle(Params) // actually handle the request
+	var ok IconListOK
+	var response models.InlineResponse20091
+	var albumList models.InlineResponse200Icons
+	var count int64
 
-	o.Context.Respond(rw, r, route.Produces, route, res)
+	db, err := _var.OpenConnection()
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+	//query
+	db.Table("icons").Where("status=?",0).Limit(*(Params.PageSize)).Offset(*(Params.PageIndex) * (*(Params.PageSize))).Find(&albumList)
+	db.Table("icons").Where("status=?",0).Limit(*(Params.PageSize)).Offset(*(Params.PageIndex) * (*(Params.PageSize))).Count(&count)
+	//data
+	response.Icons = albumList
+	//fmt.Println("size is",len(albumList))
+	//fmt.Println("haspushed is",albumList[0].HasPushed)
+	//status
+	var status models.Response
+	status.UnmarshalBinary([]byte(_var.Response200(200, "ok")))
+	response.Status = &status
+	response.Status.TotalCount = count
+
+	ok.SetPayload(&response)
+
+	o.Context.Respond(rw, r, route.Produces, route, ok)
 
 }

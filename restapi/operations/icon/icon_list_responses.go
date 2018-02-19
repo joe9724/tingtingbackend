@@ -25,7 +25,7 @@ type IconListOK struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.InlineResponse200 `json:"body,omitempty"`
+	Payload *models.InlineResponse20091 `json:"body,omitempty"`
 }
 
 // NewIconListOK creates IconListOK with default headers values
@@ -34,13 +34,13 @@ func NewIconListOK() *IconListOK {
 }
 
 // WithPayload adds the payload to the icon list o k response
-func (o *IconListOK) WithPayload(payload *models.InlineResponse200) *IconListOK {
+func (o *IconListOK) WithPayload(payload *models.InlineResponse20091) *IconListOK {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the icon list o k response
-func (o *IconListOK) SetPayload(payload *models.InlineResponse200) {
+func (o *IconListOK) SetPayload(payload *models.InlineResponse20091) {
 	o.Payload = payload
 }
 
