@@ -60,13 +60,15 @@ func (o *OrderList) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	var ok OrderListOK
 	var response models.InlineResponse2003
 	var orderList models.InlineResponse2003Orders
+	var count int64
 
 	db,err := _var.OpenConnection()
 	if err!=nil{
 		fmt.Println(err.Error())
 	}
 	//query
-	db.Where(map[string]interface{}{"status":0}).Find(&orderList).Limit(*(Params.PageSize)).Offset(*(Params.PageIndex)*(*(Params.PageSize)))
+	db.Where(map[string]interface{}{"status":0}).Limit(*(Params.PageSize)).Offset(*(Params.PageIndex)*(*(Params.PageSize))).Find(&orderList)
+	db.Table("orders").Where(map[string]interface{}{"status":0}).Count(&count)
 	//data
 	response.Orders = orderList
 
@@ -74,6 +76,7 @@ func (o *OrderList) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	var status models.Response
 	status.UnmarshalBinary([]byte(_var.Response200(200,"ok")))
 	response.Status = &status
+	response.Status.TotalCount = count
 
 	ok.SetPayload(&response)
 

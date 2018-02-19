@@ -14,6 +14,8 @@ import (
 	"tingtingbackend/restapi/operations"
 	"tingtingbackend/restapi/operations/album"
 	"tingtingbackend/restapi/operations/banner"
+	"tingtingbackend/restapi/operations/app_ver"
+	"tingtingbackend/restapi/operations/icon"
 	"tingtingbackend/restapi/operations/book"
 	"tingtingbackend/restapi/operations/category"
 	"tingtingbackend/restapi/operations/chapter"
@@ -89,8 +91,20 @@ func configureAPI(api *operations.TingtingBackendAPI) http.Handler {
 	api.RelationNrSubCategoryAlbumListRelationHandler = relation.NrSubCategoryAlbumListRelationHandlerFunc(func(params relation.NrSubCategoryAlbumListRelationParams) middleware.Responder {
 		return middleware.NotImplemented("operation relation.NrSubCategoryAlbumListRelation has not yet been implemented")
 	})
+	api.RelationNrRelationSubCategoryBannerListEditHandler = relation.NrRelationSubCategoryBannerListEditHandlerFunc(func(params relation.NrRelationSubCategoryBannerListEditParams) middleware.Responder {
+		return middleware.NotImplemented("operation relation.NrRelationSubCategoryBannerListEdit has not yet been implemented")
+	})
+	api.RelationNrRelationSubCategoryIconrListEditHandler = relation.NrRelationSubCategoryIconrListEditHandlerFunc(func(params relation.NrRelationSubCategoryIconrListEditParams) middleware.Responder {
+		return middleware.NotImplemented("operation relation.NrRelationSubCategoryIconrListEdit has not yet been implemented")
+	})
 	api.UserNrUserDeleteHandler = user.NrUserDeleteHandlerFunc(func(params user.NrUserDeleteParams) middleware.Responder {
 		return middleware.NotImplemented("operation user.NrUserDelete has not yet been implemented")
+	})
+	api.RelationNrRelationDefaultBookListHandler = relation.NrRelationDefaultBookListHandlerFunc(func(params relation.NrRelationDefaultBookListParams) middleware.Responder {
+		return middleware.NotImplemented("operation relation.NrRelationDefaultBookList has not yet been implemented")
+	})
+	api.RelationNrRelationDefaultBookUploadHandler = relation.NrRelationDefaultBookUploadHandlerFunc(func(params relation.NrRelationDefaultBookUploadParams) middleware.Responder {
+		return middleware.NotImplemented("operation relation.NrRelationDefaultBookUpload has not yet been implemented")
 	})
 	api.UserNrUserEditPassHandler = user.NrUserEditPassHandlerFunc(func(params user.NrUserEditPassParams) middleware.Responder {
 		return middleware.NotImplemented("operation user.NrUserEditPass has not yet been implemented")
@@ -115,6 +129,21 @@ func configureAPI(api *operations.TingtingBackendAPI) http.Handler {
 	})
 	api.AlbumAlbumUploadHandler = album.AlbumUploadHandlerFunc(func(params album.AlbumUploadParams) middleware.Responder {
 		return middleware.NotImplemented("operation album.AlbumUpload has not yet been implemented")
+	})
+	api.BannerBannerDeleteHandler = banner.BannerDeleteHandlerFunc(func(params banner.BannerDeleteParams) middleware.Responder {
+		return middleware.NotImplemented("operation banner.BannerDelete has not yet been implemented")
+	})
+	api.BannerBannerDetailHandler = banner.BannerDetailHandlerFunc(func(params banner.BannerDetailParams) middleware.Responder {
+		return middleware.NotImplemented("operation banner.BannerDetail has not yet been implemented")
+	})
+	api.AppVerAppVersionEditHandler = app_ver.AppVersionEditHandlerFunc(func(params app_ver.AppVersionEditParams) middleware.Responder {
+		return middleware.NotImplemented("operation app_ver.AppVersionEdit has not yet been implemented")
+	})
+	api.AppVerAppVersionListHandler = app_ver.AppVersionListHandlerFunc(func(params app_ver.AppVersionListParams) middleware.Responder {
+		return middleware.NotImplemented("operation app_ver.AppVersionList has not yet been implemented")
+	})
+	api.BannerBannerUploadHandler = banner.BannerUploadHandlerFunc(func(params banner.BannerUploadParams) middleware.Responder {
+		return middleware.NotImplemented("operation banner.BannerUpload has not yet been implemented")
 	})
 	api.BannerBannerDetailHandler = banner.BannerDetailHandlerFunc(func(params banner.BannerDetailParams) middleware.Responder {
 		return middleware.NotImplemented("operation banner.BannerDetail has not yet been implemented")
@@ -199,6 +228,18 @@ func configureAPI(api *operations.TingtingBackendAPI) http.Handler {
 	})
 	api.MsgMsgDetailHandler = msg.MsgDetailHandlerFunc(func(params msg.MsgDetailParams) middleware.Responder {
 		return middleware.NotImplemented("operation msg.MsgDetail has not yet been implemented")
+	})
+	api.IconIconDeleteHandler = icon.IconDeleteHandlerFunc(func(params icon.IconDeleteParams) middleware.Responder {
+		return middleware.NotImplemented("operation icon.IconDelete has not yet been implemented")
+	})
+	api.IconIconDetailHandler = icon.IconDetailHandlerFunc(func(params icon.IconDetailParams) middleware.Responder {
+		return middleware.NotImplemented("operation icon.IconDetail has not yet been implemented")
+	})
+	api.IconIconListHandler = icon.IconListHandlerFunc(func(params icon.IconListParams) middleware.Responder {
+		return middleware.NotImplemented("operation icon.IconList has not yet been implemented")
+	})
+	api.IconIconUploadHandler = icon.IconUploadHandlerFunc(func(params icon.IconUploadParams) middleware.Responder {
+		return middleware.NotImplemented("operation icon.IconUpload has not yet been implemented")
 	})
 	api.MsgMsgSendListHandler = msg.MsgSendListHandlerFunc(func(params msg.MsgSendListParams) middleware.Responder {
 		return middleware.NotImplemented("operation msg.MsgSendList has not yet been implemented")

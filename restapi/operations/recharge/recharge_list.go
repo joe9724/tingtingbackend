@@ -60,6 +60,7 @@ func (o *RechargeList) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	var ok RechargeListOK
 	var response models.InlineResponse2003
 	var rechargeList models.InlineResponse2003Orders
+	var count int64
 
 	db,err := _var.OpenConnection()
 	if err!=nil{
@@ -68,6 +69,7 @@ func (o *RechargeList) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	//query
 	//db.Table("recharge").Where(map[string]interface{}{"status":0}).Find(&rechargeList).Limit(*(Params.PageSize)).Offset(*(Params.PageIndex)*(*(Params.PageSize)))
 	db.Table("recharge").Select("recharge.id, recharge.memberId,recharge.type,recharge.order_no,recharge.status,recharge.time,recharge.value,members.name").Joins("left join members on recharge.memberId = members.id").Find(&rechargeList)
+	db.Table("recharge").Select("recharge.id, recharge.memberId,recharge.type,recharge.order_no,recharge.status,recharge.time,recharge.value,members.name").Joins("left join members on recharge.memberId = members.id").Count(&count)
 	//data
 	response.Orders = rechargeList
 	//fmt.Println("haspushed is",albumList[0].HasPushed)
@@ -75,6 +77,7 @@ func (o *RechargeList) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	var status models.Response
 	status.UnmarshalBinary([]byte(_var.Response200(200,"ok")))
 	response.Status = &status
+	response.Status.TotalCount = count
 
 	ok.SetPayload(&response)
 

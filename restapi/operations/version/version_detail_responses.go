@@ -10,7 +10,7 @@ import (
 
 	"github.com/go-openapi/runtime"
 
-	models "tingtingbackendtest/models"
+	models "tingtingbackend/models"
 )
 
 // VersionDetailOKCode is the HTTP code returned for type VersionDetailOK

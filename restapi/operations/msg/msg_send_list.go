@@ -7,8 +7,12 @@ package msg
 
 import (
 	"net/http"
-
+	_"github.com/jinzhu/gorm"
+	_ "github.com/jinzhu/gorm/dialects/mysql"
 	middleware "github.com/go-openapi/runtime/middleware"
+	"tingtingbackend/models"
+	"fmt"
+	"tingtingbackend/var"
 )
 
 // MsgSendListHandlerFunc turns a function with the right signature into a msg send list handler
@@ -53,8 +57,30 @@ func (o *MsgSendList) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	res := o.Handler.Handle(Params) // actually handle the request
+	var ok MsgSendListOK
+	var response models.InlineResponse20011
+	var msgList models.InlineResponse20011MsgList
+	var count int64
 
-	o.Context.Respond(rw, r, route.Produces, route, res)
+	db,err := _var.OpenConnection()
+	if err!=nil{
+		fmt.Println(err.Error())
+	}
+	//query
+	//db.Table("recharge").Where(map[string]interface{}{"status":0}).Find(&rechargeList).Limit(*(Params.PageSize)).Offset(*(Params.PageIndex)*(*(Params.PageSize)))
+	db.Table("msgs").Where("status=?",0).Limit(*(Params.PageSize)).Offset(*(Params.PageIndex)*(*(Params.PageSize))).Find(&msgList)
+	db.Table("msgs").Where("status=?",0).Count(&count)
+	//data
+	response.MsgList = msgList
+	//fmt.Println("haspushed is",albumList[0].HasPushed)
+	//status
+	var status models.Response
+	status.UnmarshalBinary([]byte(_var.Response200(200,"ok")))
+	response.Status = &status
+	response.Status.TotalCount = count
+
+	ok.SetPayload(&response)
+
+	o.Context.Respond(rw, r, route.Produces, route, ok)
 
 }
