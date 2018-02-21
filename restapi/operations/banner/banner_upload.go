@@ -7,8 +7,11 @@ package banner
 
 import (
 	"net/http"
-
 	middleware "github.com/go-openapi/runtime/middleware"
+	"fmt"
+	_"os"
+	"tingtingbackend/models"
+	"tingtingbackend/var"
 )
 
 // BannerUploadHandlerFunc turns a function with the right signature into a banner upload handler
@@ -51,8 +54,53 @@ func (o *BannerUpload) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	res := o.Handler.Handle(Params) // actually handle the request
+	var ok BannerUploadOK
+	var response models.InlineResponse2002
+	var status models.Response
+	var banner models.Banner
+	var msg string
+	var code int64
 
-	o.Context.Respond(rw, r, route.Produces, route, res)
+	msg = "ok"
+	code = 200
+
+	db,err := _var.OpenConnection()
+	if err!=nil{
+		fmt.Println(err.Error())
+	}
+	if(Params.CoverUrl != ""){
+		fmt.Println(Params.CoverUrl)
+		banner.Cover = &(Params.CoverUrl)
+	}
+
+	//tt:= int64(-1)
+	fmt.Println("Params.BookId=",*(Params.BannerID))
+	if(*(Params.BannerID) == -1){ //新建
+		banner.Type = Params.Type
+		banner.Name = Params.Name
+		banner.WebUrl = Params.WebURL
+		banner.Status = *(Params.Status)
+		banner.TargetId = Params.TargetID
+		if(Params.CoverUrl != ""){
+			banner.Cover = &(Params.CoverUrl)
+		}
+		db.Exec("insert into banners(name,status,type,targetId,webUrl,cover) values(?,?,?,?,?,?)",Params.Name,*(Params.Status),*(Params.Type),*(Params.TargetID),Params.WebURL,Params.CoverUrl)
+		//book.User_id = *(Params.MemberID)
+		//db.Table("banners").Create(&banner)
+	}else{ //更新
+		//fmt.Println("edit")
+		//db.Table("sub_book_items").Where("id=?",*(Params.BookId)).Last(&book)
+		if(Params.CoverUrl != ""){
+			db.Exec("update banners set name=?,status=?,type=?,cover=?,targetId=?,webUrl=? where id=?",Params.Name,*(Params.Status),*(Params.Type),Params.CoverUrl,*(Params.TargetID),Params.WebURL,*(Params.BannerID))
+		}else{
+			db.Exec("update banners set name=?,status=?,type=?,targetId=?,webUrl=? where id=?",Params.Name,*(Params.Status),*(Params.Type),*(Params.TargetID),Params.WebURL,*(Params.BannerID))
+		}
+
+	}
+
+	status.UnmarshalBinary([]byte(_var.Response200(code,msg)))
+	response.Status = &status
+	ok.SetPayload(&response)
+	o.Context.Respond(rw, r, route.Produces, route, ok)
 
 }

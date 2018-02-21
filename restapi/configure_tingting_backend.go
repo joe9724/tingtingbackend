@@ -61,6 +61,13 @@ func configureAPI(api *operations.TingtingBackendAPI) http.Handler {
 
 	api.JSONProducer = runtime.JSONProducer()
 
+	api.CategoryNrCategoryBannersEditHandler = category.NrCategoryBannersEditHandlerFunc(func(params category.NrCategoryBannersEditParams) middleware.Responder {
+		return middleware.NotImplemented("operation category.NrCategoryBannersEdit has not yet been implemented")
+	})
+	api.CategoryNrCategoryIconsEditHandler = category.NrCategoryIconsEditHandlerFunc(func(params category.NrCategoryIconsEditParams) middleware.Responder {
+		return middleware.NotImplemented("operation category.NrCategoryIconsEdit has not yet been implemented")
+	})
+
 	api.RelationNrCategorySubCategoryListRelationHandler = relation.NrCategorySubCategoryListRelationHandlerFunc(func(params relation.NrCategorySubCategoryListRelationParams) middleware.Responder {
 		return middleware.NotImplemented("operation relation.NrCategorySubCategoryListRelation has not yet been implemented")
 	})
@@ -90,12 +97,6 @@ func configureAPI(api *operations.TingtingBackendAPI) http.Handler {
 	})
 	api.RelationNrSubCategoryAlbumListRelationHandler = relation.NrSubCategoryAlbumListRelationHandlerFunc(func(params relation.NrSubCategoryAlbumListRelationParams) middleware.Responder {
 		return middleware.NotImplemented("operation relation.NrSubCategoryAlbumListRelation has not yet been implemented")
-	})
-	api.RelationNrRelationSubCategoryBannerListEditHandler = relation.NrRelationSubCategoryBannerListEditHandlerFunc(func(params relation.NrRelationSubCategoryBannerListEditParams) middleware.Responder {
-		return middleware.NotImplemented("operation relation.NrRelationSubCategoryBannerListEdit has not yet been implemented")
-	})
-	api.RelationNrRelationSubCategoryIconrListEditHandler = relation.NrRelationSubCategoryIconrListEditHandlerFunc(func(params relation.NrRelationSubCategoryIconrListEditParams) middleware.Responder {
-		return middleware.NotImplemented("operation relation.NrRelationSubCategoryIconrListEdit has not yet been implemented")
 	})
 	api.UserNrUserDeleteHandler = user.NrUserDeleteHandlerFunc(func(params user.NrUserDeleteParams) middleware.Responder {
 		return middleware.NotImplemented("operation user.NrUserDelete has not yet been implemented")

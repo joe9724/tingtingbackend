@@ -7,8 +7,12 @@ package relation
 
 import (
 	"net/http"
-
+	_"github.com/jinzhu/gorm"
+	_ "github.com/jinzhu/gorm/dialects/mysql"
 	middleware "github.com/go-openapi/runtime/middleware"
+	"tingtingbackend/models"
+	"fmt"
+	"tingtingbackend/var"
 )
 
 // NrRelationDefaultBookListHandlerFunc turns a function with the right signature into a relation default book list handler
@@ -53,8 +57,65 @@ func (o *NrRelationDefaultBookList) ServeHTTP(rw http.ResponseWriter, r *http.Re
 		return
 	}
 
-	res := o.Handler.Handle(Params) // actually handle the request
+	var ok RelationDefaultBookListOK
+	var response models.InlineResponse20030513
+	var bookList models.InlineResponse20030Books
+	var count int64
 
-	o.Context.Respond(rw, r, route.Produces, route, res)
+	db,err := _var.OpenConnection()
+	if err!=nil{
+		fmt.Println(err.Error())
+	}
+	//query
+	//db.Table("books").Select("books.id, books.name,books.grade,book_default_grade_relation.startTime,book_default_grade_relation.endTime,book_default_grade_relation.bookId").Joins("left join book_default_grade_relation on books.id = book_default_grade_relation.bookId").Where("book_default_grade_relation.status =?",0).Count(&count)
+	//db.Table("books").Select("books.id, books.name,books.grade,book_default_grade_relation.startTime,book_default_grade_relation.endTime,book_default_grade_relation.bookId").Joins("left join book_default_grade_relation on books.id = book_default_grade_relation.bookId").Where("book_default_grade_relation.status =?",0).Limit(*(Params.PageSize)).Offset(*(Params.PageIndex)*(*(Params.PageSize))).Find(&bookList)
+	//data
+
+	//var temp []interface{}
+	//db.Raw("select books.id, books.name,books.grade,book_default_grade_relation.startTime,book_default_grade_relation.endTime,book_default_grade_relation.bookId from books left join book_default_grade_relation on books.id = book_default_grade_relation.bookId").Limit(*(Params.PageSize)).Offset(*(Params.PageIndex) * (*(Params.PageSize))).Find(&temp)
+    //fmt.Println(temp)
+
+	//db.Raw("select books.id, books.name,books.grade,book_default_grade_relation.startTime,book_default_grade_relation.endTime,book_default_grade_relation.bookId,book_default_grade_relation.status from books left join book_default_grade_relation on books.id = book_default_grade_relation.bookId").Limit(*(Params.PageSize)).Offset(*(Params.PageIndex) * (*(Params.PageSize))).Find(&bookList)
+
+	rows, err := db.Table("books").Select("books.name,books.grade,book_default_grade_relation.startTime,book_default_grade_relation.endTime,book_default_grade_relation.bookId,book_default_grade_relation.status").Joins("left join book_default_grade_relation on book_default_grade_relation.bookId = books.id").Order("book_default_grade_relation.startTime").Limit(*(Params.PageSize)).Offset(*(Params.PageIndex)*(*(Params.PageSize))).Rows()
+	if err !=nil{
+		fmt.Println("err is",err.Error())
+	}
+	//var temp []models.Album
+	for rows.Next() {
+		var name string
+		var bookId int64
+		var status int64
+		var startTime string
+		var endTime string
+		var grade int64
+
+		err = rows.Scan(&name,&grade,&startTime,&endTime,&bookId,&status)
+		if err != nil{
+			fmt.Println(err.Error())
+		}
+
+		var t models.SuggestedBook
+		t.BookId = bookId
+		t.Name = name
+		t.Status = status
+		t.StartTime = startTime
+		t.EndTime = endTime
+		t.Grade = grade
+		bookList = append(bookList,&t)
+	}
+
+
+	response.Books = bookList
+
+	//status
+	var status models.Response
+	status.UnmarshalBinary([]byte(_var.Response200(200,"ok")))
+	response.Status = &status
+	response.Status.TotalCount = count
+
+	ok.SetPayload(&response)
+
+	o.Context.Respond(rw, r, route.Produces, route, ok)
 
 }

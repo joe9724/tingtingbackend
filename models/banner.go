@@ -30,6 +30,12 @@ type Banner struct {
 	Type *int64 `json:"type"`
 
 	Name *string `json:"name"`
+
+	TargetId *int64 `json:"targetId"`
+
+	Status int64 `json:"status"`
+
+	WebUrl *string `json:"webUrl"`
 }
 
 // Validate validates this banner
@@ -42,6 +48,16 @@ func (m *Banner) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateID(formats); err != nil {
+		// prop
+		res = append(res, err)
+	}
+
+	if err := m.validateTargetID(formats); err != nil {
+		// prop
+		res = append(res, err)
+	}
+
+	if err := m.validateWebUrl(formats); err != nil {
 		// prop
 		res = append(res, err)
 	}
@@ -71,6 +87,24 @@ func (m *Banner) validateID(formats strfmt.Registry) error {
 	if err := validate.Required("id", "body", m.ID); err != nil {
 		return err
 	}
+
+	return nil
+}
+
+func (m *Banner) validateTargetID(formats strfmt.Registry) error {
+
+	/*if err := validate.Required("targetId", "body", m.TargetId); err != nil {
+		return err
+	}*/
+
+	return nil
+}
+
+func (m *Banner) validateWebUrl(formats strfmt.Registry) error {
+
+	/*if err := validate.Required("webUrl", "body", m.WebUrl); err != nil {
+		return err
+	}*/
 
 	return nil
 }

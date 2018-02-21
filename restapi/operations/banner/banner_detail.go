@@ -68,8 +68,8 @@ func (o *BannerDetail) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	var banner models.Banner
 
 	db.Table("banners").Where("id=?",Params.BannerID).First(&banner)
-	//data
-	//response.Data = &album
+	fmt.Println("banner is",banner)
+	response.Data = &banner
 
 	//status
 	var status models.Response

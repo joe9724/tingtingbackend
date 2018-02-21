@@ -7,8 +7,11 @@ package icon
 
 import (
 	"net/http"
-
 	middleware "github.com/go-openapi/runtime/middleware"
+	"fmt"
+	_"os"
+	"tingtingbackend/models"
+	"tingtingbackend/var"
 )
 
 // IconUploadHandlerFunc turns a function with the right signature into a icon upload handler
@@ -51,8 +54,45 @@ func (o *IconUpload) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	res := o.Handler.Handle(Params) // actually handle the request
+	var ok IconUploadOK
+	var response models.InlineResponse2002
+	var status models.Response
+	var icon models.Icon
+	var msg string
+	var code int64
 
-	o.Context.Respond(rw, r, route.Produces, route, res)
+	msg = "ok"
+	code = 200
+
+	db,err := _var.OpenConnection()
+	if err!=nil{
+		fmt.Println(err.Error())
+	}
+	if(Params.CoverUrl != ""){
+		fmt.Println(Params.CoverUrl)
+		icon.Cover = Params.CoverUrl
+	}
+
+	//tt:= int64(-1)
+
+	if(*(Params.IconID) == -1){ //新建
+		db.Exec("insert into icons(name,status,type,targetId,webUrl,cover) values(?,?,?,?,?,?)",Params.Name,*(Params.Status),*(Params.Type),*(Params.TargetID),Params.WebURL,Params.CoverUrl)
+		//book.User_id = *(Params.MemberID)
+		//db.Table("banners").Create(&banner)
+	}else{ //更新
+		//fmt.Println("edit")
+		//db.Table("sub_book_items").Where("id=?",*(Params.BookId)).Last(&book)
+		if(Params.CoverUrl != ""){
+			db.Exec("update icons set name=?,status=?,type=?,cover=?,targetId=?,webUrl=? where id=?",Params.Name,*(Params.Status),*(Params.Type),Params.CoverUrl,*(Params.TargetID),Params.WebURL,*(Params.IconID))
+		}else{
+			db.Exec("update icons set name=?,status=?,type=?,targetId=?,webUrl=? where id=?",Params.Name,*(Params.Status),*(Params.Type),*(Params.TargetID),Params.WebURL,*(Params.IconID))
+		}
+
+	}
+
+	status.UnmarshalBinary([]byte(_var.Response200(code,msg)))
+	response.Status = &status
+	ok.SetPayload(&response)
+	o.Context.Respond(rw, r, route.Produces, route, ok)
 
 }

@@ -7,8 +7,12 @@ package icon
 
 import (
 	"net/http"
-
+	_"github.com/jinzhu/gorm"
+	_ "github.com/jinzhu/gorm/dialects/mysql"
 	middleware "github.com/go-openapi/runtime/middleware"
+	"tingtingbackend/models"
+	"fmt"
+	"tingtingbackend/var"
 )
 
 // IconDetailHandlerFunc turns a function with the right signature into a icon detail handler
@@ -53,8 +57,28 @@ func (o *IconDetail) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	res := o.Handler.Handle(Params) // actually handle the request
+	var ok IconDetailOK
+	var response models.InlineResponse20010513
 
-	o.Context.Respond(rw, r, route.Produces, route, res)
+	db,err := _var.OpenConnection()
+	if err!=nil{
+		fmt.Println(err.Error())
+	}
+	//query
+	var icon models.Icon
+
+	db.Table("icons").Where("id=?",Params.IconID).First(&icon)
+	//fmt.Println("banner is",banner)
+	response.Data = &icon
+
+	//status
+	var status models.Response
+	status.UnmarshalBinary([]byte(_var.Response200(200,"ok")))
+	response.Status = &status
+
+	ok.SetPayload(&response)
+
+	o.Context.Respond(rw, r, route.Produces, route, ok)
+
 
 }

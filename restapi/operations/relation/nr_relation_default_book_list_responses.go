@@ -25,7 +25,7 @@ type RelationDefaultBookListOK struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.InlineResponse20030 `json:"body,omitempty"`
+	Payload *models.InlineResponse20030513 `json:"body,omitempty"`
 }
 
 // NewRelationDefaultBookListOK creates RelationDefaultBookListOK with default headers values
@@ -34,13 +34,13 @@ func NewRelationDefaultBookListOK() *RelationDefaultBookListOK {
 }
 
 // WithPayload adds the payload to the relation default book list o k response
-func (o *RelationDefaultBookListOK) WithPayload(payload *models.InlineResponse20030) *RelationDefaultBookListOK {
+func (o *RelationDefaultBookListOK) WithPayload(payload *models.InlineResponse20030513) *RelationDefaultBookListOK {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the relation default book list o k response
-func (o *RelationDefaultBookListOK) SetPayload(payload *models.InlineResponse20030) {
+func (o *RelationDefaultBookListOK) SetPayload(payload *models.InlineResponse20030513) {
 	o.Payload = payload
 }
 

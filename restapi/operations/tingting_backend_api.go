@@ -68,6 +68,12 @@ func NewTingtingBackendAPI(spec *loads.Document) *TingtingBackendAPI {
 		MemberNrMemberRecordListHandler: member.NrMemberRecordListHandlerFunc(func(params member.NrMemberRecordListParams) middleware.Responder {
 			return middleware.NotImplemented("operation MemberNrMemberRecordList has not yet been implemented")
 		}),
+		CategoryNrCategoryBannersEditHandler: category.NrCategoryBannersEditHandlerFunc(func(params category.NrCategoryBannersEditParams) middleware.Responder {
+			return middleware.NotImplemented("operation CategoryNrCategoryBannersEdit has not yet been implemented")
+		}),
+		CategoryNrCategoryIconsEditHandler: category.NrCategoryIconsEditHandlerFunc(func(params category.NrCategoryIconsEditParams) middleware.Responder {
+			return middleware.NotImplemented("operation CategoryNrCategoryIconsEdit has not yet been implemented")
+		}),
 		RelationNrRelationCategorySubCategoryListEditHandler: relation.NrRelationCategorySubCategoryListEditHandlerFunc(func(params relation.NrRelationCategorySubCategoryListEditParams) middleware.Responder {
 			return middleware.NotImplemented("operation RelationNrRelationCategorySubCategoryListEdit has not yet been implemented")
 		}),
@@ -83,9 +89,9 @@ func NewTingtingBackendAPI(spec *loads.Document) *TingtingBackendAPI {
 		RelationNrSubCategoryAlbumListRelationHandler: relation.NrSubCategoryAlbumListRelationHandlerFunc(func(params relation.NrSubCategoryAlbumListRelationParams) middleware.Responder {
 			return middleware.NotImplemented("operation RelationNrSubCategoryAlbumListRelation has not yet been implemented")
 		}),
-		RelationNrRelationSubCategoryBannerListEditHandler: relation.NrRelationSubCategoryBannerListEditHandlerFunc(func(params relation.NrRelationSubCategoryBannerListEditParams) middleware.Responder {
+		/*RelationNrRelationSubCategoryBannerListEditHandler: relation.NrRelationSubCategoryBannerListEditHandlerFunc(func(params relation.NrRelationSubCategoryBannerListEditParams) middleware.Responder {
 			return middleware.NotImplemented("operation RelationNrRelationSubCategoryBannerListEdit has not yet been implemented")
-		}),
+		}),*/
 		RelationNrRelationSubCategoryIconrListEditHandler: relation.NrRelationSubCategoryIconrListEditHandlerFunc(func(params relation.NrRelationSubCategoryIconrListEditParams) middleware.Responder {
 			return middleware.NotImplemented("operation RelationNrRelationSubCategoryIconrListEdit has not yet been implemented")
 		}),
@@ -328,8 +334,17 @@ type TingtingBackendAPI struct {
 	RelationNrCategorySubCategoryListRelationHandler relation.NrCategorySubCategoryListRelationHandler
 	// RelationNrAlbumBookListRelationHandler sets the operation handler for the album book list relation operation
 	RelationNrAlbumBookListRelationHandler relation.NrAlbumBookListRelationHandler
+	//RelationNrRelationCategoryBannersEditHandler relation.NrRelationCategoryBannersEditHandler
+	// RelationNrRelationCategoryIconsEditHandler sets the operation handler for the relation category icons edit operation
+	//RelationNrRelationCategoryIconsEditHandler relation.NrRelationCategoryIconsEditHandler
 	// CategoryNrCategoryListHandler sets the operation handler for the category list operation
 	CategoryNrCategoryListHandler category.NrCategoryListHandler
+	CategoryNrCategoryBannersEditHandler category.NrCategoryBannersEditHandler
+	// CategoryNrCategoryIconsEditHandler sets the operation handler for the category icons edit operation
+	CategoryNrCategoryIconsEditHandler category.NrCategoryIconsEditHandler
+	//RelationNrRelationSubCategoryBannerListEditHandler relation.NrRelationSubCategoryBannerListEditHandler
+	// RelationNrRelationSubCategoryIconListEditHandler sets the operation handler for the relation sub category icon list edit operation
+	//RelationNrRelationSubCategoryIconListEditHandler relation.NrRelationSubCategoryIconListEditHandler
 	// MemberNrMemberRecordListHandler sets the operation handler for the member record list operation
 	MemberNrMemberRecordListHandler member.NrMemberRecordListHandler
 	// RechargeNrRechargeDetailHandler sets the operation handler for the recharge detail operation
@@ -337,7 +352,7 @@ type TingtingBackendAPI struct {
 	RelationNrRelationDefaultBookListHandler relation.NrRelationDefaultBookListHandler
 	// RelationNrRelationDefaultBookUploadHandler sets the operation handler for the relation default book upload operation
 	RelationNrRelationDefaultBookUploadHandler relation.NrRelationDefaultBookUploadHandler
-	RelationNrRelationSubCategoryBannerListEditHandler relation.NrRelationSubCategoryBannerListEditHandler
+	//RelationNrRelationSubCategoryBannerListEditHandler relation.NrRelationSubCategoryBannerListEditHandler
 	// RelationNrRelationSubCategoryIconrListEditHandler sets the operation handler for the relation sub category iconr list edit operation
 	RelationNrRelationSubCategoryIconrListEditHandler relation.NrRelationSubCategoryIconrListEditHandler
 	// RelationNrRelationCategorySubCategoryListEditHandler sets the operation handler for the relation category sub category list edit operation
@@ -557,6 +572,14 @@ func (o *TingtingBackendAPI) Validate() error {
 		unregistered = append(unregistered, "category.NrCategoryListHandler")
 	}
 
+	if o.CategoryNrCategoryBannersEditHandler == nil {
+		unregistered = append(unregistered, "category.NrCategoryBannersEditHandler")
+	}
+
+	if o.CategoryNrCategoryIconsEditHandler == nil {
+		unregistered = append(unregistered, "category.NrCategoryIconsEditHandler")
+	}
+
 	if o.MemberNrMemberRecordListHandler == nil {
 		unregistered = append(unregistered, "member.NrMemberRecordListHandler")
 	}
@@ -591,14 +614,6 @@ func (o *TingtingBackendAPI) Validate() error {
 
 	if o.RelationNrRelationAlbumTaglistEditHandler == nil {
 		unregistered = append(unregistered, "relation.NrRelationAlbumTaglistEditHandler")
-	}
-
-	if o.RelationNrRelationSubCategoryBannerListEditHandler == nil {
-		unregistered = append(unregistered, "relation.NrRelationSubCategoryBannerListEditHandler")
-	}
-
-	if o.RelationNrRelationSubCategoryIconrListEditHandler == nil {
-		unregistered = append(unregistered, "relation.NrRelationSubCategoryIconrListEditHandler")
 	}
 
 	if o.RelationNrRelationBookTaglistEditHandler == nil {
@@ -967,6 +982,16 @@ func (o *TingtingBackendAPI) initHandlerCache() {
 	}
 	o.handlers["GET"]["/relation/Category/subCategoryList"] = relation.NewNrCategorySubCategoryListRelation(o.context, o.RelationNrCategorySubCategoryListRelationHandler)
 
+	if o.handlers["POST"] == nil {
+		o.handlers["POST"] = make(map[string]http.Handler)
+	}
+	o.handlers["POST"]["/category/banners/edit"] = category.NewNrCategoryBannersEdit(o.context, o.CategoryNrCategoryBannersEditHandler)
+
+	if o.handlers["POST"] == nil {
+		o.handlers["POST"] = make(map[string]http.Handler)
+	}
+	o.handlers["POST"]["/category/icons/edit"] = category.NewNrCategoryIconsEdit(o.context, o.CategoryNrCategoryIconsEditHandler)
+
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}
@@ -986,16 +1011,6 @@ func (o *TingtingBackendAPI) initHandlerCache() {
 		o.handlers["POST"] = make(map[string]http.Handler)
 	}
 	o.handlers["POST"]["/recharge/detail"] = recharge.NewNrRechargeDetail(o.context, o.RechargeNrRechargeDetailHandler)
-
-	if o.handlers["POST"] == nil {
-		o.handlers["POST"] = make(map[string]http.Handler)
-	}
-	o.handlers["POST"]["/relation/subCategory/bannerList/edit"] = relation.NewNrRelationSubCategoryBannerListEdit(o.context, o.RelationNrRelationSubCategoryBannerListEditHandler)
-
-	if o.handlers["POST"] == nil {
-		o.handlers["POST"] = make(map[string]http.Handler)
-	}
-	o.handlers["POST"]["/relation/subCategory/iconList/edit"] = relation.NewNrRelationSubCategoryIconrListEdit(o.context, o.RelationNrRelationSubCategoryIconrListEditHandler)
 
 	if o.handlers["POST"] == nil {
 		o.handlers["POST"] = make(map[string]http.Handler)

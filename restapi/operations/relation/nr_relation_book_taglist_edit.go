@@ -7,9 +7,9 @@ package relation
 
 import (
 	"net/http"
-	_"github.com/jinzhu/gorm"
+	_ "github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
-	middleware "github.com/go-openapi/runtime/middleware"
+	"github.com/go-openapi/runtime/middleware"
 	"tingtingbackend/models"
 	"fmt"
 	"tingtingbackend/var"
@@ -61,33 +61,62 @@ func (o *NrRelationBookTaglistEdit) ServeHTTP(rw http.ResponseWriter, r *http.Re
 	var ok RelationBookTaglistEditOK
 	var response models.InlineResponse20014
 
-
-	db,err := _var.OpenConnection()
-	if err!=nil{
+	db, err := _var.OpenConnection()
+	if err != nil {
 		fmt.Println(err.Error())
 	}
 
 	books := *(Params.Body.BookIds)
 
-	if (*(Params.Body.ActionCode) == 0){ //添加映射
+	if (*(Params.Body.ActionCode) == 0) { //添加映射
 		fmt.Println("add")
 		//先解析出bookis集合,样式 1,2,3,4,
-		if (!strings.Contains(books,",")){
-			db.Exec("insert into tag_book_relation(bookId,tagId) values(?,?)",Params.Body.BookID,books)
-		}else{
-			temp := strings.Split(books,",")
-			for k:=0;k< len(temp);k++ {
-				db.Exec("insert into tag_book_relation(bookId,tagId) values(?,?)",Params.Body.BookID,temp[k])
-				fmt.Println("insert into tag_book_relation(bookId,tagId) values(?,?)",Params.Body.BookID,temp[k])
+		if (!strings.Contains(books, ",")) {
+			db.Exec("insert into tag_book_relation(bookId,tagId) values(?,?)", Params.Body.BookID, books)
+		} else {
+			temp := strings.Split(books, ",")
+			for k := 0; k < len(temp); k++ {
+				db.Exec("insert into tag_book_relation(bookId,tagId) values(?,?)", Params.Body.BookID, temp[k])
+				fmt.Println("insert into tag_book_relation(bookId,tagId) values(?,?)", Params.Body.BookID, temp[k])
 			}
 		}
-	}else{ //去除映射
+	} else if (*(Params.Body.ActionCode) == 1) { //去除映射
 		fmt.Println("remove")
-		db.Exec("delete from tag_book_relation where bookId=? and tagId=?",Params.Body.BookID,books)
+		db.Exec("delete from tag_book_relation where bookId=? and tagId=?", Params.Body.BookID, books)
+	} else if (*(Params.Body.ActionCode) == 2) { //添加分类下banner映射
+		fmt.Println("add")
+		//先解析出bookis集合,样式 1,2,3,4,
+		if (!strings.Contains(books, ",")) {
+			db.Exec("insert into category_banner_relation(categoryId,bannerId) values(?,?)", Params.Body.BookID, books)
+		} else {
+			temp := strings.Split(books, ",")
+			for k := 0; k < len(temp); k++ {
+				db.Exec("insert into category_banner_relation(categoryId,bannerId) values(?,?)", Params.Body.BookID, temp[k])
+				fmt.Println("insert into category_banner_relation(categoryId,bannerId) values(?,?)", Params.Body.BookID, temp[k])
+			}
+		}
+	} else if (*(Params.Body.ActionCode) == 3) { //去除分类下banner映射
+		fmt.Println("remove")
+		db.Exec("delete from category_banner_relation where categoryId=? and bannerId=?", Params.Body.BookID, books)
+	} else if (*(Params.Body.ActionCode) == 4) { //添加分类下icon映射
+		fmt.Println("add")
+		//先解析出bookis集合,样式 1,2,3,4,
+		if (!strings.Contains(books, ",")) {
+			db.Exec("insert into category_icon_relation(categoryId,iconId) values(?,?)", Params.Body.BookID, books)
+		} else {
+			temp := strings.Split(books, ",")
+			for k := 0; k < len(temp); k++ {
+				db.Exec("insert into category_icon_relation(categoryId,iconId) values(?,?)", Params.Body.BookID, temp[k])
+				fmt.Println("insert into category_icon_relation(categoryId,iconId) values(?,?)", Params.Body.BookID, temp[k])
+			}
+		}
+	} else if (*(Params.Body.ActionCode) == 5) { //去除分类下icon映射
+		fmt.Println("remove")
+		db.Exec("delete from category_icon_relation where categoryId=? and iconId=?", Params.Body.BookID, books)
 	}
 
 	var status models.Response
-	status.UnmarshalBinary([]byte(_var.Response200(200,"ok")))
+	status.UnmarshalBinary([]byte(_var.Response200(200, "ok")))
 	response.Status = &status
 
 	ok.SetPayload(&response)

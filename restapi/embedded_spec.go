@@ -1168,6 +1168,46 @@ func init() {
         }
       }
     },
+    "/category/iconList/edit": {
+      "post": {
+        "description": "编辑子类下的icon集合",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Relation"
+        ],
+        "summary": "编辑子类下的icon集合",
+        "operationId": "/category/iconList/edit",
+        "parameters": [
+          {
+            "description": "编辑子类下的集合",
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/body_7"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "操作成功，返回操作信息",
+            "schema": {
+              "$ref": "#/definitions/inline_response_200_3"
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
     "/category/list": {
       "get": {
         "description": "大类列表",
@@ -7073,6 +7113,46 @@ func init() {
         }
       }
     },
+    "/category/bannerList/edit": {
+      "post": {
+        "description": "编辑子类下的banner集合",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Relation"
+        ],
+        "summary": "编辑子类下的banner集合",
+        "operationId": "/category/bannerList/edit",
+        "parameters": [
+          {
+            "description": "编辑子类下的集合",
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/body_6"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "操作成功，返回操作信息",
+            "schema": {
+              "$ref": "#/definitions/inline_response_200_3"
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
     "/category/delete": {
       "get": {
         "description": "删除分类",
@@ -7218,6 +7298,46 @@ func init() {
             "description": "上传成功，返回成功信息",
             "schema": {
               "$ref": "#/definitions/inline_response_200_16"
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/category/iconList/edit": {
+      "post": {
+        "description": "编辑子类下的icon集合",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Relation"
+        ],
+        "summary": "编辑子类下的icon集合",
+        "operationId": "/category/iconList/edit",
+        "parameters": [
+          {
+            "description": "编辑子类下的集合",
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/body_7"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "操作成功，返回操作信息",
+            "schema": {
+              "$ref": "#/definitions/inline_response_200_3"
             }
           },
           "default": {

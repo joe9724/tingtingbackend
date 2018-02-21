@@ -66,6 +66,10 @@ type BannerUploadParams struct {
 	  In: formData
 	*/
 	WebURL *string
+
+	Status *int64
+
+	CoverUrl string
 }
 
 // BindRequest both binds and validates a request, it assumes that complex things implement a Validatable(strfmt.Registry) error interface
@@ -90,6 +94,11 @@ func (o *BannerUploadParams) BindRequest(r *http.Request, route *middleware.Matc
 
 	fdBannerID, fdhkBannerID, _ := fds.GetOK("bannerId")
 	if err := o.bindBannerID(fdBannerID, fdhkBannerID, route.Formats); err != nil {
+		res = append(res, err)
+	}
+
+	fdCoverUrl, fdhkCoverUrl, _ := fds.GetOK("coverUrl")
+	if err := o.bindCoverUrl(fdCoverUrl, fdhkCoverUrl, route.Formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -126,6 +135,11 @@ func (o *BannerUploadParams) BindRequest(r *http.Request, route *middleware.Matc
 
 	fdWebURL, fdhkWebURL, _ := fds.GetOK("webUrl")
 	if err := o.bindWebURL(fdWebURL, fdhkWebURL, route.Formats); err != nil {
+		res = append(res, err)
+	}
+
+	fdStatus, fdhkStatus, _ := fds.GetOK("status")
+	if err := o.bindStatus(fdStatus, fdhkStatus, route.Formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -168,6 +182,20 @@ func (o *BannerUploadParams) bindBannerID(rawData []string, hasKey bool, formats
 }
 
 func (o *BannerUploadParams) bindCover(file multipart.File, header *multipart.FileHeader) error {
+
+	return nil
+}
+
+func (o *BannerUploadParams) bindCoverUrl(rawData []string, hasKey bool, formats strfmt.Registry) error {
+	var raw string
+	if len(rawData) > 0 {
+		raw = rawData[len(rawData)-1]
+	}
+	if raw == "" { // empty values pass all other validations
+		return nil
+	}
+
+	o.CoverUrl = raw
 
 	return nil
 }
@@ -221,6 +249,25 @@ func (o *BannerUploadParams) bindType(rawData []string, hasKey bool, formats str
 
 	return nil
 }
+
+func (o *BannerUploadParams) bindStatus(rawData []string, hasKey bool, formats strfmt.Registry) error {
+	var raw string
+	if len(rawData) > 0 {
+		raw = rawData[len(rawData)-1]
+	}
+	if raw == "" { // empty values pass all other validations
+		return nil
+	}
+
+	value, err := swag.ConvertInt64(raw)
+	if err != nil {
+		return errors.InvalidType("status", "formData", "int64", raw)
+	}
+	o.Status = &value
+
+	return nil
+}
+
 
 func (o *BannerUploadParams) bindUserid(rawData []string, hasKey bool, formats strfmt.Registry) error {
 	var raw string

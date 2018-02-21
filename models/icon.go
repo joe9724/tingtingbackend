@@ -24,6 +24,14 @@ type Icon struct {
 
 	// type
 	Type int64 `json:"type,omitempty"`
+
+	Name *string `json:"name"`
+
+	TargetId *int64 `json:"targetId"`
+
+	Status int64 `json:"status"`
+
+	WebUrl *string `json:"webUrl"`
 }
 
 // Validate validates this icon
