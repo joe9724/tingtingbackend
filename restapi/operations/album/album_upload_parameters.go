@@ -78,6 +78,8 @@ type AlbumUploadParams struct {
 
 	AlbumId *int64
 
+	Grade *int64
+
 }
 
 // BindRequest both binds and validates a request, it assumes that complex things implement a Validatable(strfmt.Registry) error interface
@@ -145,6 +147,11 @@ func (o *AlbumUploadParams) BindRequest(r *http.Request, route *middleware.Match
 
 	fdAlbumId, fdhkAlbumId, _ := fds.GetOK("albumId")
 	if err := o.bindAlbumId(fdAlbumId, fdhkAlbumId, route.Formats); err != nil {
+		res = append(res, err)
+	}
+
+	fdGrade, fdhkGrade, _ := fds.GetOK("grade")
+	if err := o.bindGrade(fdGrade, fdhkGrade, route.Formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -239,6 +246,24 @@ func (o *AlbumUploadParams) bindAlbumId(rawData []string, hasKey bool, formats s
 		return errors.InvalidType("albumId", "formData", "int64", raw)
 	}
 	o.AlbumId = &value
+
+	return nil
+}
+
+func (o *AlbumUploadParams) bindGrade(rawData []string, hasKey bool, formats strfmt.Registry) error {
+	var raw string
+	if len(rawData) > 0 {
+		raw = rawData[len(rawData)-1]
+	}
+	if raw == "" { // empty values pass all other validations
+		return nil
+	}
+
+	value, err := swag.ConvertInt64(raw)
+	if err != nil {
+		return errors.InvalidType("grade", "formData", "int64", raw)
+	}
+	o.Grade = &value
 
 	return nil
 }

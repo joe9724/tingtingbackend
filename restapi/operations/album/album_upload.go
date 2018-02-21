@@ -93,11 +93,11 @@ func (o *AlbumUpload) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 		//db.Table("sub_album_items").Where("id=?",*(Params.AlbumId)).Last(&album)
 		if(Params.IconUrl != ""){
 			fmt.Println("1",Params.IconUrl)
-			db.Exec("update albums set name=?,status=?,summary=?,icon=? where id=?",Params.Title,0,*(Params.Summary),Params.IconUrl,&(Params.AlbumId))
+			db.Exec("update albums set name=?,status=?,summary=?,icon=? ,grade=? where id=?",Params.Title,0,*(Params.Summary),Params.IconUrl,*(Params.Grade),&(Params.AlbumId))
 		}else{
 			fmt.Println("2",Params.IconUrl,*(Params.Summary))
 			summary := *(Params.Summary)
-			db.Exec("update albums set name=?,status=?,summary=? where id=?",Params.Title,0,summary,&(Params.AlbumId))
+			db.Exec("update albums set name=?,status=?,summary=?,grade=? where id=?",Params.Title,0,summary,*(Params.Grade),&(Params.AlbumId))
 		}
 
 	}
