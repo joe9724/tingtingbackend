@@ -12,7 +12,7 @@ import (
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/runtime/middleware"
 
-	models "tingtingbackendtest/models"
+	models "tingtingbackend/models"
 )
 
 // NewNrCategoryIconsEditParams creates a new NrCategoryIconsEditParams object
