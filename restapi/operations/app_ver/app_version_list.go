@@ -66,6 +66,7 @@ func (o *AppVersionList) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Println(err.Error())
 	}
+	defer db.Close()
 	//query
 	db.Table("init").Where("status=?",0).Limit(*(Params.PageSize)).Offset(*(Params.PageIndex) * (*(Params.PageSize))).Find(&albumList)
 	db.Table("init").Where("status=?",0).Limit(*(Params.PageSize)).Offset(*(Params.PageIndex) * (*(Params.PageSize))).Count(&count)

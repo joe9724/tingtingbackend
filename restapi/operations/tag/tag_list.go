@@ -66,6 +66,7 @@ func (o *TagList) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Println(err.Error())
 	}
+	defer db.Close()
 	//query
 	db.Table("tags").Where("status=?",0).Limit(*(Params.PageSize)).Offset(*(Params.PageIndex)*(*(Params.PageSize))).Find(&albumList)
 	db.Table("tags").Where("status=?",0).Count(&count)

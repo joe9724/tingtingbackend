@@ -66,6 +66,7 @@ func (o *ChapterList) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	if err!=nil{
 		fmt.Println(err.Error())
 	}
+	defer db.Close()
 	//query
 	if Params.Keyword !=nil && Params.BookID!=nil{
 		if(*Params.Keyword == " ") {

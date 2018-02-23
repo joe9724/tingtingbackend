@@ -66,6 +66,7 @@ func (o *RechargeList) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	if err!=nil{
 		fmt.Println(err.Error())
 	}
+	defer db.Close()
 	//query
 	//db.Table("recharge").Where(map[string]interface{}{"status":0}).Find(&rechargeList).Limit(*(Params.PageSize)).Offset(*(Params.PageIndex)*(*(Params.PageSize)))
 	db.Table("recharge").Select("recharge.id, recharge.memberId,recharge.type,recharge.order_no,recharge.status,recharge.time,recharge.value,members.name").Joins("left join members on recharge.memberId = members.id").Find(&rechargeList)

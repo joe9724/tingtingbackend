@@ -65,6 +65,7 @@ func (o *NrUserList) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	if err!=nil{
 		fmt.Println(err.Error())
 	}
+	defer db.Close()
 	//query
 	db.Where(map[string]interface{}{"status":0}).Find(&userlist).Limit(*(Params.PageSize)).Offset(*(Params.PageIndex)*(*(Params.PageSize)))
 	//data
