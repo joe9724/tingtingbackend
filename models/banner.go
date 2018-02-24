@@ -31,11 +31,13 @@ type Banner struct {
 
 	Name *string `json:"name"`
 
-	TargetId *int64 `json:"targetId"`
+	Jumpid *int64 `json:"jumpid"`
 
 	Status int64 `json:"status"`
 
-	WebUrl *string `json:"webUrl"`
+	Jumpurl *string `json:"jumpurl"`
+
+	Test *string `json:"test"`
 }
 
 // Validate validates this banner

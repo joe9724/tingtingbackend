@@ -58,8 +58,8 @@ func (o *RechargeList) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	var ok RechargeListOK
-	var response models.InlineResponse2003
-	var rechargeList models.InlineResponse2003Orders
+	var response models.InlineResponse2003513
+	var rechargeList models.InlineResponse2003513recharges
 	var count int64
 
 	db,err := _var.OpenConnection()
@@ -69,10 +69,42 @@ func (o *RechargeList) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	defer db.Close()
 	//query
 	//db.Table("recharge").Where(map[string]interface{}{"status":0}).Find(&rechargeList).Limit(*(Params.PageSize)).Offset(*(Params.PageIndex)*(*(Params.PageSize)))
-	db.Table("recharge").Select("recharge.id, recharge.memberId,recharge.type,recharge.order_no,recharge.status,recharge.time,recharge.value,members.name").Joins("left join members on recharge.memberId = members.id").Find(&rechargeList)
-	db.Table("recharge").Select("recharge.id, recharge.memberId,recharge.type,recharge.order_no,recharge.status,recharge.time,recharge.value,members.name").Joins("left join members on recharge.memberId = members.id").Count(&count)
+	//db.Table("recharge").Select("recharge.id, recharge.memberId,recharge.type,recharge.order_no,recharge.status,recharge.time,recharge.value,members.name").Joins("left join members on recharge.memberId = members.id").Find(&rechargeList)
+	rows, err := db.Raw("select recharge.id,recharge.type,recharge.time,recharge.order_no,recharge.memberId,recharge.value,members.name as membername from recharge left join members on recharge.memberId = members.id").Limit(*(Params.PageSize)).Offset(*(Params.PageIndex)*(*(Params.PageSize))).Rows()
+	if err !=nil{
+		fmt.Println("err is",err.Error())
+	}
+	//var temp []models.Album
+	for rows.Next() {
+		var id int64
+		var rtype int64
+		var time int64
+		var order_no string
+		var memberId int64
+		var value float64
+		var membername string
+
+		err = rows.Scan(&id,&rtype,&time,&order_no,&memberId,&value,&membername)
+		if err != nil{
+			fmt.Println(err.Error())
+		}
+
+		var t models.Recharge
+		t.MemberName = membername
+		t.OrderNo = order_no
+		t.Time = time
+		t.Value = value
+		t.ID = id
+		t.MemberID = memberId
+		t.Rtype = rtype
+
+		rechargeList = append(rechargeList,&t)
+	}
+
+
+	db.Table("recharge").Select("recharge.id, recharge.memberId,recharge.type,recharge.order_no,recharge.status,recharge.time,recharge.value,members.name").Count(&count)
 	//data
-	response.Orders = rechargeList
+	response.Recharges = rechargeList
 	//fmt.Println("haspushed is",albumList[0].HasPushed)
 	//status
 	var status models.Response

@@ -12,6 +12,7 @@ import (
 	_"os"
 	"tingtingbackend/models"
 	"tingtingbackend/var"
+	"time"
 )
 
 // AlbumUploadHandlerFunc turns a function with the right signature into a album upload handler
@@ -80,6 +81,8 @@ func (o *AlbumUpload) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 		fmt.Println("Params.Summary is",Params.Summary)
 		album.Summary = *(Params.Summary)
 		album.Name = Params.Title
+		album.Time = time.Now().UnixNano() / 1000000000
+		fmt.Println("album.time is",album.Time)
 		//t := int64(-1)
 		//album.album_Id = &t
 		album.Status = *(Params.Status)

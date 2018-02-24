@@ -72,11 +72,11 @@ func (o *BannerList) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	//db.Table("banners").Where("status=?",0).Limit(*(Params.PageSize)).Offset(*(Params.PageIndex) * (*(Params.PageSize))).Count(&count)
 	if Params.Keyword !=nil && Params.CategoryID!=nil{
 		if(*Params.Keyword == " ") {
-			db.Raw("select id,name  FROM banners where  id not in (select bannerId from category_banner_relation  where categoryId = ? )", *(Params.CategoryID)).Limit(*(Params.PageSize)).Offset(*(Params.PageIndex)*(*(Params.PageSize))).Find(&bannerList)
+			db.Raw("select id,name  FROM banners where status=0 and  id not in (select bannerId from category_banner_relation  where categoryId = ? )", *(Params.CategoryID)).Limit(*(Params.PageSize)).Offset(*(Params.PageIndex)*(*(Params.PageSize))).Find(&bannerList)
 			db.Raw("select id,name  FROM banners where  id not in (select bannerId from category_banner_relation  where categoryId = ? )", *(Params.CategoryID)).Count(&count)
 		}else{
-			db.Raw("select id,name  FROM banners where name like '%" + *(Params.Keyword)+"%' and id not in (select bannerId from category_banner_relation  where categoryId = ? )", *(Params.CategoryID)).Limit(*(Params.PageSize)).Offset(*(Params.PageIndex)*(*(Params.PageSize))).Find(&bannerList)
-			db.Raw("select id,name  FROM banners where name like '%" + *(Params.Keyword)+"%' and id not in (select bannerId from category_banner_relation  where categoryId = ? )", *(Params.CategoryID)).Count(&count)
+			db.Raw("select id,name  FROM banners where status=0 and name like '%" + *(Params.Keyword)+"%' and id not in (select bannerId from category_banner_relation  where categoryId = ? )", *(Params.CategoryID)).Limit(*(Params.PageSize)).Offset(*(Params.PageIndex)*(*(Params.PageSize))).Find(&bannerList)
+			db.Raw("select id,name  FROM banners where status=0 and name like '%" + *(Params.Keyword)+"%' and id not in (select bannerId from category_banner_relation  where categoryId = ? )", *(Params.CategoryID)).Count(&count)
 		}
 		//db.Table("books").Select("books.id, books.name").Joins("left join album_book_relation on books.id = album_book_relation.bookId").Where("books.id is null").Find(&bookList)
 		fmt.Println("1")
@@ -84,8 +84,8 @@ func (o *BannerList) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	}else{
 		if Params.CategoryID !=nil{
 			fmt.Println("2")
-			db.Table("banners").Select("banners.id, banners.name").Joins("left join category_banner_relation on banners.id = category_banner_relation.bannerId").Where("category_banner_relation.categoryId =?",*Params.CategoryID).Count(&count)
-			db.Table("banners").Select("banners.id, banners.name").Joins("left join category_banner_relation on banners.id = category_banner_relation.bannerId").Where("category_banner_relation.categoryId =?",*Params.CategoryID).Limit(*(Params.PageSize)).Offset(*(Params.PageIndex)*(*(Params.PageSize))).Find(&bannerList)
+			db.Table("banners").Select("banners.id, banners.name").Joins("left join category_banner_relation on banners.id = category_banner_relation.bannerId").Where("category_banner_relation.categoryId =?",*Params.CategoryID).Where("banners.status=?",0).Count(&count)
+			db.Table("banners").Select("banners.id, banners.name").Joins("left join category_banner_relation on banners.id = category_banner_relation.bannerId").Where("category_banner_relation.categoryId =?",*Params.CategoryID).Where("banners.status=?",0).Limit(*(Params.PageSize)).Offset(*(Params.PageIndex)*(*(Params.PageSize))).Find(&bannerList)
 		}else{
 			fmt.Println("3")
 			db.Table("banners").Where(map[string]interface{}{"status":0}).Count(&count)

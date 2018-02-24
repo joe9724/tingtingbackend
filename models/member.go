@@ -56,6 +56,12 @@ type Member struct {
 	// tags
 	// Required: true
 	Tags *string `json:"tags"`
+
+	Ts *int64 `json:"ts"`
+
+	BuyedAlbumsCount *int64 `json:"buyedAlbumsCount"`
+
+	Status *int64 `json:"status"`
 }
 
 // Validate validates this member

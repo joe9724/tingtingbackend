@@ -12,6 +12,7 @@ import (
 	_"os"
 	"tingtingbackend/models"
 	"tingtingbackend/var"
+	"time"
 )
 
 // BookUploadHandlerFunc turns a function with the right signature into a book upload handler
@@ -82,6 +83,7 @@ func (o *BookUpload) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 		book.Name = Params.Title
 		book.AuthorName = Params.AuthorName
 		fmt.Println("author is",Params.AuthorName)
+		book.Time = time.Now().UnixNano() / 1000000000
 		//t := int64(-1)
 		//book.book_Id = &t
 		book.Status = *(Params.Status)

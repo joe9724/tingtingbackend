@@ -67,7 +67,8 @@ func (o *BannerDetail) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	//query
 	var banner models.Banner
 
-	db.Table("banners").Where("id=?",Params.BannerID).First(&banner)
+    db.Table("banners").Select("id,cover,type,name,jumpid,jumpurl,test").Where("id=?",Params.BannerID).Last(&banner)
+	//db.Table("banners").Where("id=?",Params.BannerID).First(&banner)
 	fmt.Println("banner is",banner)
 	response.Data = &banner
 

@@ -78,22 +78,22 @@ func (o *BannerUpload) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	if(*(Params.BannerID) == -1){ //新建
 		banner.Type = Params.Type
 		banner.Name = Params.Name
-		banner.WebUrl = Params.WebURL
+		banner.Jumpurl = Params.WebURL
 		banner.Status = *(Params.Status)
-		banner.TargetId = Params.TargetID
+		banner.Jumpid = Params.TargetID
 		if(Params.CoverUrl != ""){
 			banner.Cover = &(Params.CoverUrl)
 		}
-		db.Exec("insert into banners(name,status,type,targetId,webUrl,cover) values(?,?,?,?,?,?)",Params.Name,*(Params.Status),*(Params.Type),*(Params.TargetID),Params.WebURL,Params.CoverUrl)
+		db.Exec("insert into banners(name,status,type,jumpid,jumpurl,cover) values(?,?,?,?,?,?)",Params.Name,*(Params.Status),*(Params.Type),*(Params.TargetID),Params.WebURL,Params.CoverUrl)
 		//book.User_id = *(Params.MemberID)
 		//db.Table("banners").Create(&banner)
 	}else{ //更新
 		//fmt.Println("edit")
 		//db.Table("sub_book_items").Where("id=?",*(Params.BookId)).Last(&book)
 		if(Params.CoverUrl != ""){
-			db.Exec("update banners set name=?,status=?,type=?,cover=?,targetId=?,webUrl=? where id=?",Params.Name,*(Params.Status),*(Params.Type),Params.CoverUrl,*(Params.TargetID),Params.WebURL,*(Params.BannerID))
+			db.Exec("update banners set name=?,status=?,type=?,cover=?,jumpid=?,jumpurl=? where id=?",Params.Name,*(Params.Status),*(Params.Type),Params.CoverUrl,*(Params.TargetID),Params.WebURL,*(Params.BannerID))
 		}else{
-			db.Exec("update banners set name=?,status=?,type=?,targetId=?,webUrl=? where id=?",Params.Name,*(Params.Status),*(Params.Type),*(Params.TargetID),Params.WebURL,*(Params.BannerID))
+			db.Exec("update banners set name=?,status=?,type=?,jumpid=?,jumpurl=? where id=?",Params.Name,*(Params.Status),*(Params.Type),*(Params.TargetID),Params.WebURL,*(Params.BannerID))
 		}
 
 	}

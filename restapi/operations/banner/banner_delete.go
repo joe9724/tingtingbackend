@@ -7,8 +7,13 @@ package banner
 
 import (
 	"net/http"
-
+	_"github.com/jinzhu/gorm"
+	_ "github.com/jinzhu/gorm/dialects/mysql"
 	middleware "github.com/go-openapi/runtime/middleware"
+	"tingtingbackend/models"
+	"fmt"
+	"tingtingbackend/var"
+	"strconv"
 )
 
 // BannerDeleteHandlerFunc turns a function with the right signature into a banner delete handler
@@ -53,8 +58,34 @@ func (o *BannerDelete) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	res := o.Handler.Handle(Params) // actually handle the request
+	var ok BannerDeleteOK
+	var response models.InlineResponse2003
 
-	o.Context.Respond(rw, r, route.Produces, route, res)
+	db,err := _var.OpenConnection()
+	if err!=nil{
+		fmt.Println(err.Error())
+	}
+	//query
+	//var banner models.Banner
+
+	//db.Table("banners").Select("id,cover,type,name,jumpid,jumpurl,test").Where("id=?",Params.BannerID).Last(&banner)
+	//db.Table("banners").Where("id=?",Params.BannerID).First(&banner)
+	//fmt.Println("banner is",banner)
+	//response.Data = &banner
+	fmt.Println("bannerid is",*(Params.BannerID))
+	var bid int64
+	bid,er := strconv.ParseInt(*(Params.BannerID), 10, 64)
+	if er !=nil{
+
+	}
+    db.Exec("update banners set status=1 where id=?",bid)
+	//status
+	var status models.Response
+	status.UnmarshalBinary([]byte(_var.Response200(200,"ok")))
+	response.Status = &status
+
+	ok.SetPayload(&response)
+
+	o.Context.Respond(rw, r, route.Produces, route, ok)
 
 }

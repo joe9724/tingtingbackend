@@ -39,6 +39,8 @@ type Recharge struct {
 
 	// value
 	Value float64 `json:"value,omitempty"`
+
+	Rtype int64 `json:"rtype,omitempty"`
 }
 
 // Validate validates this recharge

@@ -68,7 +68,39 @@ func (o *OrderList) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	}
 	defer db.Close()
 	//query
-	db.Where(map[string]interface{}{"status":0}).Limit(*(Params.PageSize)).Offset(*(Params.PageIndex)*(*(Params.PageSize))).Find(&orderList)
+	//db.Where(map[string]interface{}{"status":0}).Limit(*(Params.PageSize)).Offset(*(Params.PageIndex)*(*(Params.PageSize))).Find(&orderList)
+	rows, err := db.Raw("select orders.id,orders.order_no,orders.album_id,orders.member_id,orders.time,albums.name as albumname,albums.value,members.name as membername from orders left join albums on orders.album_id = albums.id left join members on orders.member_id=members.id").Limit(*(Params.PageSize)).Offset(*(Params.PageIndex)*(*(Params.PageSize))).Rows()
+	if err !=nil{
+		fmt.Println("err is",err.Error())
+	}
+	//var temp []models.Album
+	for rows.Next() {
+		var id int64
+		var order_no string
+		var album_id int64
+		var member_id int64
+		var time int64
+		var albumname string
+		var value float64
+		var membername string
+
+		err = rows.Scan(&id,&order_no,&album_id,&member_id,&time,&albumname,&value,&membername)
+		if err != nil{
+			fmt.Println(err.Error())
+		}
+
+		var t models.Order
+        t.MemberID = &member_id
+        t.ID = &id
+        t.Value = &value
+        t.Time = &time
+        t.OrderNo = &order_no
+        t.AlbumName = &albumname
+        t.MemberName = &membername
+        t.AlbumID = &album_id
+		orderList = append(orderList,&t)
+	}
+
 	db.Table("orders").Where(map[string]interface{}{"status":0}).Count(&count)
 	//data
 	response.Orders = orderList

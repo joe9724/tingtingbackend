@@ -7,8 +7,13 @@ package book
 
 import (
 	"net/http"
-
+	_"github.com/jinzhu/gorm"
+	_ "github.com/jinzhu/gorm/dialects/mysql"
 	middleware "github.com/go-openapi/runtime/middleware"
+	"tingtingbackend/models"
+	"fmt"
+	"tingtingbackend/var"
+	"strconv"
 )
 
 // BookDeleteHandlerFunc turns a function with the right signature into a book delete handler
@@ -53,8 +58,34 @@ func (o *BookDelete) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	res := o.Handler.Handle(Params) // actually handle the request
+	var ok BookDeleteOK
+	var response models.InlineResponse20018
 
-	o.Context.Respond(rw, r, route.Produces, route, res)
+	db,err := _var.OpenConnection()
+	if err!=nil{
+		fmt.Println(err.Error())
+	}
+
+	fmt.Println("iconid is",*(Params.BookID))
+	var bid int64
+	bid,er := strconv.ParseInt(*(Params.BookID), 10, 64)
+	if er !=nil{
+
+	}
+	//判断是删除book还是删除defaultbook
+	if(Params.Action !=nil){
+		db.Exec("update book_default_grade_relation set status=1 where id=?",bid)
+	}else{
+		db.Exec("update books set status=1 where id=?",bid)
+	}
+
+	//status
+	var status models.Response
+	status.UnmarshalBinary([]byte(_var.Response200(200,"ok")))
+	response.Status = &status
+
+	ok.SetPayload(&response)
+
+	o.Context.Respond(rw, r, route.Produces, route, ok)
 
 }

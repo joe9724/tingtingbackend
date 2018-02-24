@@ -25,7 +25,7 @@ type RechargeListOK struct {
 	/*
 	  In: Body
 	*/
-	Payload *models.InlineResponse2003 `json:"body,omitempty"`
+	Payload *models.InlineResponse2003513 `json:"body,omitempty"`
 }
 
 // NewRechargeListOK creates RechargeListOK with default headers values
@@ -34,13 +34,13 @@ func NewRechargeListOK() *RechargeListOK {
 }
 
 // WithPayload adds the payload to the recharge list o k response
-func (o *RechargeListOK) WithPayload(payload *models.InlineResponse2003) *RechargeListOK {
+func (o *RechargeListOK) WithPayload(payload *models.InlineResponse2003513) *RechargeListOK {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the recharge list o k response
-func (o *RechargeListOK) SetPayload(payload *models.InlineResponse2003) {
+func (o *RechargeListOK) SetPayload(payload *models.InlineResponse2003513) {
 	o.Payload = payload
 }
 

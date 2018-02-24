@@ -4356,6 +4356,16 @@ func init() {
         "type": {
           "type": "integer",
           "format": "int64"
+        },
+        "name": {
+          "type": "string"
+        },
+        "targetId": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "webUrl": {
+          "type": "string"
         }
       },
       "example": {
@@ -10460,6 +10470,16 @@ func init() {
         "type": {
           "type": "integer",
           "format": "int64"
+        },
+        "name": {
+          "type": "string"
+        },
+        "targetId": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "webUrl": {
+          "type": "string"
         }
       },
       "example": {
