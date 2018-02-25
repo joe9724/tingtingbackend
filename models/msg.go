@@ -32,6 +32,8 @@ type Msg struct {
 	// title
 	// Required: true
 	Title *string `json:"title"`
+
+	Times *int64 `json:"times"`
 }
 
 // Validate validates this msg
