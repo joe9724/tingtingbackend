@@ -52,11 +52,12 @@ func (o *NrRelationDefaultBookUpload) ServeHTTP(rw http.ResponseWriter, r *http.
 	}
 	var Params = NewNrRelationDefaultBookUploadParams()
 
+	//fmt.Println("Params.grade is",Params.Body.Grade)
+
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
 		o.Context.Respond(rw, r, route.Produces, route, err)
 		return
 	}
-
 
 	//grade,bookId,startTime,status
 	var ok RelationDefaultBookUploadOK

@@ -31,7 +31,7 @@ type Body1 struct {
 
 	Grade *int64 `json:"actionCode"`
 
-	BookId *int64 `json:"actionCode"`
+	BookId *int64 `json:"bookId"`
 
 	Status *int64 `json:"status"`
 
