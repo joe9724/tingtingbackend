@@ -7,8 +7,12 @@ package relation
 
 import (
 	"net/http"
-
 	middleware "github.com/go-openapi/runtime/middleware"
+	"fmt"
+	_"os"
+	"tingtingbackend/models"
+	"tingtingbackend/var"
+	_"time"
 )
 
 // NrRelationDefaultBookUploadHandlerFunc turns a function with the right signature into a relation default book upload handler
@@ -53,8 +57,29 @@ func (o *NrRelationDefaultBookUpload) ServeHTTP(rw http.ResponseWriter, r *http.
 		return
 	}
 
-	res := o.Handler.Handle(Params) // actually handle the request
 
-	o.Context.Respond(rw, r, route.Produces, route, res)
+	//grade,bookId,startTime,status
+	var ok RelationDefaultBookUploadOK
+	var response models.InlineResponse2003
+	var status models.Response
+
+	var msg string
+	var code int64
+
+	msg = "ok"
+	code = 200
+
+	db,err := _var.OpenConnection()
+	if err!=nil{
+		fmt.Println(err.Error())
+	}
+
+
+	db.Exec("insert into book_default_grade_relation(bookId,grade,startTime,status) values(?,?,?)",Params.Body.BookId,Params.Body.Grade,Params.Body.StartTime,Params.Body.Status)
+
+	status.UnmarshalBinary([]byte(_var.Response200(code,msg)))
+	response.Status = &status
+	ok.SetPayload(&response)
+	o.Context.Respond(rw, r, route.Produces, route, ok)
 
 }

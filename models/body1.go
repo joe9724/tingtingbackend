@@ -28,6 +28,15 @@ type Body1 struct {
 	// book ids
 	// Required: true
 	BookIds *string `json:"bookIds"`
+
+	Grade *int64 `json:"actionCode"`
+
+	BookId *int64 `json:"actionCode"`
+
+	Status *int64 `json:"status"`
+
+	StartTime *string `json:"starttime"`
+
 }
 
 // Validate validates this body 1
