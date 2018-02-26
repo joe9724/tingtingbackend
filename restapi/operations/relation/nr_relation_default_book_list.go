@@ -79,7 +79,7 @@ func (o *NrRelationDefaultBookList) ServeHTTP(rw http.ResponseWriter, r *http.Re
 
 	db.Raw("select count(id) from book_default_grade_relation where book_default_grade_relation.status=0").Count(&count)
 
-	rows, err := db.Raw("select books.name,books.grade,book_default_grade_relation.startTime,book_default_grade_relation.endTime,book_default_grade_relation.bookId,book_default_grade_relation.status from books join book_default_grade_relation on books.id=book_default_grade_relation.bookId where book_default_grade_relation.status=0").Limit(*(Params.PageSize)).Offset(*(Params.PageIndex)*(*(Params.PageSize))).Rows()
+	rows, err := db.Raw("select books.name,book_default_grade_relation.grade,book_default_grade_relation.startTime,book_default_grade_relation.endTime,book_default_grade_relation.bookId,book_default_grade_relation.status from books join book_default_grade_relation on books.id=book_default_grade_relation.bookId where book_default_grade_relation.status=0 order by grade,(startTime+1)").Limit(*(Params.PageSize)).Offset(*(Params.PageIndex)*(*(Params.PageSize))).Rows()
 	if err !=nil{
 		fmt.Println("err is",err.Error())
 	}

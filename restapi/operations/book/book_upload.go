@@ -76,34 +76,39 @@ func (o *BookUpload) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 
 	//tt:= int64(-1)
 	fmt.Println("Params.BookId=",*(Params.BookId))
-	if(*(Params.BookId) == -1){ //新建
-		fmt.Println("new")
-		fmt.Println("Params.Summary is",Params.Summary)
-		book.Summary = *(Params.Summary)
-		book.Name = Params.Title
-		book.AuthorName = Params.AuthorName
-		fmt.Println("author is",Params.AuthorName)
-		book.Time = time.Now().UnixNano() / 1000000000
-		//t := int64(-1)
-		//book.book_Id = &t
-		book.Status = *(Params.Status)
-		if(Params.IconUrl != ""){
-			book.Icon = Params.IconUrl
-		}
-		//book.User_id = *(Params.MemberID)
-		db.Table("books").Create(&book)
-	}else{ //更新
-		//fmt.Println("edit")
-		//db.Table("sub_book_items").Where("id=?",*(Params.BookId)).Last(&book)
-		if(Params.IconUrl != ""){
-			fmt.Println("1",Params.IconUrl)
-			db.Exec("update books set name=?,status=?,summary=?,icon=?,author_name=? where id=?",Params.Title,0,*(Params.Summary),Params.IconUrl,Params.AuthorName,&(Params.BookId))
-		}else{
-			fmt.Println("2",Params.IconUrl,*(Params.Summary))
-			summary := *(Params.Summary)
-			db.Exec("update books set name=?,status=?,summary=?,author_name=? where id=?",Params.Title,0,summary,Params.AuthorName,&(Params.BookId))
-		}
+	//添加正常
+	if (Params.Action == "default"){
+		db.Exec("insert into book_default_grade_relation(bookId,grade,startTime) values(?,?,?)",Params.BookId,Params.Grade,Params.StartTime)
+	}else {
+		if (*(Params.BookId) == -1) { //新建
+			fmt.Println("new")
+			fmt.Println("Params.Summary is", Params.Summary)
+			book.Summary = *(Params.Summary)
+			book.Name = Params.Title
+			book.AuthorName = Params.AuthorName
+			fmt.Println("author is", Params.AuthorName)
+			book.Time = time.Now().UnixNano() / 1000000000
+			//t := int64(-1)
+			//book.book_Id = &t
+			book.Status = *(Params.Status)
+			if (Params.IconUrl != "") {
+				book.Icon = Params.IconUrl
+			}
+			//book.User_id = *(Params.MemberID)
+			db.Table("books").Create(&book)
+		} else { //更新
+			//fmt.Println("edit")
+			//db.Table("sub_book_items").Where("id=?",*(Params.BookId)).Last(&book)
+			if (Params.IconUrl != "") {
+				fmt.Println("1", Params.IconUrl)
+				db.Exec("update books set name=?,status=?,summary=?,icon=?,author_name=? where id=?", Params.Title, 0, *(Params.Summary), Params.IconUrl, Params.AuthorName, &(Params.BookId))
+			} else {
+				fmt.Println("2", Params.IconUrl, *(Params.Summary))
+				summary := *(Params.Summary)
+				db.Exec("update books set name=?,status=?,summary=?,author_name=? where id=?", Params.Title, 0, summary, Params.AuthorName, &(Params.BookId))
+			}
 
+		}
 	}
 
 	status.UnmarshalBinary([]byte(_var.Response200(code,msg)))

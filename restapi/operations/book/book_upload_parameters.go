@@ -75,6 +75,12 @@ type BookUploadParams struct {
 	Status *int64
 
 	BookId *int64
+
+	Action string
+
+	Grade *int64
+
+	StartTime string
 }
 
 // BindRequest both binds and validates a request, it assumes that complex things implement a Validatable(strfmt.Registry) error interface
@@ -104,6 +110,16 @@ func (o *BookUploadParams) BindRequest(r *http.Request, route *middleware.Matche
 
 	fdIconUrl, fdhkIconUrl, _ := fds.GetOK("iconUrl")
 	if err := o.bindIconUrl(fdIconUrl, fdhkIconUrl, route.Formats); err != nil {
+		res = append(res, err)
+	}
+
+	fdAction, fdhkAction, _ := fds.GetOK("action")
+	if err := o.bindAction(fdAction, fdhkAction, route.Formats); err != nil {
+		res = append(res, err)
+	}
+
+	fdStartTime, fdhkStartTime, _ := fds.GetOK("starttime")
+	if err := o.bindStartTime(fdStartTime, fdhkStartTime, route.Formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -154,6 +170,11 @@ func (o *BookUploadParams) BindRequest(r *http.Request, route *middleware.Matche
 		res = append(res, err)
 	}
 
+	fdGrade, fdhkGrade, _ := fds.GetOK("grade")
+	if err := o.bindGrade(fdGrade, fdhkGrade, route.Formats); err != nil {
+		res = append(res, err)
+	}
+
 	fdStatus, fdhkStatus, _ := fds.GetOK("status")
 	if err := o.bindStatus(fdStatus, fdhkStatus, route.Formats); err != nil {
 		res = append(res, err)
@@ -185,6 +206,40 @@ func (o *BookUploadParams) bindCover(file multipart.File, header *multipart.File
 }
 
 func (o *BookUploadParams) bindIcon(file multipart.File, header *multipart.FileHeader) error {
+
+	return nil
+}
+
+func (o *BookUploadParams) bindAction(rawData []string, hasKey bool, formats strfmt.Registry) error {
+	/*if !hasKey {
+		return errors.Required("iconUrl", "formData")
+	}*/
+	var raw string
+	if len(rawData) > 0 {
+		raw = rawData[len(rawData)-1]
+	}
+	if err := validate.RequiredString("action", "formData", raw); err != nil {
+		return err
+	}
+
+	o.Action = raw
+
+	return nil
+}
+
+func (o *BookUploadParams) bindStartTime(rawData []string, hasKey bool, formats strfmt.Registry) error {
+	/*if !hasKey {
+		return errors.Required("iconUrl", "formData")
+	}*/
+	var raw string
+	if len(rawData) > 0 {
+		raw = rawData[len(rawData)-1]
+	}
+	if err := validate.RequiredString("starttime", "formData", raw); err != nil {
+		return err
+	}
+
+	o.StartTime = raw
 
 	return nil
 }
@@ -223,7 +278,7 @@ func (o *BookUploadParams) bindAuthorName(rawData []string, hasKey bool, formats
 	return nil
 }
 
-func (o *BookUploadParams) bindBookId(rawData []string, hasKey bool, formats strfmt.Registry) error {
+func (o *BookUploadParams) bindGrade(rawData []string, hasKey bool, formats strfmt.Registry) error {
 	var raw string
 	if len(rawData) > 0 {
 		raw = rawData[len(rawData)-1]
@@ -234,9 +289,9 @@ func (o *BookUploadParams) bindBookId(rawData []string, hasKey bool, formats str
 
 	value, err := swag.ConvertInt64(raw)
 	if err != nil {
-		return errors.InvalidType("categoryId", "formData", "int64", raw)
+		return errors.InvalidType("grade", "formData", "int64", raw)
 	}
-	o.BookId = &value
+	o.Grade = &value
 
 	return nil
 }
@@ -285,6 +340,24 @@ func (o *BookUploadParams) bindTitle(rawData []string, hasKey bool, formats strf
 	}
 
 	o.Title = raw
+
+	return nil
+}
+
+func (o *BookUploadParams) bindBookId(rawData []string, hasKey bool, formats strfmt.Registry) error {
+	var raw string
+	if len(rawData) > 0 {
+		raw = rawData[len(rawData)-1]
+	}
+	if raw == "" { // empty values pass all other validations
+		return nil
+	}
+
+	value, err := swag.ConvertInt64(raw)
+	if err != nil {
+		return errors.InvalidType("bookId", "formData", "int64", raw)
+	}
+	o.BookId = &value
 
 	return nil
 }
