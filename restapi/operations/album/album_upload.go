@@ -82,6 +82,7 @@ func (o *AlbumUpload) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 		album.Summary = *(Params.Summary)
 		album.Name = Params.Title
 		album.Time = time.Now().UnixNano() / 1000000000
+		album.GradeRange = Params.GradeRange
 		fmt.Println("album.time is",album.Time)
 		//t := int64(-1)
 		//album.album_Id = &t
@@ -96,11 +97,11 @@ func (o *AlbumUpload) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 		//db.Table("sub_album_items").Where("id=?",*(Params.AlbumId)).Last(&album)
 		if(Params.IconUrl != ""){
 			fmt.Println("1",Params.IconUrl)
-			db.Exec("update albums set name=?,status=?,summary=?,icon=? ,grade=? where id=?",Params.Title,0,*(Params.Summary),Params.IconUrl,*(Params.Grade),&(Params.AlbumId))
+			db.Exec("update albums set name=?,status=?,summary=?,icon=? ,grade_range=? where id=?",Params.Title,0,*(Params.Summary),Params.IconUrl,Params.GradeRange,&(Params.AlbumId))
 		}else{
 			fmt.Println("2",Params.IconUrl,*(Params.Summary))
 			summary := *(Params.Summary)
-			db.Exec("update albums set name=?,status=?,summary=?,grade=? where id=?",Params.Title,0,summary,*(Params.Grade),&(Params.AlbumId))
+			db.Exec("update albums set name=?,status=?,summary=?,grade_range=? where id=?",Params.Title,0,summary,Params.GradeRange,&(Params.AlbumId))
 		}
 
 	}

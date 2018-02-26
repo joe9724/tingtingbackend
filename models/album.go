@@ -60,6 +60,10 @@ type Album struct {
 	HasPushed int64 `json:"hasPushed"`
 
 	Grade int64 `json:"grade"`
+
+	GradeRange string `json:"gradeRange"`
+
+	Times int64 `json:"times"`
 }
 
 // Validate validates this album

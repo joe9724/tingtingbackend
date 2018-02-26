@@ -60,6 +60,7 @@ func (o *NrUserList) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	var ok UserListOK
 	var response models.InlineResponse20030
 	var userlist models.InlineResponse20030Users
+	var count int64
 
 	db,err := _var.OpenConnection()
 	if err!=nil{
@@ -67,7 +68,8 @@ func (o *NrUserList) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	}
 	defer db.Close()
 	//query
-	db.Where(map[string]interface{}{"status":0}).Find(&userlist).Limit(*(Params.PageSize)).Offset(*(Params.PageIndex)*(*(Params.PageSize)))
+	db.Table("users").Where(map[string]interface{}{"status":0}).Find(&userlist).Limit(*(Params.PageSize)).Offset(*(Params.PageIndex)*(*(Params.PageSize)))
+	db.Table("users").Where(map[string]interface{}{"status":0}).Count(&count)
 	//data
 	response.Users = userlist
 
@@ -75,6 +77,7 @@ func (o *NrUserList) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	var status models.Response
 	status.UnmarshalBinary([]byte(_var.Response200(200,"ok")))
 	response.Status = &status
+	response.Status.TotalCount = count
 
 	ok.SetPayload(&response)
 

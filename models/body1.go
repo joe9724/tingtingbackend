@@ -37,6 +37,8 @@ type Body1 struct {
 
 	StartTime *string `json:"starttime"`
 
+	GradeRange string
+
 }
 
 // Validate validates this body 1
