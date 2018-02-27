@@ -105,7 +105,13 @@ func (o *PushJpush) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 
 	payload := jpushclient.NewPushPayLoad()
 	payload.SetPlatform(&pf)
-	//payload.SetAudience(&ad)
+
+	var ad jpushclient.Audience
+	//s := []string{"t1", "t2", "t3"}
+	//ad.SetTag(s)
+	ad.All()
+
+	payload.SetAudience(&ad)
 	//payload.SetMessage(&msg)
 	payload.SetNotice(&notice)
 
