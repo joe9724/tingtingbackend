@@ -44,6 +44,8 @@ type PushJpushParams struct {
 	  In: query
 	*/
 	Userid *int64
+
+	Title string
 }
 
 // BindRequest both binds and validates a request, it assumes that complex things implement a Validatable(strfmt.Registry) error interface
@@ -64,6 +66,11 @@ func (o *PushJpushParams) BindRequest(r *http.Request, route *middleware.Matched
 		res = append(res, err)
 	}
 
+	qTitle, qhkTitle, _ := qs.GetOK("title")
+	if err := o.bindIitle(qTitle, qhkTitle, route.Formats); err != nil {
+		res = append(res, err)
+	}
+
 	qUserid, qhkUserid, _ := qs.GetOK("userid")
 	if err := o.bindUserid(qUserid, qhkUserid, route.Formats); err != nil {
 		res = append(res, err)
@@ -72,6 +79,24 @@ func (o *PushJpushParams) BindRequest(r *http.Request, route *middleware.Matched
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+func (o *PushJpushParams) bindIitle(rawData []string, hasKey bool, formats strfmt.Registry) error {
+	var raw string
+	if len(rawData) > 0 {
+		raw = rawData[len(rawData)-1]
+	}
+	if raw == "" { // empty values pass all other validations
+		return nil
+	}
+
+	/*value, err := swag.ConvertInt64(raw)
+	if err != nil {
+		return errors.InvalidType("title", "query", "string", raw)
+	}*/
+	o.Title = raw
+
 	return nil
 }
 

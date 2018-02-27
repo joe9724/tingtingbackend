@@ -2786,6 +2786,56 @@ func init() {
         }
       }
     },
+    "/push/jpush": {
+      "get": {
+        "description": "推送",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Jpush"
+        ],
+        "summary": "推送",
+        "operationId": "push/jpush",
+        "parameters": [
+          {
+            "type": "integer",
+            "format": "int64",
+            "description": "当前后台登录id",
+            "name": "userid",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "format": "int64",
+            "description": "通知id",
+            "name": "id",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "format": "int64",
+            "description": "类型 0=album 1=book 2= chapter 3=公告 4=新版本",
+            "name": "type",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "消息详情",
+            "schema": {
+              "$ref": "#/definitions/inline_response_200_3"
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
     "/recharge/detail": {
       "post": {
         "description": "获取充值",
@@ -8926,6 +8976,146 @@ func init() {
             "description": "获取反馈列表",
             "schema": {
               "$ref": "#/definitions/inline_response_200_3"
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/push/jpush": {
+      "get": {
+        "description": "推送",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Jpush"
+        ],
+        "summary": "推送",
+        "operationId": "push/jpush",
+        "parameters": [
+          {
+            "type": "integer",
+            "format": "int64",
+            "description": "当前后台登录id",
+            "name": "userid",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "format": "int64",
+            "description": "通知id",
+            "name": "id",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "format": "int64",
+            "description": "类型 0=album 1=book 2= chapter 3=公告 4=新版本",
+            "name": "type",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "消息详情",
+            "schema": {
+              "$ref": "#/definitions/inline_response_200_3"
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/recharge/detail": {
+      "post": {
+        "description": "获取充值",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Recharge"
+        ],
+        "summary": "获取充值流水(含条件检索)",
+        "operationId": "/recharge/detail",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "当前登录用户id",
+            "name": "userid",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "format": "int64",
+            "description": "分页索引",
+            "name": "pageIndex",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "format": "int64",
+            "description": "分页尺寸",
+            "name": "pageSize",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "format": "int64",
+            "description": "支付类型 0是支付宝 1是微信 2是银联 3是applay 4是其他",
+            "name": "payType",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "订单编号",
+            "name": "orderNo",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "format": "int64",
+            "description": "统计开始时间",
+            "name": "startTime",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "format": "int64",
+            "description": "统计结束时间",
+            "name": "endTime",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "format": "int64",
+            "description": "买书人id",
+            "name": "memberId",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "format": "int64",
+            "description": "id",
+            "name": "id",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "获取反馈列表",
+            "schema": {
+              "$ref": "#/definitions/inline_response_200_8"
             }
           },
           "default": {

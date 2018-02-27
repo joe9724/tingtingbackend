@@ -14,10 +14,11 @@ import (
 	"fmt"
 	"tingtingbackend/var"
 	"github.com/ylywyn/jpush-api-go-client"
+	"github.com/fatih/structs"
 )
 const (
-	appKey = "85c17e89d58186c1846dff4"
-	secret = "6509a4aa43b27a1ce8235c49"
+	appKey = "a67c24d6c05f16fe2b96112e"
+	secret = "858c1e130a1be0040f81badd"
 )
 // PushJpushHandlerFunc turns a function with the right signature into a push jpush handler
 type PushJpushHandlerFunc func(PushJpushParams) middleware.Responder
@@ -35,6 +36,12 @@ type PushJpushHandler interface {
 // NewPushJpush creates a new http.Handler for the push jpush operation
 func NewPushJpush(ctx *middleware.Context, handler PushJpushHandler) *PushJpush {
 	return &PushJpush{Context: ctx, Handler: handler}
+}
+
+type ExtraInfo struct{
+	ID *int64 `json:"id"`
+	Type *int64 `json:"type"`
+    Content *string `json:"content"`
 }
 
 /*PushJpush swagger:route GET /push/jpush Jpush pushJpush
@@ -78,11 +85,19 @@ func (o *PushJpush) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 
 	//Notice
 	var notice jpushclient.Notice
-	notice.SetAlert("alert_test")
-	notice.SetAndroidNotice(&jpushclient.AndroidNotice{Alert: "AndroidNotice"})
-	notice.SetIOSNotice(&jpushclient.IOSNotice{Alert: "IOSNotice"})
-	notice.SetWinPhoneNotice(&jpushclient.WinPhoneNotice{Alert: "WinPhoneNotice"})
+	fmt.Println("title is",Params.Title)
+	notice.SetAlert(Params.Title)
 
+	var extra ExtraInfo
+	extra.ID = Params.ID
+	extra.Content = &Params.Title
+	extra.Type = Params.Type
+
+	notice.SetAndroidNotice(&jpushclient.AndroidNotice{Alert: Params.Title,Title:Params.Title,Extras:structs.Map(extra)})
+	notice.SetIOSNotice(&jpushclient.IOSNotice{Alert: Params.Title,Extras:structs.Map(extra)})
+	//notice.SetWinPhoneNotice(&jpushclient.WinPhoneNotice{Alert: "WinPhoneNotice"})
+
+	//{"content":"xxxx", "type":0, "id":1234}
 	/*var msg jpushclient.Message
 	msg.Title = "Hello"
 	msg.Content = "你是ylywn"*/
