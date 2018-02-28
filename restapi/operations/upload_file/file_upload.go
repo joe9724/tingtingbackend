@@ -71,42 +71,55 @@ func (o *FileUpload) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 
 	fmt.Println("filename is", filename)
 
-	if (Params.Type == nil) {
+	fmt.Println("Param.type is",Params.Type)
+
+	var contentType string
+	var file []byte
+
+	if (Params.File!=nil){
 		file, err := ioutil.ReadAll(Params.File)
 		if err != nil {
 			fmt.Println("err upload:", err.Error())
 		}
 		//fmt.Println(len(icon))
 		// Always returns a valid content-type and "application/octet-stream" if no others seemed to match.
-		contentType := http.DetectContentType(file)
-		fmt.Println("contentType is", contentType)
+		contentType = http.DetectContentType(file)
+		fmt.Println("contentType is",contentType)
+
+	}
+	if contentType == "application/octet-stream"{
+		fmt.Println("10")
+		/*file, err := ioutil.ReadAll(Params.File)
+		if err != nil {
+			fmt.Println("err upload:", err.Error())
+		}
+		//fmt.Println(len(icon))
+		// Always returns a valid content-type and "application/octet-stream" if no others seemed to match.
+		contentType := http.DetectContentType(file)*/
+		//fmt.Println("contentType is", contentType)
 
 		//save
-		var lower string
-		lower = strings.ToLower(contentType)
-		if (strings.Contains(lower, "jp") || (strings.Contains(lower, "pn"))) {
-			if (runtime.GOOS == "windows") {
-				err1 := ioutil.WriteFile(filename+".jpg", file, 0644)
-				if err1 != nil {
-					fmt.Println(err1.Error())
-				}
-			} else {
-				err1 := ioutil.WriteFile("/root/go/src/resource/image/icon/"+filename+".jpg", file, 0644)
-				if err1 != nil {
-					fmt.Println(err1.Error())
-				}
+		//var lower string
+		//lower = strings.ToLower(contentType)
+		fmt.Println("contentType is",contentType)
+		if (runtime.GOOS == "windows") {
+			err1 := ioutil.WriteFile(filename+".m4a", file, 0644)
+			if err1 != nil {
+				fmt.Println(err1.Error())
 			}
-			response.URL = _var.GetResourceDomain("icon") + filename + ".jpg"
-			code = 200
-			msg = "ok"
 		} else {
-			code = 401
-			msg = "image format need jpg or png"
+			fmt.Println("11")
+			err1 := ioutil.WriteFile("/root/go/src/resource/mp3/"+filename+".m4a", file, 0644)
+			if err1 != nil {
+				fmt.Println(err1.Error())
+			}
 		}
-	} else {
-
-		//如果有icon
-		if (*Params.Type) == "icon" {
+		code = 200
+		msg = "ok"
+		response.URL = _var.GetResourceDomain("m4a") + filename + ".m4a"
+	}else {
+		if (Params.Type == nil) {
+			fmt.Println("1")
 			file, err := ioutil.ReadAll(Params.File)
 			if err != nil {
 				fmt.Println("err upload:", err.Error())
@@ -119,7 +132,8 @@ func (o *FileUpload) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 			//save
 			var lower string
 			lower = strings.ToLower(contentType)
-			if (strings.Contains(lower, "jp") || (strings.Contains(lower, "pn"))) {
+			fmt.Println("lower is",lower)
+			if (strings.Contains(lower, "text") || (strings.Contains(lower, "plain"))) {
 				if (runtime.GOOS == "windows") {
 					err1 := ioutil.WriteFile(filename+".jpg", file, 0644)
 					if err1 != nil {
@@ -135,77 +149,87 @@ func (o *FileUpload) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 				code = 200
 				msg = "ok"
 			} else {
+				fmt.Println("2")
 				code = 401
 				msg = "image format need jpg or png"
 			}
-		} else if (*Params.Type) == "cover" {
-			file, err := ioutil.ReadAll(Params.File)
-			if err != nil {
-				fmt.Println("err upload:", err.Error())
-			}
-			//fmt.Println(len(icon))
-			// Always returns a valid content-type and "application/octet-stream" if no others seemed to match.
-			contentType := http.DetectContentType(file)
-			//fmt.Println("contentType is", contentType)
-
-			//save
-			var lower string
-			lower = strings.ToLower(contentType)
-			if (strings.Contains(lower, "jp") || (strings.Contains(lower, "pn"))) {
-				if (runtime.GOOS == "windows") {
-					err1 := ioutil.WriteFile(filename+".jpg", file, 0644)
-					if err1 != nil {
-						fmt.Println(err1.Error())
-					}
-				} else {
-					err1 := ioutil.WriteFile("/root/go/src/resource/image/cover/"+filename+".jpg", file, 0644)
-					if err1 != nil {
-						fmt.Println(err1.Error())
-					}
+		} else {
+			fmt.Println("3")
+			//如果有icon
+			if (*Params.Type) == "icon" {
+				fmt.Println("4")
+				file, err := ioutil.ReadAll(Params.File)
+				if err != nil {
+					fmt.Println("err upload:", err.Error())
 				}
-				code = 200
-				msg = "ok"
-				response.URL = _var.GetResourceDomain("cover") + filename + ".jpg"
-			} else {
-				code = 402
-				msg = "image format need jpg or png "
-			}
+				//fmt.Println(len(icon))
+				// Always returns a valid content-type and "application/octet-stream" if no others seemed to match.
+				contentType := http.DetectContentType(file)
+				fmt.Println("contentType is", contentType)
 
-		} else if (*Params.Type) == "mp3" {
-			file, err := ioutil.ReadAll(Params.File)
-			if err != nil {
-				fmt.Println("err upload:", err.Error())
-			}
-			//fmt.Println(len(icon))
-			// Always returns a valid content-type and "application/octet-stream" if no others seemed to match.
-			contentType := http.DetectContentType(file)
-			//fmt.Println("contentType is", contentType)
-
-			//save
-			var lower string
-			lower = strings.ToLower(contentType)
-			if (strings.Contains(lower, "jp") || (strings.Contains(lower, "pn"))) {
-				if (runtime.GOOS == "windows") {
-					err1 := ioutil.WriteFile(filename+".jpg", file, 0644)
-					if err1 != nil {
-						fmt.Println(err1.Error())
+				//save
+				var lower string
+				lower = strings.ToLower(contentType)
+				if (strings.Contains(lower, "text") || (strings.Contains(lower, "plain"))) {
+					fmt.Println("5")
+					if (runtime.GOOS == "windows") {
+						err1 := ioutil.WriteFile(filename+".jpg", file, 0644)
+						if err1 != nil {
+							fmt.Println(err1.Error())
+						}
+					} else {
+						err1 := ioutil.WriteFile("/root/go/src/resource/image/icon/"+filename+".jpg", file, 0644)
+						if err1 != nil {
+							fmt.Println(err1.Error())
+						}
 					}
+					response.URL = _var.GetResourceDomain("icon") + filename + ".jpg"
+					code = 200
+					msg = "ok"
 				} else {
-					err1 := ioutil.WriteFile("/root/go/src/resource/image/cover/"+filename+".jpg", file, 0644)
-					if err1 != nil {
-						fmt.Println(err1.Error())
-					}
+					fmt.Println("6")
+					code = 402
+					msg = "image format need jpg or png"
 				}
-				code = 200
-				msg = "ok"
-				response.URL = _var.GetResourceDomain("cover") + filename + ".jpg"
-			} else {
-				code = 402
-				msg = "image format need jpg or png "
+			} else if (*Params.Type) == "cover" {
+				fmt.Println("7")
+				file, err := ioutil.ReadAll(Params.File)
+				if err != nil {
+					fmt.Println("err upload:", err.Error())
+				}
+				//fmt.Println(len(icon))
+				// Always returns a valid content-type and "application/octet-stream" if no others seemed to match.
+				contentType := http.DetectContentType(file)
+				//fmt.Println("contentType is", contentType)
+
+				//save
+				var lower string
+				lower = strings.ToLower(contentType)
+				if (strings.Contains(lower, "text") || (strings.Contains(lower, "plain"))) {
+					fmt.Println("8")
+					if (runtime.GOOS == "windows") {
+						err1 := ioutil.WriteFile(filename+".jpg", file, 0644)
+						if err1 != nil {
+							fmt.Println(err1.Error())
+						}
+					} else {
+						err1 := ioutil.WriteFile("/root/go/src/resource/image/cover/"+filename+".jpg", file, 0644)
+						if err1 != nil {
+							fmt.Println(err1.Error())
+						}
+					}
+					code = 200
+					msg = "ok"
+					response.URL = _var.GetResourceDomain("cover") + filename + ".jpg"
+				} else {
+					fmt.Println("9")
+					code = 403
+					msg = "image format need jpg or png "
+				}
+
 			}
 
 		}
-
 	}
 	db, err := _var.OpenConnection()
 	if err != nil {

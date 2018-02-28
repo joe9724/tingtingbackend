@@ -82,6 +82,7 @@ func (o *ChapterUpload) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 		chapter.Summary = Params.Summary
 		chapter.Name = &(Params.Title)
 		chapter.Time = time.Now().UnixNano() / 1000000000
+		chapter.URL = &(Params.Url)
 		//chapter.AuthorName = Params.AuthorName
 		//fmt.Println("author is",Params.AuthorName)
 		//t := int64(-1)

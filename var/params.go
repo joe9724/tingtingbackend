@@ -36,7 +36,7 @@ func GetResourceDomain(filetype string) (string){
 		val = "http://tingting-resource.bitekun.xin/resource/image/icon/"
 	}else if(filetype == "cover"){
 		val = "http://tingting-resource.bitekun.xin/resource/image/cover/"
-	}else if(filetype == "mp3"){
+	}else if(filetype == "m4a"){
 		val = "http://tingting-resource.bitekun.xin/resource/mp3/"
 	}else if(filetype == "amr"){
 		val = "http://tingting-resource.bitekun.xin/resource/amr/"
