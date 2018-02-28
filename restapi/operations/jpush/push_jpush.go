@@ -41,7 +41,7 @@ func NewPushJpush(ctx *middleware.Context, handler PushJpushHandler) *PushJpush 
 type ExtraInfo struct{
 	ID *int64 `json:"id"`
 	Type *int64 `json:"type"`
-    Content *string `json:"content"`
+    //Content *string `json:"content"`
     //
 }
 
@@ -88,20 +88,26 @@ func (o *PushJpush) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	var notice jpushclient.Notice
 	fmt.Println("title is",Params.Title)
 	notice.SetAlert(Params.Title)
+	//notice.Android.Title = Params.Title
+
 
 	var extra ExtraInfo
 	extra.ID = Params.ID
-	extra.Content = &Params.Title
+	//extra.Content = &Params.Title
+	//var tempType int64
+	//tempType = 2
 	extra.Type = Params.Type
+	fmt.Println("Params.type is",*Params.Type)
 
-	notice.SetAndroidNotice(&jpushclient.AndroidNotice{Alert: Params.Title,Title:Params.Title,Extras:structs.Map(extra)})
-	notice.SetIOSNotice(&jpushclient.IOSNotice{Alert: Params.Title,Extras:structs.Map(extra)})
+	fmt.Println("title is",Params.Title)
+	notice.SetAndroidNotice(&jpushclient.AndroidNotice{Alert: "title",Title:"听听悦读",Extras:structs.Map(extra)})
+	notice.SetIOSNotice(&jpushclient.IOSNotice{Alert: "Title",Sound:"default",Extras:structs.Map(extra)})
 	//notice.SetWinPhoneNotice(&jpushclient.WinPhoneNotice{Alert: "WinPhoneNotice"})
 
 	//{"content":"xxxx", "type":0, "id":1234}
-	/*var msg jpushclient.Message
+	var msg jpushclient.Message
 	msg.Title = "Hello"
-	msg.Content = "你是ylywn"*/
+	msg.Content = "你是ylywn"
 
 	payload := jpushclient.NewPushPayLoad()
 	payload.SetPlatform(&pf)
