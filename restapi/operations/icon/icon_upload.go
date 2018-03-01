@@ -74,18 +74,26 @@ func (o *IconUpload) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	//tt:= int64(-1)
+	fmt.Println("Params.Name is",Params.Name)
+	fmt.Println("*(Params.Status) is",*(Params.Status))
+	fmt.Println("*(Params.Type)",*(Params.Type))
+	fmt.Println("*(Params.TargetID) is",*(Params.TargetID))
+	fmt.Println("Params.WebURL is",Params.WebURL)
+	fmt.Println("Params.CoverUrl is",Params.CoverUrl)
 
 	if(*(Params.IconID) == -1){ //新建
-		db.Exec("insert into icons(name,status,type,targetId,webUrl,cover) values(?,?,?,?,?,?)",Params.Name,*(Params.Status),*(Params.Type),*(Params.TargetID),Params.WebURL,Params.CoverUrl)
+
+
+		db.Exec("insert into icons(name,status,type,jumpid,weburl,cover) values(?,?,?,?,?,?)",Params.Name,*(Params.Status),*(Params.Type),*(Params.TargetID),Params.WebURL,Params.CoverUrl)
 		//book.User_id = *(Params.MemberID)
 		//db.Table("banners").Create(&banner)
 	}else{ //更新
 		//fmt.Println("edit")
 		//db.Table("sub_book_items").Where("id=?",*(Params.BookId)).Last(&book)
 		if(Params.CoverUrl != ""){
-			db.Exec("update icons set name=?,status=?,type=?,cover=?,targetId=?,webUrl=? where id=?",Params.Name,*(Params.Status),*(Params.Type),Params.CoverUrl,*(Params.TargetID),Params.WebURL,*(Params.IconID))
+			db.Exec("update icons set name=?,status=?,type=?,cover=?,jumpid=?,weburl=? where id=?",Params.Name,*(Params.Status),*(Params.Type),Params.CoverUrl,*(Params.TargetID),Params.WebURL,*(Params.IconID))
 		}else{
-			db.Exec("update icons set name=?,status=?,type=?,targetId=?,webUrl=? where id=?",Params.Name,*(Params.Status),*(Params.Type),*(Params.TargetID),Params.WebURL,*(Params.IconID))
+			db.Exec("update icons set name=?,status=?,type=?,jumpid=?,weburl=? where id=?",Params.Name,*(Params.Status),*(Params.Type),*(Params.TargetID),Params.WebURL,*(Params.IconID))
 		}
 
 	}

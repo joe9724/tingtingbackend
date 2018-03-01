@@ -31,7 +31,7 @@ type Icon struct {
 
 	Status int64 `json:"status"`
 
-	WebUrl *string `json:"webUrl"`
+	Weburl *string `json:"webUrl"`
 }
 
 // Validate validates this icon
