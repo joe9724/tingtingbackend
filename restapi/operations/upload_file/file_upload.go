@@ -87,7 +87,7 @@ func (o *FileUpload) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 		fmt.Println("contentType is", contentType)
 		fmt.Println("file.size is", len(file))
 
-		if contentType == "application/octet-stream" {
+		if contentType == "application/octet-stream" || contentType == "video/mp4" {
 			fmt.Println("10")
 			/*file, err := ioutil.ReadAll(Params.File)
 		if err != nil {
@@ -109,6 +109,7 @@ func (o *FileUpload) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 				}
 			} else {
 				fmt.Println("11")
+				fmt.Println("file.size2 is", len(file))
 				err1 := ioutil.WriteFile("/root/go/src/resource/mp3/"+filename+".m4a", file, 0644)
 				if err1 != nil {
 					fmt.Println(err1.Error())

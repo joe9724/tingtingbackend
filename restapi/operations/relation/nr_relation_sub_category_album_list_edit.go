@@ -7,8 +7,13 @@ package relation
 
 import (
 	"net/http"
-
+	_"github.com/jinzhu/gorm"
+	_ "github.com/jinzhu/gorm/dialects/mysql"
 	middleware "github.com/go-openapi/runtime/middleware"
+	"tingtingbackend/models"
+	"fmt"
+	"tingtingbackend/var"
+	"strings"
 )
 
 // NrRelationSubCategoryAlbumListEditHandlerFunc turns a function with the right signature into a relation sub category album list edit handler
@@ -53,8 +58,40 @@ func (o *NrRelationSubCategoryAlbumListEdit) ServeHTTP(rw http.ResponseWriter, r
 		return
 	}
 
-	res := o.Handler.Handle(Params) // actually handle the request
+	var ok RelationSubCategoryAlbumListEditOK
+	var response models.InlineResponse20018
 
-	o.Context.Respond(rw, r, route.Produces, route, res)
+
+	db,err := _var.OpenConnection()
+	if err!=nil{
+		fmt.Println(err.Error())
+	}
+
+	defer db.Close()
+
+	chapters := *(Params.Body.AlbumIds)
+
+	if (*(Params.Body.ActionCode) == 0){ //添加映射
+		//先解析出bookis集合,样式 1,2,3,4,
+		if (!strings.Contains(chapters,",")){
+			db.Exec("insert into category_album_relation(categoryId,albumId) values(?,?)",Params.Body.BookID,chapters)
+		}else{
+			temp := strings.Split(chapters,",")
+			for k:=0;k< len(temp);k++ {
+				db.Exec("insert into category_album_relation(categoryId,albumId) values(?,?)",Params.Body.BookID,temp[k])
+				//fmt.Println("insert into category_album_relation(bookId,chapterId) values(?,?)",Params.Body.BookID,temp[k])
+			}
+		}
+	}else{ //去除映射
+		db.Exec("delete from category_album_relation where categoryId=? and albumId=?",Params.Body.BookID,chapters)
+	}
+
+	var status models.Response
+	status.UnmarshalBinary([]byte(_var.Response200(200,"ok")))
+	response.Status = &status
+
+	ok.SetPayload(&response)
+
+	o.Context.Respond(rw, r, route.Produces, route, ok)
 
 }
