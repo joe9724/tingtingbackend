@@ -47,6 +47,7 @@ type NrRelationAlbumBooklistEdit struct {
 }
 
 func (o *NrRelationAlbumBooklistEdit) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
+	fmt.Println("edit_book_chapter_relation")
 	route, rCtx, _ := o.Context.RouteInfo(r)
 	if rCtx != nil {
 		r = rCtx
@@ -68,8 +69,10 @@ func (o *NrRelationAlbumBooklistEdit) ServeHTTP(rw http.ResponseWriter, r *http.
 	}
 
 	books := *(Params.Body.BookIds)
+
+	fmt.Println("Params.body.actionCode is",*(Params.Body.Action))
 	
-	if (*(Params.Body.ActionCode) == 0){ //添加映射
+	if (*(Params.Body.Action) == 0){ //添加映射
 		//先解析出bookis集合,样式 1,2,3,4,
 		if (!strings.Contains(books,",")){
 			db.Exec("insert into album_book_relation(albumId,bookId) values(?,?)",Params.Body.AlbumID,books)

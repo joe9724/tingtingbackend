@@ -47,6 +47,7 @@ type BookChapterListRelationEdit struct {
 }
 
 func (o *BookChapterListRelationEdit) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
+
 	route, rCtx, _ := o.Context.RouteInfo(r)
 	if rCtx != nil {
 		r = rCtx

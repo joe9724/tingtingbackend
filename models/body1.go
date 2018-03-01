@@ -11,6 +11,7 @@ import (
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/swag"
 	"github.com/go-openapi/validate"
+	"fmt"
 )
 
 // Body1 body 1
@@ -39,6 +40,8 @@ type Body1 struct {
 
 	GradeRange string
 
+	Action *int64 `json:"action"`
+
 }
 
 // Validate validates this body 1
@@ -46,6 +49,11 @@ func (m *Body1) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.validateActionCode(formats); err != nil {
+		// prop
+		res = append(res, err)
+	}
+
+	if err := m.validateAction(formats); err != nil {
 		// prop
 		res = append(res, err)
 	}
@@ -66,11 +74,22 @@ func (m *Body1) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *Body1) validateActionCode(formats strfmt.Registry) error {
+func (m *Body1) validateAction(formats strfmt.Registry) error {
 
-	if err := validate.Required("actionCode", "body", m.ActionCode); err != nil {
+	if err := validate.Required("action", "body", m.Action); err != nil {
+		fmt.Println("body1.err")
 		return err
 	}
+
+	return nil
+}
+
+func (m *Body1) validateActionCode(formats strfmt.Registry) error {
+
+	/*if err := validate.Required("actionCode", "body", m.ActionCode); err != nil {
+		fmt.Println("body2.err")
+		return err
+	}*/
 
 	return nil
 }
