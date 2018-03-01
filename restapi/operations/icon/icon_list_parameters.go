@@ -44,6 +44,10 @@ type IconListParams struct {
 	  In: query
 	*/
 	Userid *string
+
+	Keyword *string
+
+	CategoryID *int64
 }
 
 // BindRequest both binds and validates a request, it assumes that complex things implement a Validatable(strfmt.Registry) error interface
@@ -56,6 +60,16 @@ func (o *IconListParams) BindRequest(r *http.Request, route *middleware.MatchedR
 
 	qPageIndex, qhkPageIndex, _ := qs.GetOK("pageIndex")
 	if err := o.bindPageIndex(qPageIndex, qhkPageIndex, route.Formats); err != nil {
+		res = append(res, err)
+	}
+
+	qCategoryID, qhkCategoryID, _ := qs.GetOK("categoryId")
+	if err := o.bindCategoryID(qCategoryID, qhkCategoryID, route.Formats); err != nil {
+		res = append(res, err)
+	}
+
+	qKeyword, qhkKeyword, _ := qs.GetOK("keyword")
+	if err := o.bindKeyword(qKeyword, qhkKeyword, route.Formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -89,6 +103,38 @@ func (o *IconListParams) bindPageIndex(rawData []string, hasKey bool, formats st
 		return errors.InvalidType("pageIndex", "query", "int64", raw)
 	}
 	o.PageIndex = &value
+
+	return nil
+}
+
+func (o *IconListParams) bindCategoryID(rawData []string, hasKey bool, formats strfmt.Registry) error {
+	var raw string
+	if len(rawData) > 0 {
+		raw = rawData[len(rawData)-1]
+	}
+	if raw == "" { // empty values pass all other validations
+		return nil
+	}
+
+	value, err := swag.ConvertInt64(raw)
+	if err != nil {
+		return errors.InvalidType("albumId", "query", "int64", raw)
+	}
+	o.CategoryID = &value
+
+	return nil
+}
+
+func (o *IconListParams) bindKeyword(rawData []string, hasKey bool, formats strfmt.Registry) error {
+	var raw string
+	if len(rawData) > 0 {
+		raw = rawData[len(rawData)-1]
+	}
+	if raw == "" { // empty values pass all other validations
+		return nil
+	}
+
+	o.Keyword = &raw
 
 	return nil
 }

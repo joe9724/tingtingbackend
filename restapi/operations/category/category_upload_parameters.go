@@ -73,6 +73,8 @@ type CategoryUploadParams struct {
 	Status *int64
 
 	CategoryId *int64
+
+	Action string
 }
 
 // BindRequest both binds and validates a request, it assumes that complex things implement a Validatable(strfmt.Registry) error interface
@@ -97,6 +99,11 @@ func (o *CategoryUploadParams) BindRequest(r *http.Request, route *middleware.Ma
 
 	fdIconUrl, fdhkIconUrl, _ := fds.GetOK("iconUrl")
 	if err := o.bindIconUrl(fdIconUrl, fdhkIconUrl, route.Formats); err != nil {
+		res = append(res, err)
+	}
+
+	fdAction, fdhkAction, _ := fds.GetOK("action")
+	if err := o.bindAction(fdAction, fdhkAction, route.Formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -168,6 +175,20 @@ func (o *CategoryUploadParams) bindIconUrl(rawData []string, hasKey bool, format
 	}
 
 	o.IconUrl = raw
+
+	return nil
+}
+
+func (o *CategoryUploadParams) bindAction(rawData []string, hasKey bool, formats strfmt.Registry) error {
+	var raw string
+	if len(rawData) > 0 {
+		raw = rawData[len(rawData)-1]
+	}
+	if raw == "" { // empty values pass all other validations
+		return nil
+	}
+
+	o.Action = raw
 
 	return nil
 }

@@ -73,7 +73,7 @@ func (o *AlbumList) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	//data
 	response.AlbumList = albumList
 	fmt.Println("size is",len(albumList))
-    fmt.Println("haspushed is",albumList[0].HasPushed)
+    //fmt.Println("haspushed is",albumList[0].HasPushed)
 	//status
 	var status models.Response
 	status.UnmarshalBinary([]byte(_var.Response200(200,"ok")))

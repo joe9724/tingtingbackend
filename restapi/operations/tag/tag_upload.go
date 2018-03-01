@@ -78,7 +78,7 @@ func (o *TagUpload) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	if(*(Params.Tagid) == -1){ //新建
 		fmt.Println("new")
 		fmt.Println("Params.Summary is",Params.Summary)
-		tag.Summary = *(Params.Summary)
+		//tag.Summary = *(Params.Summary)
 		tag.Name = Params.Title
 		//t := int64(-1)
 		//tag.tag_Id = &t
@@ -87,7 +87,8 @@ func (o *TagUpload) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 			tag.Icon = Params.IconUrl
 		}*/
 		//tag.User_id = *(Params.MemberID)
-		db.Table("tags").Create(&tag)
+		//db.Table("tags").Create(&tag)
+		db.Exec("insert into tags(name,status) values(?,?)",Params.Title,Params.Status)
 	}else{ //更新
 		//fmt.Println("edit")
 		//db.Table("sub_tag_items").Where("id=?",*(Params.tagId)).Last(&tag)

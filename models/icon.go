@@ -27,7 +27,7 @@ type Icon struct {
 
 	Name *string `json:"name"`
 
-	TargetId *int64 `json:"targetId"`
+	Jumpid *int64 `json:"jumpid"`
 
 	Status int64 `json:"status"`
 

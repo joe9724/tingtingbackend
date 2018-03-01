@@ -93,21 +93,34 @@ func (o *CategoryUpload) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	}else{ //更新
 	    //fmt.Println("edit")
 		//db.Table("sub_category_items").Where("id=?",*(Params.CategoryId)).Last(&category)
-		if(Params.IconUrl != ""){
-			fmt.Println("0",Params.Title)
-			fmt.Println("1",Params.IconUrl)
-			fmt.Println("2",*(Params.Summary))
-			fmt.Println("3",*(Params.CategoryId))
-			name := Params.Title
-			summary := Params.Summary
-			iconurl := Params.IconUrl
-			categoryid := Params.CategoryId
+		if(Params.Action == "add"){
+			category.Summary = Params.Summary
+			category.Name = &(Params.Title)
+			//t := int64(-1)
+			category.Category_Id = Params.CategoryId
+			category.Status = Params.Status
+			if(Params.IconUrl != ""){
+				category.Icon = &(Params.IconUrl)
+			}
+			//album.User_id = *(Params.MemberID)
+			db.Table("sub_category_items").Create(&category)
+		}else {
+			if (Params.IconUrl != "") {
+				fmt.Println("0", Params.Title)
+				fmt.Println("1", Params.IconUrl)
+				fmt.Println("2", *(Params.Summary))
+				fmt.Println("3", *(Params.CategoryId))
+				name := Params.Title
+				summary := Params.Summary
+				iconurl := Params.IconUrl
+				categoryid := Params.CategoryId
 
-			db.Exec("update sub_category_items set name=?,status=?,summary=?,icon=? where id=?",name,0,summary,iconurl,categoryid)
-		}else{
-			fmt.Println("4",Params.IconUrl,*(Params.Summary))
-			summary := *(Params.Summary)
-			db.Exec("update sub_category_items set name=?,status=?,summary=? where id=?",Params.Title,0,summary,*(Params.CategoryId))
+				db.Exec("update sub_category_items set name=?,status=?,summary=?,icon=? where id=?", name, 0, summary, iconurl, categoryid)
+			} else {
+				fmt.Println("4", Params.IconUrl, *(Params.Summary))
+				summary := *(Params.Summary)
+				db.Exec("update sub_category_items set name=?,status=?,summary=? where id=?", Params.Title, 0, summary, *(Params.CategoryId))
+			}
 		}
 
 	}

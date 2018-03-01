@@ -73,6 +73,8 @@ type TagUploadParams struct {
 	Userid *int64
 
 	Tagid *int64
+
+	Status *int64
 }
 
 // BindRequest both binds and validates a request, it assumes that complex things implement a Validatable(strfmt.Registry) error interface
@@ -95,25 +97,30 @@ func (o *TagUploadParams) BindRequest(r *http.Request, route *middleware.Matched
 		res = append(res, err)
 	}
 
-	cover, coverHeader, err := r.FormFile("cover")
+	/*cover, coverHeader, err := r.FormFile("cover")
 	if err != nil {
 		res = append(res, errors.New(400, "reading file %q failed: %v", "cover", err))
 	} else if err := o.bindCover(cover, coverHeader); err != nil {
 		res = append(res, err)
 	} else {
 		o.Cover = &runtime.File{Data: cover, Header: coverHeader}
+	}*/
+
+	fdStatus, fdhkStatus, _ := fds.GetOK("status")
+	if err := o.bindStatus(fdStatus, fdhkStatus, route.Formats); err != nil {
+		res = append(res, err)
 	}
 
-	icon, iconHeader, err := r.FormFile("icon")
+	/*icon, iconHeader, err := r.FormFile("icon")
 	if err != nil {
 		res = append(res, errors.New(400, "reading file %q failed: %v", "icon", err))
 	} else if err := o.bindIcon(icon, iconHeader); err != nil {
 		res = append(res, err)
 	} else {
 		o.Icon = &runtime.File{Data: icon, Header: iconHeader}
-	}
+	}*/
 
-	fdPriceValue, fdhkPriceValue, _ := fds.GetOK("priceValue")
+	/*fdPriceValue, fdhkPriceValue, _ := fds.GetOK("priceValue")
 	if err := o.bindPriceValue(fdPriceValue, fdhkPriceValue, route.Formats); err != nil {
 		res = append(res, err)
 	}
@@ -126,7 +133,7 @@ func (o *TagUploadParams) BindRequest(r *http.Request, route *middleware.Matched
 	fdSummary, fdhkSummary, _ := fds.GetOK("summary")
 	if err := o.bindSummary(fdSummary, fdhkSummary, route.Formats); err != nil {
 		res = append(res, err)
-	}
+	}*/
 
 	fdTitle, fdhkTitle, _ := fds.GetOK("title")
 	if err := o.bindTitle(fdTitle, fdhkTitle, route.Formats); err != nil {
@@ -169,6 +176,24 @@ func (o *TagUploadParams) bindCover(file multipart.File, header *multipart.FileH
 }
 
 func (o *TagUploadParams) bindIcon(file multipart.File, header *multipart.FileHeader) error {
+
+	return nil
+}
+
+func (o *TagUploadParams) bindStatus(rawData []string, hasKey bool, formats strfmt.Registry) error {
+	var raw string
+	if len(rawData) > 0 {
+		raw = rawData[len(rawData)-1]
+	}
+	if raw == "" { // empty values pass all other validations
+		return nil
+	}
+
+	value, err := swag.ConvertInt64(raw)
+	if err != nil {
+		return errors.InvalidType("status", "formData", "int64", raw)
+	}
+	o.Status = &value
 
 	return nil
 }

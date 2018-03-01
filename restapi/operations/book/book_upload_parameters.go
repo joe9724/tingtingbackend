@@ -235,9 +235,9 @@ func (o *BookUploadParams) bindStartTime(rawData []string, hasKey bool, formats 
 	if len(rawData) > 0 {
 		raw = rawData[len(rawData)-1]
 	}
-	if err := validate.RequiredString("starttime", "formData", raw); err != nil {
+	/*if err := validate.RequiredString("starttime", "formData", raw); err != nil {
 		return err
-	}
+	}*/
 
 	o.StartTime = raw
 

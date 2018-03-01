@@ -71,18 +71,18 @@ func (o *ChapterList) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	if Params.Keyword !=nil && Params.BookID!=nil{
 		if(*Params.Keyword == " ") {
 			fmt.Println("1")
-			db.Raw("select id,name  FROM chapters where  id not in (select chapterId from book_chapter_relation  where bookId = ? )", *(Params.BookID)).Find(&chapterlist)
-			db.Raw("select id,name  FROM chapters where  id not in (select chapterId from book_chapter_relation  where bookId = ? )", *(Params.BookID)).Count(&count)
+			db.Raw("select id,name  FROM chapters where status=0 and  id not in (select chapterId from book_chapter_relation  where bookId = ? and status=0)", *(Params.BookID)).Find(&chapterlist)
+			db.Raw("select id,name  FROM chapters where status=0 and  id not in (select chapterId from book_chapter_relation  where bookId = ? and status=0)", *(Params.BookID)).Count(&count)
 		}else{
 			fmt.Println("2")
-			db.Raw("select id,name  FROM chapters where name like '%" + *(Params.Keyword)+"%' and id not in (select chapterId from book_chapter_relation  where bookId = ? )", *(Params.BookID)).Find(&chapterlist)
-			db.Raw("select id,name  FROM chapters where name like '%" + *(Params.Keyword)+"%' and id not in (select chapterId from book_chapter_relation  where bookId = ? )", *(Params.BookID)).Count(&count)
+			db.Raw("select id,name  FROM chapters where status=0 and name like '%" + *(Params.Keyword)+"%' and id not in (select chapterId from book_chapter_relation  where bookId = ? and status=0)", *(Params.BookID)).Find(&chapterlist)
+			db.Raw("select id,name  FROM chapters where status=0 and name like '%" + *(Params.Keyword)+"%' and id not in (select chapterId from book_chapter_relation  where bookId = ? and status=0)", *(Params.BookID)).Count(&count)
 		}
 	}else{
 		if Params.BookID !=nil{
 			fmt.Println("3")
-			db.Table("chapters").Select("chapters.id, chapters.name").Joins("left join book_chapter_relation on chapters.id = book_chapter_relation.chapterId").Where("book_chapter_relation.bookId =?",*Params.BookID).Find(&chapterlist)
-			db.Table("chapters").Select("chapters.id, chapters.name").Joins("left join book_chapter_relation on chapters.id = book_chapter_relation.chapterId").Where("book_chapter_relation.bookId =?",*Params.BookID).Count(&count)
+			db.Table("chapters").Select("chapters.id, chapters.name").Joins("left join book_chapter_relation on chapters.id = book_chapter_relation.chapterId").Where("book_chapter_relation.bookId =?",*Params.BookID).Where("chapters.status=?",0).Where("book_chapter_relation.status=?",0).Find(&chapterlist)
+			db.Table("chapters").Select("chapters.id, chapters.name").Joins("left join book_chapter_relation on chapters.id = book_chapter_relation.chapterId").Where("book_chapter_relation.bookId =?",*Params.BookID).Where("chapters.status=?",0).Where("book_chapter_relation.status=?",0).Count(&count)
 		}else{
 			fmt.Println("4")
 			db.Table("chapters").Where(map[string]interface{}{"status":0}).Limit(*(Params.PageSize)).Offset(*(Params.PageIndex)*(*(Params.PageSize))).Find(&chapterlist)
