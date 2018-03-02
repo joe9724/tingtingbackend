@@ -62,6 +62,8 @@ type SuggestedBook struct {
 	Time int64 `json:"time,omitempty"`
 
 	BookId int64 `json:"bookId"`
+
+	Id int64 `json:"id"`
 }
 
 // Validate validates this suggested book

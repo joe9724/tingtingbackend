@@ -14,6 +14,7 @@ import (
 	"fmt"
 	"tingtingbackend/var"
 	"strings"
+	"strconv"
 )
 
 // NrRelationSubCategoryAlbumListEditHandlerFunc turns a function with the right signature into a relation sub category album list edit handler
@@ -75,15 +76,23 @@ func (o *NrRelationSubCategoryAlbumListEdit) ServeHTTP(rw http.ResponseWriter, r
 		//先解析出bookis集合,样式 1,2,3,4,
 		if (!strings.Contains(chapters,",")){
 			db.Exec("insert into category_album_relation(categoryId,albumId) values(?,?)",Params.Body.BookID,chapters)
+			//调整category下album个数
+			db.Exec("update sub_category_items set albums_number=albums_number+1 where id=?",Params.Body.BookID)
+			fmt.Println("1")
+
 		}else{
 			temp := strings.Split(chapters,",")
 			for k:=0;k< len(temp);k++ {
 				db.Exec("insert into category_album_relation(categoryId,albumId) values(?,?)",Params.Body.BookID,temp[k])
 				//fmt.Println("insert into category_album_relation(bookId,chapterId) values(?,?)",Params.Body.BookID,temp[k])
 			}
+			db.Exec("update sub_category_items set albums_number=albums_number+"+strconv.Itoa(len(temp))+" where id="+strconv.FormatInt(*(Params.Body.BookID),10))
+			fmt.Println("2")
 		}
 	}else{ //去除映射
 		db.Exec("delete from category_album_relation where categoryId=? and albumId=?",Params.Body.BookID,chapters)
+		db.Exec("update sub_category_items set albums_number=albums_number-1 where id=?",Params.Body.BookID)
+		fmt.Println("3")
 	}
 
 	var status models.Response

@@ -14,6 +14,7 @@ import (
 	"fmt"
 	"tingtingbackend/var"
 	"strings"
+	"strconv"
 )
 
 // BookChapterListRelationEditHandlerFunc turns a function with the right signature into a book chapter list relation edit handler
@@ -74,15 +75,19 @@ func (o *BookChapterListRelationEdit) ServeHTTP(rw http.ResponseWriter, r *http.
 		//先解析出bookis集合,样式 1,2,3,4,
 		if (!strings.Contains(chapters,",")){
 			db.Exec("insert into book_chapter_relation(bookId,chapterId) values(?,?)",Params.Body.BookID,chapters)
+			db.Exec("update books set clips_number=clips_number+1 where id=?",Params.Body.BookID)
+			fmt.Println("1")
 		}else{
 			temp := strings.Split(chapters,",")
 			for k:=0;k< len(temp);k++ {
 				db.Exec("insert into book_chapter_relation(bookId,chapterId) values(?,?)",Params.Body.BookID,temp[k])
 				fmt.Println("insert into book_chapter_relation(bookId,chapterId) values(?,?)",Params.Body.BookID,temp[k])
 			}
+			db.Exec("update books set clips_number=clips_number+"+strconv.Itoa(len(temp))+" where id="+strconv.FormatInt(*(Params.Body.BookID),10))
 		}
 	}else{ //去除映射
 		db.Exec("delete from book_chapter_relation where bookId=? and chapterId=?",Params.Body.BookID,chapters)
+		db.Exec("update books set clips_number=clips_number-1 where id=?",Params.Body.BookID)
 	}
 
 	var status models.Response
