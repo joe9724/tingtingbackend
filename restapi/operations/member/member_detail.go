@@ -7,8 +7,12 @@ package member
 
 import (
 	"net/http"
-
+	_"github.com/jinzhu/gorm"
+	_ "github.com/jinzhu/gorm/dialects/mysql"
 	middleware "github.com/go-openapi/runtime/middleware"
+	"tingtingbackend/models"
+	"fmt"
+	"tingtingbackend/var"
 )
 
 // MemberDetailHandlerFunc turns a function with the right signature into a member detail handler
@@ -53,8 +57,34 @@ func (o *MemberDetail) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	res := o.Handler.Handle(Params) // actually handle the request
+	var ok MemberDetailOK
+	var response models.InlineResponse200
 
-	o.Context.Respond(rw, r, route.Produces, route, res)
+	db,err := _var.OpenConnection()
+	if err!=nil{
+		fmt.Println(err.Error())
+	}
+	defer db.Close()
+
+	if Params.Action == "start"{
+        db.Exec("update members set status=0 where id=?",Params.MemberID)
+		fmt.Println("start")
+	}else if Params.Action == "stop"{
+		db.Exec("update members set status=1 where id=?",Params.MemberID)
+		fmt.Println("stop")
+	}else if Params.Action == "reset"{
+		db.Exec("update members set password=654321 where id=?",Params.MemberID)
+		fmt.Println("reset")
+	}
+
+
+	//status
+	var status models.Response
+	status.UnmarshalBinary([]byte(_var.Response200(200,"ok")))
+	response.Status = &status
+
+	ok.SetPayload(&response)
+
+	o.Context.Respond(rw, r, route.Produces, route, ok)
 
 }

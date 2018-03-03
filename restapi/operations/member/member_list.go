@@ -68,7 +68,7 @@ func (o *MemberList) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	}
 	defer db.Close()
 	//query
-	db.Where(map[string]interface{}{"status":0}).Limit(*(Params.PageSize)).Offset(*(Params.PageIndex)*(*(Params.PageSize))).Find(&memberList)
+	db.Limit(*(Params.PageSize)).Offset(*(Params.PageIndex)*(*(Params.PageSize))).Find(&memberList)
 	db.Table("members").Count(&count)
 	//data
 	response.Orders = memberList

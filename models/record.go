@@ -48,6 +48,8 @@ type Record struct {
 	// user Id
 	// Required: true
 	UserID *int64 `json:"userId"`
+
+	Time *int64 `json:"userId"`
 }
 
 // Validate validates this record
@@ -90,6 +92,11 @@ func (m *Record) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateUserID(formats); err != nil {
+		// prop
+		res = append(res, err)
+	}
+
+	if err := m.validateTime(formats); err != nil {
 		// prop
 		res = append(res, err)
 	}
@@ -166,6 +173,15 @@ func (m *Record) validateURL(formats strfmt.Registry) error {
 func (m *Record) validateUserID(formats strfmt.Registry) error {
 
 	if err := validate.Required("userId", "body", m.UserID); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *Record) validateTime(formats strfmt.Registry) error {
+
+	if err := validate.Required("time", "body", m.Time); err != nil {
 		return err
 	}
 

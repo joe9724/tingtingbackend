@@ -12,6 +12,7 @@ import (
 	graceful "github.com/tylerb/graceful"
 
 	"tingtingbackend/restapi/operations"
+	"tingtingbackend/restapi/operations/web"
 	"tingtingbackend/restapi/operations/album"
 	"tingtingbackend/restapi/operations/banner"
 	"tingtingbackend/restapi/operations/app_ver"
@@ -283,6 +284,15 @@ func configureAPI(api *operations.TingtingBackendAPI) http.Handler {
 	})
 	api.JpushPushJpushHandler = jpush.PushJpushHandlerFunc(func(params jpush.PushJpushParams) middleware.Responder {
 		return middleware.NotImplemented("operation jpush.PushJpush has not yet been implemented")
+	})
+	api.WebWebDetailHandler = web.WebDetailHandlerFunc(func(params web.WebDetailParams) middleware.Responder {
+		return middleware.NotImplemented("operation web.WebDetail has not yet been implemented")
+	})
+	api.WebWebListHandler = web.WebListHandlerFunc(func(params web.WebListParams) middleware.Responder {
+		return middleware.NotImplemented("operation web.WebList has not yet been implemented")
+	})
+	api.WebWebUploadHandler = web.WebUploadHandlerFunc(func(params web.WebUploadParams) middleware.Responder {
+		return middleware.NotImplemented("operation web.WebUpload has not yet been implemented")
 	})
 
 	api.ServerShutdown = func() {}

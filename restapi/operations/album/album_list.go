@@ -70,28 +70,37 @@ func (o *AlbumList) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	//query
 	//db.Where(map[string]interface{}{"status":0}).Limit(*(Params.PageSize)).Offset(*(Params.PageIndex)*(*(Params.PageSize))).Find(&albumList)
 	//db.Table("albums").Where(map[string]interface{}{"status":0}).Count(&count)
-	if Params.Keyword !=nil && Params.Categoryid!=nil{
-		if(*Params.Keyword == " ") {
-			db.Raw("select id,name  FROM albums where  status=0 and id not in (select albumId from category_album_relation  where status=0 and albumId = ? )", *(Params.Categoryid)).Limit(*(Params.PageSize)).Offset(*(Params.PageIndex)*(*(Params.PageSize))).Find(&albumList)
-			db.Raw("select id,name  FROM albums where status=0 and  id not in (select albumId from category_album_relation  where status=0 and albumId = ? )", *(Params.Categoryid)).Count(&count)
-		}else{
-			db.Raw("select id,name  FROM albums where status=0 and name like '%" + *(Params.Keyword)+"%' and id not in (select albumId from category_album_relation  where status=0 and albumId = ? )", *(Params.Categoryid)).Limit(*(Params.PageSize)).Offset(*(Params.PageIndex)*(*(Params.PageSize))).Find(&albumList)
-			db.Raw("select id,name  FROM albums where status=0 and name like '%" + *(Params.Keyword)+"%' and id not in (select albumId from category_album_relation  where status=0 and albumId = ? )", *(Params.Categoryid)).Count(&count)
-		}
-		//db.Table("albums").Select("albums.id, albums.name").Joins("left join category_album_relation on albums.id = category_album_relation.albumId").Where("albums.id is null").Find(&bookList)
-		fmt.Println("1")
-		//db.Where(map[string]interface{}{"status":0}).Where("name like ?","%"+*(Params.Keyword)+"%").Not("id",).Find(&bookList).Offset(*(Params.PageIndex)*(*(Params.PageSize)))
-	}else{
-		if Params.Categoryid !=nil{
-			fmt.Println("2")
-			db.Table("albums").Select("albums.id, albums.name").Joins("left join category_album_relation on albums.id = category_album_relation.albumId").Where("category_album_relation.categoryId =?",*Params.Categoryid).Where("albums.status=?",0).Where("category_album_relation.status =?",0).Count(&count)
-			db.Table("albums").Select("albums.id, albums.name").Joins("left join category_album_relation on albums.id = category_album_relation.albumId").Where("category_album_relation.categoryId =?",*Params.Categoryid).Where("albums.status=?",0).Where("category_album_relation.status =?",0).Limit(*(Params.PageSize)).Offset(*(Params.PageIndex)*(*(Params.PageSize))).Find(&albumList)
-		}else{
-			fmt.Println("3")
-			db.Table("albums").Where(map[string]interface{}{"status":0}).Count(&count)
-			db.Table("albums").Where(map[string]interface{}{"status":0}).Limit(*(Params.PageSize)).Offset(*(Params.PageIndex)*(*(Params.PageSize))).Find(&albumList)
-		}
+	//判断是否是用户收藏的专辑列表请求还是其他
+	if Params.Memberid !=nil{
+		fmt.Println("get fav albumlist",*(Params.Memberid))
+		db.Raw("select albums.id, albums.name,albums.icon,fav_album.time from albums left join fav_album on albums.id = fav_album.album_id where fav_album.member_id=?",*(Params.Memberid)).Limit(*(Params.PageSize)).Offset(*(Params.PageIndex) * (*(Params.PageSize))).Find(&albumList)
+		db.Raw("select albums.id, albums.name,albums.icon,fav_album.timefrom albums left join fav_album on albums.id = fav_album.album_id where fav_album.member_id=?",*(Params.Memberid)).Count(&count)
+		//db.Table("albums").Select("albums.id, albums.name").Joins("left join fav_album on albums.id = fav_album.album_id").Where("fav_album.member_id =?", *(Params.Memberid)).Where("albums.status=?", 0).Where("fav_album.status =?", 0).Count(&count)
+		//db.Table("albums").Select("albums.id, albums.name").Joins("left join fav_album on albums.id = fav_album.album_id").Where("fav_album.member_id =?", *(Params.Memberid)).Where("albums.status=?", 0).Where("fav_album.status =?", 0).Limit(*(Params.PageSize)).Offset(*(Params.PageIndex) * (*(Params.PageSize))).Find(&albumList)
+	}else {
+		if Params.Keyword != nil && Params.Categoryid != nil {
+			if (*Params.Keyword == " ") {
+				db.Raw("select id,name  FROM albums where  status=0 and id not in (select albumId from category_album_relation  where status=0 and albumId = ? )", *(Params.Categoryid)).Limit(*(Params.PageSize)).Offset(*(Params.PageIndex) * (*(Params.PageSize))).Find(&albumList)
+				db.Raw("select id,name  FROM albums where status=0 and  id not in (select albumId from category_album_relation  where status=0 and albumId = ? )", *(Params.Categoryid)).Count(&count)
+			} else {
+				db.Raw("select id,name  FROM albums where status=0 and name like '%" + *(Params.Keyword)+"%' and id not in (select albumId from category_album_relation  where status=0 and albumId = ? )", *(Params.Categoryid)).Limit(*(Params.PageSize)).Offset(*(Params.PageIndex) * (*(Params.PageSize))).Find(&albumList)
+				db.Raw("select id,name  FROM albums where status=0 and name like '%" + *(Params.Keyword)+"%' and id not in (select albumId from category_album_relation  where status=0 and albumId = ? )", *(Params.Categoryid)).Count(&count)
+			}
+			//db.Table("albums").Select("albums.id, albums.name").Joins("left join category_album_relation on albums.id = category_album_relation.albumId").Where("albums.id is null").Find(&bookList)
+			fmt.Println("1")
+			//db.Where(map[string]interface{}{"status":0}).Where("name like ?","%"+*(Params.Keyword)+"%").Not("id",).Find(&bookList).Offset(*(Params.PageIndex)*(*(Params.PageSize)))
+		} else {
+			if Params.Categoryid != nil {
+				fmt.Println("2")
+				db.Table("albums").Select("albums.id, albums.name").Joins("left join category_album_relation on albums.id = category_album_relation.albumId").Where("category_album_relation.categoryId =?", *Params.Categoryid).Where("albums.status=?", 0).Where("category_album_relation.status =?", 0).Count(&count)
+				db.Table("albums").Select("albums.id, albums.name").Joins("left join category_album_relation on albums.id = category_album_relation.albumId").Where("category_album_relation.categoryId =?", *Params.Categoryid).Where("albums.status=?", 0).Where("category_album_relation.status =?", 0).Limit(*(Params.PageSize)).Offset(*(Params.PageIndex) * (*(Params.PageSize))).Find(&albumList)
+			} else {
+				fmt.Println("3")
+				db.Table("albums").Where(map[string]interface{}{"status": 0}).Count(&count)
+				db.Table("albums").Where(map[string]interface{}{"status": 0}).Limit(*(Params.PageSize)).Offset(*(Params.PageIndex) * (*(Params.PageSize))).Find(&albumList)
+			}
 
+		}
 	}
 	//data
 	response.AlbumList = albumList

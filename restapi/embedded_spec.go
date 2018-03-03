@@ -4245,6 +4245,166 @@ func init() {
         }
       }
     },
+    "/web/detail": {
+      "get": {
+        "description": "web列表",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Web"
+        ],
+        "summary": "列表",
+        "operationId": "web/detail",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "用户id",
+            "name": "userid",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "format": "int64",
+            "description": "webId",
+            "name": "webId",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "web列表",
+            "schema": {
+              "$ref": "#/definitions/inline_response_200_1"
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/web/list": {
+      "get": {
+        "description": "web列表",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Web"
+        ],
+        "summary": "列表",
+        "operationId": "web/list",
+        "parameters": [
+          {
+            "type": "integer",
+            "format": "int64",
+            "description": "分页索引",
+            "name": "pageIndex",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "format": "int64",
+            "description": "分页尺寸",
+            "name": "pageSize",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "用户id",
+            "name": "userid",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "web列表",
+            "schema": {
+              "$ref": "#/definitions/inline_response_200_2"
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/web/upload": {
+      "post": {
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "tags": [
+          "Web"
+        ],
+        "summary": "添加一个web",
+        "operationId": "web/upload/",
+        "parameters": [
+          {
+            "type": "integer",
+            "format": "int64",
+            "description": "当前登录用户id",
+            "name": "userid",
+            "in": "formData"
+          },
+          {
+            "type": "string",
+            "description": "Description of file contents.",
+            "name": "title",
+            "in": "formData"
+          },
+          {
+            "type": "integer",
+            "format": "int64",
+            "description": "id",
+            "name": "id",
+            "in": "formData"
+          },
+          {
+            "type": "string",
+            "name": "url",
+            "in": "formData"
+          },
+          {
+            "type": "string",
+            "name": "content",
+            "in": "formData"
+          },
+          {
+            "type": "string",
+            "name": "iconUrl",
+            "in": "formData"
+          },
+          {
+            "type": "string",
+            "description": "add/edit/delete",
+            "name": "action",
+            "in": "formData"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功，返回成功信息",
+            "schema": {
+              "$ref": "#/definitions/inline_response_200"
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
     "/user/login": {
       "get": {
         "description": "登录接口",
@@ -10525,6 +10685,166 @@ func init() {
             "description": "操作成功，返回登录信息",
             "schema": {
               "$ref": "#/definitions/inline_response_200_30"
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/web/detail": {
+      "get": {
+        "description": "web列表",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Web"
+        ],
+        "summary": "列表",
+        "operationId": "web/detail",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "用户id",
+            "name": "userid",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "format": "int64",
+            "description": "webId",
+            "name": "webId",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "web列表",
+            "schema": {
+              "$ref": "#/definitions/inline_response_200_1"
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/web/list": {
+      "get": {
+        "description": "web列表",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "Web"
+        ],
+        "summary": "列表",
+        "operationId": "web/list",
+        "parameters": [
+          {
+            "type": "integer",
+            "format": "int64",
+            "description": "分页索引",
+            "name": "pageIndex",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "format": "int64",
+            "description": "分页尺寸",
+            "name": "pageSize",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "用户id",
+            "name": "userid",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "web列表",
+            "schema": {
+              "$ref": "#/definitions/inline_response_200_2"
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/web/upload": {
+      "post": {
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "tags": [
+          "Web"
+        ],
+        "summary": "添加一个web",
+        "operationId": "web/upload/",
+        "parameters": [
+          {
+            "type": "integer",
+            "format": "int64",
+            "description": "当前登录用户id",
+            "name": "userid",
+            "in": "formData"
+          },
+          {
+            "type": "string",
+            "description": "Description of file contents.",
+            "name": "title",
+            "in": "formData"
+          },
+          {
+            "type": "integer",
+            "format": "int64",
+            "description": "id",
+            "name": "id",
+            "in": "formData"
+          },
+          {
+            "type": "string",
+            "name": "url",
+            "in": "formData"
+          },
+          {
+            "type": "string",
+            "name": "content",
+            "in": "formData"
+          },
+          {
+            "type": "string",
+            "name": "iconUrl",
+            "in": "formData"
+          },
+          {
+            "type": "string",
+            "description": "add/edit/delete",
+            "name": "action",
+            "in": "formData"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "成功，返回成功信息",
+            "schema": {
+              "$ref": "#/definitions/inline_response_200"
             }
           },
           "default": {

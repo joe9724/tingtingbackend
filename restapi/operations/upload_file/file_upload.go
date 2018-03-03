@@ -71,12 +71,14 @@ func (o *FileUpload) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 
 	fmt.Println("filename is", filename)
 
-	fmt.Println("Param.type is",Params.Type)
+	fmt.Println("Param.type is", Params.Type)
 
 	var contentType string
 	//var file []byte
+	code = 200
+	msg = "ok"
 
-	if (Params.File!=nil) {
+	if (Params.File != nil) {
 		file, err := ioutil.ReadAll(Params.File)
 		if err != nil {
 			fmt.Println("err upload:", err.Error())
@@ -90,12 +92,12 @@ func (o *FileUpload) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 		if contentType == "application/octet-stream" || contentType == "video/mp4" {
 			fmt.Println("10")
 			/*file, err := ioutil.ReadAll(Params.File)
-		if err != nil {
-			fmt.Println("err upload:", err.Error())
-		}
-		//fmt.Println(len(icon))
-		// Always returns a valid content-type and "application/octet-stream" if no others seemed to match.
-		contentType := http.DetectContentType(file)*/
+	if err != nil {
+		fmt.Println("err upload:", err.Error())
+	}
+	//fmt.Println(len(icon))
+	// Always returns a valid content-type and "application/octet-stream" if no others seemed to match.
+	contentType := http.DetectContentType(file)*/
 			//fmt.Println("contentType is", contentType)
 
 			//save
@@ -122,9 +124,9 @@ func (o *FileUpload) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 			if (Params.Type == nil) {
 				fmt.Println("1")
 				/*file, err := ioutil.ReadAll(Params.File)
-			if err != nil {
-				fmt.Println("err upload:", err.Error())
-			}*/
+		if err != nil {
+			fmt.Println("err upload:", err.Error())
+		}*/
 				//fmt.Println(len(icon))
 				// Always returns a valid content-type and "application/octet-stream" if no others seemed to match.
 				//contentType := http.DetectContentType(file)
@@ -161,9 +163,9 @@ func (o *FileUpload) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 				if (*Params.Type) == "icon" {
 					fmt.Println("4")
 					/*file, err := ioutil.ReadAll(Params.File)
-				if err != nil {
-					fmt.Println("err upload:", err.Error())
-				}*/
+			if err != nil {
+				fmt.Println("err upload:", err.Error())
+			}*/
 					//fmt.Println(len(icon))
 					// Always returns a valid content-type and "application/octet-stream" if no others seemed to match.
 					//contentType := http.DetectContentType(file)
@@ -196,9 +198,9 @@ func (o *FileUpload) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 				} else if (*Params.Type) == "cover" {
 					fmt.Println("7")
 					/*file, err := ioutil.ReadAll(Params.File)
-				if err != nil {
-					fmt.Println("err upload:", err.Error())
-				}*/
+			if err != nil {
+				fmt.Println("err upload:", err.Error())
+			}*/
 					//fmt.Println(len(icon))
 					// Always returns a valid content-type and "application/octet-stream" if no others seemed to match.
 					//contentType := http.DetectContentType(file)
@@ -235,6 +237,7 @@ func (o *FileUpload) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 
 		}
 	}
+
 	db, err := _var.OpenConnection()
 	if err != nil {
 		fmt.Println(err.Error())

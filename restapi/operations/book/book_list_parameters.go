@@ -62,6 +62,8 @@ type BookListParams struct {
 	Userid *string
 
 	Type *int64
+
+	Memberid *int64
 }
 
 // BindRequest both binds and validates a request, it assumes that complex things implement a Validatable(strfmt.Registry) error interface
@@ -97,6 +99,11 @@ func (o *BookListParams) BindRequest(r *http.Request, route *middleware.MatchedR
 		res = append(res, err)
 	}
 
+	qMemberid, qhkMemberid, _ := qs.GetOK("memberId")
+	if err := o.bindMemberid(qMemberid, qhkMemberid, route.Formats); err != nil {
+		res = append(res, err)
+	}
+
 	qTag, qhkTag, _ := qs.GetOK("tag")
 	if err := o.bindTag(qTag, qhkTag, route.Formats); err != nil {
 		res = append(res, err)
@@ -115,6 +122,24 @@ func (o *BookListParams) BindRequest(r *http.Request, route *middleware.MatchedR
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+func (o *BookListParams) bindMemberid(rawData []string, hasKey bool, formats strfmt.Registry) error {
+	var raw string
+	if len(rawData) > 0 {
+		raw = rawData[len(rawData)-1]
+	}
+	if raw == "" { // empty values pass all other validations
+		return nil
+	}
+
+	value, err := swag.ConvertInt64(raw)
+	if err != nil {
+		return errors.InvalidType("memberId", "query", "int64", raw)
+	}
+	o.Memberid = &value
+
 	return nil
 }
 

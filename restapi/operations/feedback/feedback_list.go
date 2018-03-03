@@ -7,8 +7,12 @@ package feedback
 
 import (
 	"net/http"
-
+	_"github.com/jinzhu/gorm"
+	_ "github.com/jinzhu/gorm/dialects/mysql"
 	middleware "github.com/go-openapi/runtime/middleware"
+	"tingtingbackend/models"
+	"fmt"
+	"tingtingbackend/var"
 )
 
 // FeedbackListHandlerFunc turns a function with the right signature into a feedback list handler
@@ -53,8 +57,31 @@ func (o *FeedbackList) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	res := o.Handler.Handle(Params) // actually handle the request
+	var ok FeedbackListOK
+	var response models.InlineResponse2004
+	var feedbackList models.InlineResponse2004Chapters
+	var count int64
 
-	o.Context.Respond(rw, r, route.Produces, route, res)
+	db,err := _var.OpenConnection()
+	if err!=nil{
+		fmt.Println(err.Error())
+	}
+	defer db.Close()
+	//query
+	db.Table("feedbacks").Limit(*(Params.PageSize)).Offset(*(Params.PageIndex)*(*(Params.PageSize))).Find(&feedbackList)
+	db.Table("feedbacks").Count(&count)
+
+	//data
+	response.Chapters = feedbackList
+
+	//status
+	var status models.Response
+	status.UnmarshalBinary([]byte(_var.Response200(200,"ok")))
+	response.Status = &status
+	response.Status.TotalCount = count
+
+	ok.SetPayload(&response)
+
+	o.Context.Respond(rw, r, route.Produces, route, ok)
 
 }

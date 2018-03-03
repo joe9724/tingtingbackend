@@ -38,6 +38,7 @@ import (
 	"tingtingbackend/restapi/operations/tag"
 	"tingtingbackend/restapi/operations/jpush"
 	"tingtingbackend/restapi/operations/version"
+	"tingtingbackend/restapi/operations/web"
 )
 
 // NewTingtingBackendAPI creates a new TingtingBackend instance
@@ -299,6 +300,15 @@ func NewTingtingBackendAPI(spec *loads.Document) *TingtingBackendAPI {
 		VersionVersionUploadHandler: version.VersionUploadHandlerFunc(func(params version.VersionUploadParams) middleware.Responder {
 			return middleware.NotImplemented("operation VersionVersionUpload has not yet been implemented")
 		}),
+		WebWebDetailHandler: web.WebDetailHandlerFunc(func(params web.WebDetailParams) middleware.Responder {
+			return middleware.NotImplemented("operation WebWebDetail has not yet been implemented")
+		}),
+		WebWebListHandler: web.WebListHandlerFunc(func(params web.WebListParams) middleware.Responder {
+			return middleware.NotImplemented("operation WebWebList has not yet been implemented")
+		}),
+		WebWebUploadHandler: web.WebUploadHandlerFunc(func(params web.WebUploadParams) middleware.Responder {
+			return middleware.NotImplemented("operation WebWebUpload has not yet been implemented")
+		}),
 	}
 }
 
@@ -459,6 +469,12 @@ type TingtingBackendAPI struct {
 	MsgMsgDetailHandler msg.MsgDetailHandler
 	// MsgMsgSendListHandler sets the operation handler for the msg send list operation
 	MsgMsgSendListHandler msg.MsgSendListHandler
+
+	WebWebDetailHandler web.WebDetailHandler
+	// WebWebListHandler sets the operation handler for the web list operation
+	WebWebListHandler web.WebListHandler
+	// WebWebUploadHandler sets the operation handler for the web upload operation
+	WebWebUploadHandler web.WebUploadHandler
 	// MsgMsgUnsendListHandler sets the operation handler for the msg unsend list operation
 	MsgMsgUnsendListHandler msg.MsgUnsendListHandler
 	// OrderOrderDetailHandler sets the operation handler for the order detail operation
@@ -822,6 +838,18 @@ func (o *TingtingBackendAPI) Validate() error {
 
 	if o.MsgMsgUnsendListHandler == nil {
 		unregistered = append(unregistered, "msg.MsgUnsendListHandler")
+	}
+
+	if o.WebWebDetailHandler == nil {
+		unregistered = append(unregistered, "web.WebDetailHandler")
+	}
+
+	if o.WebWebListHandler == nil {
+		unregistered = append(unregistered, "web.WebListHandler")
+	}
+
+	if o.WebWebUploadHandler == nil {
+		unregistered = append(unregistered, "web.WebUploadHandler")
 	}
 
 	if o.OrderOrderDetailHandler == nil {
@@ -1306,6 +1334,21 @@ func (o *TingtingBackendAPI) initHandlerCache() {
 		o.handlers["POST"] = make(map[string]http.Handler)
 	}
 	o.handlers["POST"]["/recharge/list"] = recharge.NewRechargeList(o.context, o.RechargeRechargeListHandler)
+
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/web/detail"] = web.NewWebDetail(o.context, o.WebWebDetailHandler)
+
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/web/list"] = web.NewWebList(o.context, o.WebWebListHandler)
+
+	if o.handlers["POST"] == nil {
+		o.handlers["POST"] = make(map[string]http.Handler)
+	}
+	o.handlers["POST"]["/web/upload"] = web.NewWebUpload(o.context, o.WebWebUploadHandler)
 
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)

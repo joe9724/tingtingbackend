@@ -52,6 +52,8 @@ type AlbumListParams struct {
 	Keyword *string
 
 	AlbumID *int64
+
+	Memberid *int64
 }
 
 // BindRequest both binds and validates a request, it assumes that complex things implement a Validatable(strfmt.Registry) error interface
@@ -64,6 +66,11 @@ func (o *AlbumListParams) BindRequest(r *http.Request, route *middleware.Matched
 
 	qCategoryid, qhkCategoryid, _ := qs.GetOK("categoryId")
 	if err := o.bindCategoryid(qCategoryid, qhkCategoryid, route.Formats); err != nil {
+		res = append(res, err)
+	}
+
+	qMemberid, qhkMemberid, _ := qs.GetOK("memberId")
+	if err := o.bindMemberid(qMemberid, qhkMemberid, route.Formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -130,6 +137,23 @@ func (o *AlbumListParams) bindKeyword(rawData []string, hasKey bool, formats str
 	return nil
 }
 
+func (o *AlbumListParams) bindMemberid(rawData []string, hasKey bool, formats strfmt.Registry) error {
+	var raw string
+	if len(rawData) > 0 {
+		raw = rawData[len(rawData)-1]
+	}
+	if raw == "" { // empty values pass all other validations
+		return nil
+	}
+
+	value, err := swag.ConvertInt64(raw)
+	if err != nil {
+		return errors.InvalidType("memberId", "query", "int64", raw)
+	}
+	o.Memberid = &value
+
+	return nil
+}
 
 func (o *AlbumListParams) bindCategoryid(rawData []string, hasKey bool, formats strfmt.Registry) error {
 	var raw string
