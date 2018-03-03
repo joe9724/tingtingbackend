@@ -94,6 +94,7 @@ func (o *AlbumUpload) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 		}
 		//album.User_id = *(Params.MemberID)
 		db.Table("albums").Create(&album)
+		//
 	}else{ //更新
 		//fmt.Println("edit")
 		//db.Table("sub_album_items").Where("id=?",*(Params.AlbumId)).Last(&album)

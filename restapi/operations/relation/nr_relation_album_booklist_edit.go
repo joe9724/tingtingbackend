@@ -14,6 +14,7 @@ import (
 	"fmt"
 	"tingtingbackend/var"
 	"strings"
+	"strconv"
 )
 
 // NrRelationAlbumBooklistEditHandlerFunc turns a function with the right signature into a relation album booklist edit handler
@@ -75,16 +76,22 @@ func (o *NrRelationAlbumBooklistEdit) ServeHTTP(rw http.ResponseWriter, r *http.
 	if (*(Params.Body.Action) == 0){ //添加映射
 		//先解析出bookis集合,样式 1,2,3,4,
 		if (!strings.Contains(books,",")){
+			fmt.Println("1")
 			db.Exec("insert into album_book_relation(albumId,bookId) values(?,?)",Params.Body.AlbumID,books)
+			db.Exec("update albums set books_number=books_number+1 where id=?",Params.Body.AlbumID)
 		}else{
 			temp := strings.Split(books,",")
 			for k:=0;k< len(temp);k++ {
 				db.Exec("insert into album_book_relation(albumId,bookId) values(?,?)",Params.Body.AlbumID,temp[k])
 				fmt.Println("insert into album_book_relation(albumId,bookId) values(?,?)",Params.Body.AlbumID,temp[k])
 			}
+			db.Exec("update albums set books_number=albums_number+"+strconv.Itoa(len(temp))+" where id="+strconv.FormatInt(*(Params.Body.AlbumID),10))
+			fmt.Println("2")
 		}
 	}else{ //去除映射
 		db.Exec("delete from album_book_relation where albumId=? and bookId=?",Params.Body.AlbumID,books)
+		db.Exec("update albums set books_number=books_number-1 where id=?",Params.Body.AlbumID)
+		fmt.Println("3")
 	}
 	
 	
