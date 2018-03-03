@@ -76,7 +76,7 @@ func (o *WebUpload) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 		fmt.Println(Params.IconUrl)
 		book.Icon = Params.IconUrl
 	}*/
-
+ //
 	//tt:= int64(-1)
 	fmt.Println("Params.id=",*(Params.ID))
 	//添加正常
