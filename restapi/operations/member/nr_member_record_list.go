@@ -68,8 +68,10 @@ func (o *NrMemberRecordList) ServeHTTP(rw http.ResponseWriter, r *http.Request) 
 	}
 	defer db.Close()
 	//query
-	db.Table("records").Limit(*(Params.PageSize)).Offset(*(Params.PageIndex)*(*(Params.PageSize))).Find(&recordList)
-	db.Table("records").Count(&count)
+
+	db.Raw("select records.id,records.title,records.time,records.url,members.name from records left join members on records.user_id=members.id").Limit(*(Params.PageSize)).Offset(*(Params.PageIndex)*(*(Params.PageSize))).Find(&recordList)
+	db.Raw("select id  from records ").Count(&count)
+	fmt.Println("count is",count)
 	//data
 	response.RecordList = recordList
 

@@ -129,6 +129,9 @@ func configureAPI(api *operations.TingtingBackendAPI) http.Handler {
 	api.AlbumAlbumListHandler = album.AlbumListHandlerFunc(func(params album.AlbumListParams) middleware.Responder {
 		return middleware.NotImplemented("operation album.AlbumList has not yet been implemented")
 	})
+	api.AppVerAppVersionDetailHandler = app_ver.AppVersionDetailHandlerFunc(func(params app_ver.AppVersionDetailParams) middleware.Responder {
+		return middleware.NotImplemented("operation app_ver.AppVersionDetail has not yet been implemented")
+	})
 	api.AlbumAlbumUploadHandler = album.AlbumUploadHandlerFunc(func(params album.AlbumUploadParams) middleware.Responder {
 		return middleware.NotImplemented("operation album.AlbumUpload has not yet been implemented")
 	})
@@ -218,6 +221,9 @@ func configureAPI(api *operations.TingtingBackendAPI) http.Handler {
 	})
 	api.MemberMemberDetailHandler = member.MemberDetailHandlerFunc(func(params member.MemberDetailParams) middleware.Responder {
 		return middleware.NotImplemented("operation member.MemberDetail has not yet been implemented")
+	})
+	api.MsgMsgUploadHandler = msg.MsgUploadHandlerFunc(func(params msg.MsgUploadParams) middleware.Responder {
+		return middleware.NotImplemented("operation msg.MsgUpload has not yet been implemented")
 	})
 	api.UploadFileFileUploadHandler = upload_file.FileUploadHandlerFunc(func(params upload_file.FileUploadParams) middleware.Responder {
 		return middleware.NotImplemented("operation upload_file.FileUpload has not yet been implemented")

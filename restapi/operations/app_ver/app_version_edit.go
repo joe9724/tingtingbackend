@@ -7,8 +7,12 @@ package app_ver
 
 import (
 	"net/http"
-
 	middleware "github.com/go-openapi/runtime/middleware"
+	"fmt"
+	_"os"
+	"tingtingbackend/models"
+	"tingtingbackend/var"
+
 )
 
 // AppVersionEditHandlerFunc turns a function with the right signature into a app version edit handler
@@ -51,8 +55,33 @@ func (o *AppVersionEdit) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	res := o.Handler.Handle(Params) // actually handle the request
+	var ok AppVersionEditOK
+	var response models.InlineResponse2002
+	var status models.Response
 
-	o.Context.Respond(rw, r, route.Produces, route, res)
+	var msg string
+	var code int64
+
+	msg = "ok"
+	code = 200
+
+	db,err := _var.OpenConnection()
+	if err!=nil{
+		fmt.Println(err.Error())
+	}
+	defer db.Close()
+
+	if Params.Cover!=nil{
+		db.Exec("update init set downloadUrl=?,`force`=?,number=?,msg=?,client=?,cover=? where id=?", Params.DownloadURL, Params.Force, Params.Number, Params.Msg, Params.Client, Params.Cover,Params.ID)
+
+	}else{
+		db.Exec("update init set downloadUrl=?,`force`=?,number=?,msg=?,client=? where id=?", Params.DownloadURL, Params.Force, Params.Number, Params.Msg, Params.Client,Params.ID)
+
+	}
+
+	status.UnmarshalBinary([]byte(_var.Response200(code,msg)))
+	response.Status = &status
+	ok.SetPayload(&response)
+	o.Context.Respond(rw, r, route.Produces, route, ok)
 
 }

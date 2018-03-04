@@ -329,6 +329,49 @@ func init() {
         }
       }
     },
+    "/appVersion/detail": {
+      "get": {
+        "description": "详情",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "AppVer"
+        ],
+        "summary": "版本详情",
+        "operationId": "appVersion/detail",
+        "parameters": [
+          {
+            "type": "integer",
+            "format": "int64",
+            "description": "当前后台登录id",
+            "name": "userid",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "format": "int64",
+            "description": "id",
+            "name": "id",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "章节详情",
+            "schema": {
+              "$ref": "#/definitions/inline_response_200_40"
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
     "/appVersion/edit": {
       "post": {
         "consumes": [
@@ -2644,6 +2687,77 @@ func init() {
             "description": "已发送消息列表",
             "schema": {
               "$ref": "#/definitions/inline_response_200_11"
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/msg/upload": {
+      "post": {
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "tags": [
+          "Msg"
+        ],
+        "summary": "添加一个消息",
+        "operationId": "msg/upload/",
+        "parameters": [
+          {
+            "type": "integer",
+            "format": "int64",
+            "description": "当前登录用户id",
+            "name": "userid",
+            "in": "formData"
+          },
+          {
+            "type": "integer",
+            "format": "int64",
+            "name": "id",
+            "in": "formData"
+          },
+          {
+            "type": "string",
+            "description": "content",
+            "name": "sub_title",
+            "in": "formData"
+          },
+          {
+            "type": "string",
+            "description": "title",
+            "name": "title",
+            "in": "formData"
+          },
+          {
+            "type": "integer",
+            "format": "int64",
+            "name": "status",
+            "in": "formData"
+          },
+          {
+            "type": "integer",
+            "format": "int64",
+            "name": "times",
+            "in": "formData"
+          },
+          {
+            "type": "string",
+            "description": "add/edit/delete",
+            "name": "action",
+            "in": "formData"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "上传成功，返回成功信息",
+            "schema": {
+              "$ref": "#/definitions/inline_response_200"
             }
           },
           "default": {
@@ -6692,6 +6806,49 @@ func init() {
         }
       }
     },
+    "/appVersion/detail": {
+      "get": {
+        "description": "详情",
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "AppVer"
+        ],
+        "summary": "版本详情",
+        "operationId": "appVersion/detail",
+        "parameters": [
+          {
+            "type": "integer",
+            "format": "int64",
+            "description": "当前后台登录id",
+            "name": "userid",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "format": "int64",
+            "description": "id",
+            "name": "id",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "章节详情",
+            "schema": {
+              "$ref": "#/definitions/inline_response_200_40"
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
     "/appVersion/edit": {
       "post": {
         "consumes": [
@@ -9005,6 +9162,77 @@ func init() {
             "description": "已发送消息列表",
             "schema": {
               "$ref": "#/definitions/inline_response_200_11"
+            }
+          },
+          "default": {
+            "description": "error",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/msg/upload": {
+      "post": {
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "tags": [
+          "Msg"
+        ],
+        "summary": "添加一个消息",
+        "operationId": "msg/upload/",
+        "parameters": [
+          {
+            "type": "integer",
+            "format": "int64",
+            "description": "当前登录用户id",
+            "name": "userid",
+            "in": "formData"
+          },
+          {
+            "type": "integer",
+            "format": "int64",
+            "name": "id",
+            "in": "formData"
+          },
+          {
+            "type": "string",
+            "description": "content",
+            "name": "sub_title",
+            "in": "formData"
+          },
+          {
+            "type": "string",
+            "description": "title",
+            "name": "title",
+            "in": "formData"
+          },
+          {
+            "type": "integer",
+            "format": "int64",
+            "name": "status",
+            "in": "formData"
+          },
+          {
+            "type": "integer",
+            "format": "int64",
+            "name": "times",
+            "in": "formData"
+          },
+          {
+            "type": "string",
+            "description": "add/edit/delete",
+            "name": "action",
+            "in": "formData"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "上传成功，返回成功信息",
+            "schema": {
+              "$ref": "#/definitions/inline_response_200"
             }
           },
           "default": {

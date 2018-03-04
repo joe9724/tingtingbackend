@@ -17,25 +17,27 @@ import (
 type AppVersion struct {
 
 	// client
-	Client string `json:"client,omitempty"`
+	Client string `json:"client"`
 
 	// download Url
-	DownloadURL string `json:"downloadUrl,omitempty"`
+	DownloadURL string `json:"downloadUrl"`
 
 	// force
-	Force float64 `json:"force,omitempty"`
+	Force float64 `json:"force"`
 
 	// id
-	ID int64 `json:"id,omitempty"`
+	ID int64 `json:"id"`
 
 	// msg
-	Msg string `json:"msg,omitempty"`
+	Msg string `json:"msg"`
 
 	// number
-	Number float64 `json:"number,omitempty"`
+	Number float64 `json:"number"`
 
 	// status
 	Status int64 `json:"status,omitempty"`
+
+	Cover string `json:"cover"`
 }
 
 // Validate validates this app version

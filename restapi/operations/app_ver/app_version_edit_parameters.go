@@ -60,6 +60,8 @@ type AppVersionEditParams struct {
 	  In: formData
 	*/
 	Status *int64
+
+	Cover *string
 }
 
 // BindRequest both binds and validates a request, it assumes that complex things implement a Validatable(strfmt.Registry) error interface
@@ -99,6 +101,11 @@ func (o *AppVersionEditParams) BindRequest(r *http.Request, route *middleware.Ma
 
 	fdMsg, fdhkMsg, _ := fds.GetOK("msg")
 	if err := o.bindMsg(fdMsg, fdhkMsg, route.Formats); err != nil {
+		res = append(res, err)
+	}
+
+	fdCover, fdhkCover, _ := fds.GetOK("cover")
+	if err := o.bindCover(fdCover, fdhkCover, route.Formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -178,6 +185,20 @@ func (o *AppVersionEditParams) bindID(rawData []string, hasKey bool, formats str
 		return errors.InvalidType("id", "formData", "int64", raw)
 	}
 	o.ID = &value
+
+	return nil
+}
+
+func (o *AppVersionEditParams) bindCover(rawData []string, hasKey bool, formats strfmt.Registry) error {
+	var raw string
+	if len(rawData) > 0 {
+		raw = rawData[len(rawData)-1]
+	}
+	if raw == "" { // empty values pass all other validations
+		return nil
+	}
+
+	o.Cover = &raw
 
 	return nil
 }

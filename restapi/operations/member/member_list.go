@@ -67,9 +67,16 @@ func (o *MemberList) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 		fmt.Println(err.Error())
 	}
 	defer db.Close()
-	//query
-	db.Limit(*(Params.PageSize)).Offset(*(Params.PageIndex)*(*(Params.PageSize))).Find(&memberList)
-	db.Table("members").Count(&count)
+	if Params.StartTime !=nil {
+		if *(Params.StartTime) == 1{
+			db.Table("members").Where("ts>UNIX_TIMESTAMP(CAST(SYSDATE()AS DATE) - INTERVAL 1 DAY)").Limit(*(Params.PageSize)).Offset(*(Params.PageIndex)*(*(Params.PageSize))).Find(&memberList)
+			db.Table("members").Where("ts>UNIX_TIMESTAMP(CAST(SYSDATE()AS DATE) - INTERVAL 1 DAY)").Count(&count)
+		}
+	}else{
+		db.Limit(*(Params.PageSize)).Offset(*(Params.PageIndex)*(*(Params.PageSize))).Find(&memberList)
+		db.Table("members").Count(&count)
+	}
+
 	//data
 	response.Orders = memberList
 
