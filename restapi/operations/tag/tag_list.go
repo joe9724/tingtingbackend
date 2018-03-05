@@ -68,8 +68,31 @@ func (o *TagList) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	}
 	defer db.Close()
 	//query
-	db.Table("tags").Where("status=?",0).Limit(*(Params.PageSize)).Offset(*(Params.PageIndex)*(*(Params.PageSize))).Find(&albumList)
-	db.Table("tags").Where("status=?",0).Count(&count)
+	//db.Table("tags").Where("status=?",0).Limit(*(Params.PageSize)).Offset(*(Params.PageIndex)*(*(Params.PageSize))).Find(&albumList)
+	//db.Table("tags").Where("status=?",0).Count(&count)
+	if Params.Keyword !=nil && Params.AlbumId!=nil{
+		if(*Params.Keyword == " ") {
+			db.Raw("select id,name  FROM tags where status=0 and  id not in (select tagId from tag_album_relation  where albumId = ? )", *(Params.AlbumId)).Limit(*(Params.PageSize)).Offset(*(Params.PageIndex)*(*(Params.PageSize))).Find(&albumList)
+			db.Raw("select id,name  FROM tags where  id not in (select tagId from tag_album_relation  where albumId = ? )", *(Params.AlbumId)).Count(&count)
+		}else{
+			db.Raw("select id,name  FROM tags where status=0 and name like '%" + *(Params.Keyword)+"%' and id not in (select tagId from tag_album_relation  where albumId = ? )", *(Params.AlbumId)).Limit(*(Params.PageSize)).Offset(*(Params.PageIndex)*(*(Params.PageSize))).Find(&albumList)
+			db.Raw("select id,name  FROM tags where status=0 and name like '%" + *(Params.Keyword)+"%' and id not in (select tagId from tag_album_relation  where albumId = ? )", *(Params.AlbumId)).Count(&count)
+		}
+		//db.Table("books").Select("books.id, books.name").Joins("left join album_book_relation on books.id = album_book_relation.bookId").Where("books.id is null").Find(&bookList)
+		fmt.Println("1")
+		//db.Where(map[string]interface{}{"status":0}).Where("name like ?","%"+*(Params.Keyword)+"%").Not("id",).Find(&bookList).Offset(*(Params.PageIndex)*(*(Params.PageSize)))
+	}else{
+		if Params.AlbumId !=nil{
+			fmt.Println("2")
+			db.Table("tags").Select("tags.id, tags.name").Joins("left join tag_album_relation on tags.id = tag_album_relation.tagId").Where("tag_album_relation.albumId =?",*Params.AlbumId).Where("tags.status=?",0).Count(&count)
+			db.Table("tags").Select("tags.id, tags.name").Joins("left join tag_album_relation on tags.id = tag_album_relation.tagId").Where("tag_album_relation.albumId =?",*Params.AlbumId).Where("tags.status=?",0).Limit(*(Params.PageSize)).Offset(*(Params.PageIndex)*(*(Params.PageSize))).Find(&albumList)
+		}else{
+			fmt.Println("3")
+			db.Table("tags").Where(map[string]interface{}{"status":0}).Count(&count)
+			db.Table("tags").Where(map[string]interface{}{"status":0}).Limit(*(Params.PageSize)).Offset(*(Params.PageIndex)*(*(Params.PageSize))).Find(&albumList)
+		}
+
+	}
 	//data
 	response.AlbumList = albumList
 	//

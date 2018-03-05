@@ -69,7 +69,7 @@ func (o *NrRelationAlbumTaglistEdit) ServeHTTP(rw http.ResponseWriter, r *http.R
 
 	books := *(Params.Body.BookIds)
 
-	if (*(Params.Body.ActionCode) == 0){ //添加映射
+	if (*(Params.Body.Action) == 0){ //添加映射
 		fmt.Println("add")
 		//先解析出bookis集合,样式 1,2,3,4,
 		if (!strings.Contains(books,",")){
