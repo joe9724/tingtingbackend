@@ -75,6 +75,8 @@ type ChapterUploadParams struct {
 	ChapterId *int64
 
 	Url string
+
+	Duration string
 }
 
 // BindRequest both binds and validates a request, it assumes that complex things implement a Validatable(strfmt.Registry) error interface
@@ -99,6 +101,11 @@ func (o *ChapterUploadParams) BindRequest(r *http.Request, route *middleware.Mat
 
 	fdIconUrl, fdhkIconUrl, _ := fds.GetOK("iconUrl")
 	if err := o.bindIconUrl(fdIconUrl, fdhkIconUrl, route.Formats); err != nil {
+		res = append(res, err)
+	}
+
+	fdDuration, fdhkDuration, _ := fds.GetOK("duration")
+	if err := o.bindDuration(fdDuration, fdhkDuration, route.Formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -199,6 +206,20 @@ func (o *ChapterUploadParams) bindIconUrl(rawData []string, hasKey bool, formats
 	}
 
 	o.IconUrl = raw
+
+	return nil
+}
+
+func (o *ChapterUploadParams) bindDuration(rawData []string, hasKey bool, formats strfmt.Registry) error {
+	var raw string
+	if len(rawData) > 0 {
+		raw = rawData[len(rawData)-1]
+	}
+	if err := validate.RequiredString("duration", "formData", raw); err != nil {
+		return err
+	}
+
+	o.Duration = raw
 
 	return nil
 }

@@ -13,6 +13,8 @@ import (
 	"tingtingbackend/models"
 	"tingtingbackend/var"
 	"time"
+	"strings"
+	"strconv"
 )
 
 // ChapterUploadHandlerFunc turns a function with the right signature into a chapter upload handler
@@ -83,6 +85,23 @@ func (o *ChapterUpload) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 		chapter.Name = &(Params.Title)
 		chapter.Time = time.Now().UnixNano() / 1000000000
 		chapter.URL = &(Params.Url)
+		var pc  int64
+		pc = 1
+		chapter.PlayCount = &pc
+		// 00:00:00 -> duration
+		//var duration int64
+		var tempduration string
+		var s []string
+		tempduration = Params.Duration
+		fmt.Println("duration is",Params.Duration)
+		s = strings.Split(tempduration,":")
+		hour,_ := strconv.ParseInt(s[0],10,64)
+		min,_ := strconv.ParseInt(s[1],10,64)
+		sec,_ := strconv.ParseInt(s[2],10,64)
+		var du int64
+		du = hour*3600+min*60+sec*1
+		chapter.Duration = &du
+
 		//chapter.AuthorName = Params.AuthorName
 		//fmt.Println("author is",Params.AuthorName)
 		//t := int64(-1)
