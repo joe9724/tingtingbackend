@@ -32,6 +32,14 @@ type Body2 struct {
 	BookIds *string `json:"bookIds"`
 
 	BookID *int64 `json:"bookId"`
+
+	OriginID *int64 `json:"originId"`
+
+	OriginOrder *int64 `json:"originOrder"`
+
+	NewID *int64 `json:"newId"`
+
+	NewOrder *int64 `json:"newOrder"`
 }
 
 // Validate validates this body 2

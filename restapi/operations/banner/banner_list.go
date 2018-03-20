@@ -84,8 +84,8 @@ func (o *BannerList) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	}else{
 		if Params.CategoryID !=nil{
 			fmt.Println("2")
-			db.Table("banners").Select("banners.id, banners.name").Joins("left join category_banner_relation on banners.id = category_banner_relation.bannerId").Where("category_banner_relation.categoryId =?",*Params.CategoryID).Where("banners.status=?",0).Count(&count)
-			db.Table("banners").Select("banners.id, banners.name").Joins("left join category_banner_relation on banners.id = category_banner_relation.bannerId").Where("category_banner_relation.categoryId =?",*Params.CategoryID).Where("banners.status=?",0).Limit(*(Params.PageSize)).Offset(*(Params.PageIndex)*(*(Params.PageSize))).Find(&bannerList)
+			db.Table("banners").Select("category_banner_relation.id, banners.name, category_banner_relation.order").Joins("left join category_banner_relation on banners.id = category_banner_relation.bannerId").Where("category_banner_relation.categoryId =?",*Params.CategoryID).Where("banners.status=?",0).Count(&count)
+			db.Table("banners").Select("category_banner_relation.id, banners.name, category_banner_relation.order").Joins("left join category_banner_relation on banners.id = category_banner_relation.bannerId").Where("category_banner_relation.categoryId =?",*Params.CategoryID).Where("banners.status=?",0).Order("order").Limit(*(Params.PageSize)).Offset(*(Params.PageIndex)*(*(Params.PageSize))).Find(&bannerList)
 		}else{
 			fmt.Println("3")
 			db.Table("banners").Where(map[string]interface{}{"status":0}).Count(&count)

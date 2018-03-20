@@ -38,6 +38,8 @@ type Banner struct {
 	Jumpurl *string `json:"jumpurl"`
 
 	Test *string `json:"test"`
+
+	Order *int64 `json:"order"`
 }
 
 // Validate validates this banner

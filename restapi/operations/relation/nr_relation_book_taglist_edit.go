@@ -113,6 +113,11 @@ func (o *NrRelationBookTaglistEdit) ServeHTTP(rw http.ResponseWriter, r *http.Re
 	} else if (*(Params.Body.ActionCode) == 5) { //去除分类下icon映射
 		fmt.Println("remove")
 		db.Exec("delete from category_icon_relation where categoryId=? and iconId=?", Params.Body.BookID, books)
+	} else if (*(Params.Body.ActionCode) == 6) { //重新排序
+        fmt.Println("reorder","update category_banner_relation set order=? where id=?",*(Params.Body.NewOrder),*(Params.Body.OriginID),"update category_banner_relation set order=? where id=?",*(Params.Body.OriginOrder),*(Params.Body.NewID))
+	    db.Exec("update category_banner_relation set `order`=? where id=?",*(Params.Body.NewOrder),*(Params.Body.OriginID))
+		db.Exec("update category_banner_relation set `order`=? where id=?",*(Params.Body.OriginOrder),*(Params.Body.NewID))
+
 	}
 
 	var status models.Response

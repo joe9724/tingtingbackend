@@ -71,8 +71,6 @@ func (o *FileUpload) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 
 	fmt.Println("filename is", *Params.Filename)
 
-
-
 	fmt.Println("Param.type is", Params.Type)
 
 	var contentType string
@@ -80,31 +78,23 @@ func (o *FileUpload) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	code = 200
 	msg = "ok"
 
+	db,err := _var.OpenConnection()
+	if err!=nil{
+		fmt.Println(err.Error())
+	}
+	defer db.Close()
+
 	if (Params.File != nil) {
 		file, err := ioutil.ReadAll(Params.File)
 		if err != nil {
 			fmt.Println("err upload:", err.Error())
 		}
-		//fmt.Println(len(icon))
-		// Always returns a valid content-type and "application/octet-stream" if no others seemed to match.
 		contentType = http.DetectContentType(file)
 		fmt.Println("contentType is", contentType)
 		fmt.Println("file.size is", len(file))
 
 		if contentType == "application/octet-stream" || contentType == "video/mp4" {
 			fmt.Println("10")
-			/*file, err := ioutil.ReadAll(Params.File)
-	if err != nil {
-		fmt.Println("err upload:", err.Error())
-	}
-	//fmt.Println(len(icon))
-	// Always returns a valid content-type and "application/octet-stream" if no others seemed to match.
-	contentType := http.DetectContentType(file)*/
-			//fmt.Println("contentType is", contentType)
-
-			//save
-			//var lower string
-			//lower = strings.ToLower(contentType)
 			fmt.Println("contentType is", contentType)
 			if (runtime.GOOS == "windows") {
 				err1 := ioutil.WriteFile(filename+".m4a", file, 0644)
@@ -122,18 +112,14 @@ func (o *FileUpload) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 			code = 200
 			msg = "ok"
 			response.URL = _var.GetResourceDomain("m4a") + filename + ".m4a"
+			if(Params.Type == nil){ //==nil说明是批量上传章节
+			title := strings.Split(*(Params.Filename),".")
+			db.Exec("insert into chapters(name,status,summary,url,time) values(?,?,?,?,?)",title[0],0,title[0],response.URL,time.Now().UnixNano() / 1000000000)
+
+			}
 		} else {
 			if (Params.Type == nil) {
 				fmt.Println("1")
-				/*file, err := ioutil.ReadAll(Params.File)
-		if err != nil {
-			fmt.Println("err upload:", err.Error())
-		}*/
-				//fmt.Println(len(icon))
-				// Always returns a valid content-type and "application/octet-stream" if no others seemed to match.
-				//contentType := http.DetectContentType(file)
-				fmt.Println("contentType is", contentType)
-
 				//save
 				var lower string
 				lower = strings.ToLower(contentType)
@@ -164,18 +150,6 @@ func (o *FileUpload) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 				//如果有icon
 				if (*Params.Type) == "icon" {
 					fmt.Println("4")
-					/*file, err := ioutil.ReadAll(Params.File)
-			if err != nil {
-				fmt.Println("err upload:", err.Error())
-			}*/
-					//fmt.Println(len(icon))
-					// Always returns a valid content-type and "application/octet-stream" if no others seemed to match.
-					//contentType := http.DetectContentType(file)
-					//fmt.Println("contentType is", contentType)
-
-					//save
-					//var lower string
-					//lower = strings.ToLower(contentType)
 					if (true) {
 						fmt.Println("5")
 						if (runtime.GOOS == "windows") {
@@ -199,18 +173,6 @@ func (o *FileUpload) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 					}
 				} else if (*Params.Type) == "cover" {
 					fmt.Println("7")
-					/*file, err := ioutil.ReadAll(Params.File)
-			if err != nil {
-				fmt.Println("err upload:", err.Error())
-			}*/
-					//fmt.Println(len(icon))
-					// Always returns a valid content-type and "application/octet-stream" if no others seemed to match.
-					//contentType := http.DetectContentType(file)
-					//fmt.Println("contentType is", contentType)
-
-					//save
-					//var lower string
-					//lower = strings.ToLower(contentType)
 					if (true) {
 						fmt.Println("8")
 						if (runtime.GOOS == "windows") {
@@ -243,11 +205,6 @@ func (o *FileUpload) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	if (Params.Filename!=nil){
 		response.OriginName = *(Params.Filename)
 	}
-	db, err := _var.OpenConnection()
-	if err != nil {
-		fmt.Println(err.Error())
-	}
-	defer db.Close()
 
 	status.UnmarshalBinary([]byte(_var.Response200(code, msg)))
 	response.Return = &status
