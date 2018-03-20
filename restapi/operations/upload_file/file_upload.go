@@ -69,7 +69,7 @@ func (o *FileUpload) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	var filename string
 	filename = strconv.FormatInt((time.Now().Unix()), 10)
 
-	fmt.Println("filename is", filename)
+	fmt.Println("filename is", *Params.Filename)
 
 
 
