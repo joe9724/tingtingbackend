@@ -71,6 +71,8 @@ func (o *FileUpload) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 
 	fmt.Println("filename is", filename)
 
+
+
 	fmt.Println("Param.type is", Params.Type)
 
 	var contentType string
@@ -238,6 +240,9 @@ func (o *FileUpload) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 		}
 	}
 
+	if (Params.Filename!=nil){
+		response.OriginName = *(Params.Filename)
+	}
 	db, err := _var.OpenConnection()
 	if err != nil {
 		fmt.Println(err.Error())

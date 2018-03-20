@@ -66,6 +66,8 @@ type FileUploadParams struct {
 	  In: formData
 	*/
 	Val *string
+
+	Filename *string
 }
 
 // BindRequest both binds and validates a request, it assumes that complex things implement a Validatable(strfmt.Registry) error interface
@@ -126,6 +128,11 @@ func (o *FileUploadParams) BindRequest(r *http.Request, route *middleware.Matche
 
 	fdVal, fdhkVal, _ := fds.GetOK("val")
 	if err := o.bindVal(fdVal, fdhkVal, route.Formats); err != nil {
+		res = append(res, err)
+	}
+
+	fdFilename, fdhkFilename, _ := fds.GetOK("filename")
+	if err := o.bindFilename(fdFilename, fdhkFilename, route.Formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -242,6 +249,20 @@ func (o *FileUploadParams) bindVal(rawData []string, hasKey bool, formats strfmt
 	}
 
 	o.Val = &raw
+
+	return nil
+}
+
+func (o *FileUploadParams) bindFilename(rawData []string, hasKey bool, formats strfmt.Registry) error {
+	var raw string
+	if len(rawData) > 0 {
+		raw = rawData[len(rawData)-1]
+	}
+	if raw == "" { // empty values pass all other validations
+		return nil
+	}
+
+	o.Filename = &raw
 
 	return nil
 }

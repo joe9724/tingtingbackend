@@ -21,6 +21,8 @@ type InlineResponse200191 struct {
 
 	// 上传文件返回的完整路径
 	URL string `json:"url,omitempty"`
+
+	OriginName string `json:"originname,omitempty"`
 }
 
 // Validate validates this inline response 200 19
