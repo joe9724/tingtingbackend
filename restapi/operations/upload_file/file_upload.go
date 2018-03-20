@@ -69,9 +69,9 @@ func (o *FileUpload) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	var filename string
 	filename = strconv.FormatInt((time.Now().Unix()), 10)
 
-	fmt.Println("filename is", *Params.Filename)
+	//fmt.Println("filename is", *Params.Filename)
 
-	fmt.Println("Param.type is", Params.Type)
+	//fmt.Println("Param.type is", Params.Type)
 
 	var contentType string
 	//var file []byte
@@ -112,7 +112,7 @@ func (o *FileUpload) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 			code = 200
 			msg = "ok"
 			response.URL = _var.GetResourceDomain("m4a") + filename + ".m4a"
-			if(Params.Type == nil){ //==nil说明是批量上传章节
+			if(Params.Filename != nil){ //==nil说明是批量上传章节
 			title := strings.Split(*(Params.Filename),".")
 			db.Exec("insert into chapters(name,status,summary,url,time) values(?,?,?,?,?)",title[0],0,title[0],response.URL,time.Now().UnixNano() / 1000000000)
 

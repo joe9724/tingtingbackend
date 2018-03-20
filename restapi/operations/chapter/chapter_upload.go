@@ -117,11 +117,11 @@ func (o *ChapterUpload) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 		//db.Table("sub_chapter_items").Where("id=?",*(Params.ChapterId)).Last(&chapter)
 		if(Params.IconUrl != ""){
 			fmt.Println("1",Params.IconUrl)
-			db.Exec("update chapters set name=?,status=?,summary=?,icon=? where id=?",Params.Title,0,*(Params.Summary),Params.IconUrl,&(Params.ChapterId))
+			db.Exec("update chapters set name=?,status=?,summary=?,icon=?,url=? where id=?",Params.Title,0,*(Params.Summary),Params.IconUrl,Params.Url,&(Params.ChapterId))
 		}else{
 			fmt.Println("2",Params.IconUrl,*(Params.Summary))
 			summary := *(Params.Summary)
-			db.Exec("update chapters set name=?,status=?,summary=? where id=?",Params.Title,0,summary,&(Params.ChapterId))
+			db.Exec("update chapters set name=?,status=?,summary=?,url=? where id=?",Params.Title,0,summary,Params.Url,&(Params.ChapterId))
 		}
 
 	}

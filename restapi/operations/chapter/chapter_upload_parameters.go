@@ -201,9 +201,9 @@ func (o *ChapterUploadParams) bindIconUrl(rawData []string, hasKey bool, formats
 	if len(rawData) > 0 {
 		raw = rawData[len(rawData)-1]
 	}
-	if err := validate.RequiredString("iconUrl", "formData", raw); err != nil {
+	/*if err := validate.RequiredString("iconUrl", "formData", raw); err != nil {
 		return err
-	}
+	}*/
 
 	o.IconUrl = raw
 
@@ -215,9 +215,9 @@ func (o *ChapterUploadParams) bindDuration(rawData []string, hasKey bool, format
 	if len(rawData) > 0 {
 		raw = rawData[len(rawData)-1]
 	}
-	if err := validate.RequiredString("duration", "formData", raw); err != nil {
+	/*if err := validate.RequiredString("duration", "formData", raw); err != nil {
 		return err
-	}
+	}*/
 
 	o.Duration = raw
 
