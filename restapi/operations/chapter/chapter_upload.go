@@ -100,7 +100,7 @@ func (o *ChapterUpload) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 		sec,_ := strconv.ParseInt(s[2],10,64)
 		var du int64
 		du = hour*3600+min*60+sec*1
-		chapter.Duration = &du
+		chapter.Duration = 100000
 
 		//chapter.AuthorName = Params.AuthorName
 		//fmt.Println("author is",Params.AuthorName)

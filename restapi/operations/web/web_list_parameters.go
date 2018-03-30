@@ -44,6 +44,8 @@ type WebListParams struct {
 	  In: query
 	*/
 	Userid *string
+
+	Webtype *string
 }
 
 // BindRequest both binds and validates a request, it assumes that complex things implement a Validatable(strfmt.Registry) error interface
@@ -66,6 +68,11 @@ func (o *WebListParams) BindRequest(r *http.Request, route *middleware.MatchedRo
 
 	qUserid, qhkUserid, _ := qs.GetOK("userid")
 	if err := o.bindUserid(qUserid, qhkUserid, route.Formats); err != nil {
+		res = append(res, err)
+	}
+
+	qWebtype, qhkWebtype, _ := qs.GetOK("webtype")
+	if err := o.bindWebtype(qWebtype, qhkWebtype, route.Formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -121,6 +128,20 @@ func (o *WebListParams) bindUserid(rawData []string, hasKey bool, formats strfmt
 	}
 
 	o.Userid = &raw
+
+	return nil
+}
+
+func (o *WebListParams) bindWebtype(rawData []string, hasKey bool, formats strfmt.Registry) error {
+	var raw string
+	if len(rawData) > 0 {
+		raw = rawData[len(rawData)-1]
+	}
+	if raw == "" { // empty values pass all other validations
+		return nil
+	}
+
+	o.Webtype = &raw
 
 	return nil
 }

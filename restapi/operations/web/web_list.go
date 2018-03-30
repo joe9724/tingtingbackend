@@ -69,7 +69,12 @@ func (o *WebList) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	defer db.Close()
 	//query
 	//db.Where(map[string]interface{}{"status":0}).Limit(*(Params.PageSize)).Offset(*(Params.PageIndex)*(*(Params.PageSize))).Find(&orderList)
-	db.Raw("select id,content,url,title from web").Find(&webList)
+	if Params.Webtype != nil{
+		db.Raw("select id,content,url,title from web where webtype=?",*(Params.Webtype)).Find(&webList)
+	}else{
+		db.Raw("select id,content,url,title from web").Find(&webList)
+	}
+
 	/*rows, err := db.Raw("select orders.id,orders.order_no,orders.album_id,orders.member_id,orders.time,albums.name as albumname,albums.value,members.name as membername from orders left join albums on orders.album_id = albums.id left join members on orders.member_id=members.id").Limit(*(Params.PageSize)).Offset(*(Params.PageIndex)*(*(Params.PageSize))).Rows()
 	if err !=nil{
 		fmt.Println("err is",err.Error())
