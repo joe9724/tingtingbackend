@@ -81,7 +81,8 @@ func (o *ChapterList) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	}else{
 		if Params.BookID !=nil{
 			fmt.Println("3")
-			db.Table("chapters").Select("chapters.id, chapters.name").Joins("left join book_chapter_relation on chapters.id = book_chapter_relation.chapterId").Where("book_chapter_relation.bookId =?",*Params.BookID).Where("chapters.status=?",0).Where("book_chapter_relation.status=?",0).Find(&chapterlist)
+			db.Raw("select book_chapter_relation.id, chapters.name,book_chapter_relation.`order` from chapters left join book_chapter_relation on chapters.id = book_chapter_relation.chapterId where book_chapter_relation.bookId =? and chapters.status=0 and book_chapter_relation.status=0",*Params.BookID).Order("book_chapter_relation.order").Limit(*(Params.PageSize)).Offset(*(Params.PageIndex) * (*(Params.PageSize))).Find(&chapterlist)
+			//db.Table("chapters").Select("chapters.id, chapters.name,book_chapter_relation.order").Joins("left join book_chapter_relation on chapters.id = book_chapter_relation.chapterId").Where("book_chapter_relation.bookId =?",*Params.BookID).Where("chapters.status=?",0).Where("book_chapter_relation.status=?",0).Order("book_chapter_relation").Find(&chapterlist)
 			db.Table("chapters").Select("chapters.id, chapters.name").Joins("left join book_chapter_relation on chapters.id = book_chapter_relation.chapterId").Where("book_chapter_relation.bookId =?",*Params.BookID).Where("chapters.status=?",0).Where("book_chapter_relation.status=?",0).Count(&count)
 		}else{
 			fmt.Println("4")
