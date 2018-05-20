@@ -60,6 +60,8 @@ type ChapterListParams struct {
 	  In: query
 	*/
 	Userid *string
+
+	Key *string
 }
 
 // BindRequest both binds and validates a request, it assumes that complex things implement a Validatable(strfmt.Registry) error interface
@@ -82,6 +84,11 @@ func (o *ChapterListParams) BindRequest(r *http.Request, route *middleware.Match
 
 	qKeyword, qhkKeyword, _ := qs.GetOK("keyword")
 	if err := o.bindKeyword(qKeyword, qhkKeyword, route.Formats); err != nil {
+		res = append(res, err)
+	}
+
+	qKey, qhkKey, _ := qs.GetOK("key")
+	if err := o.bindKey(qKey, qhkKey, route.Formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -153,6 +160,20 @@ func (o *ChapterListParams) bindKeyword(rawData []string, hasKey bool, formats s
 	}
 
 	o.Keyword = &raw
+
+	return nil
+}
+
+func (o *ChapterListParams) bindKey(rawData []string, hasKey bool, formats strfmt.Registry) error {
+	var raw string
+	if len(rawData) > 0 {
+		raw = rawData[len(rawData)-1]
+	}
+	if raw == "" { // empty values pass all other validations
+		return nil
+	}
+
+	o.Key = &raw
 
 	return nil
 }

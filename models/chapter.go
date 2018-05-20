@@ -64,6 +64,8 @@ type Chapter struct {
 	URL *string `json:"url"`
 
 	Summary *string `json:"summary"`
+
+	BookName *string `json:"book_name"`
 }
 
 // Validate validates this chapter

@@ -14,6 +14,7 @@ import (
 	"fmt"
 	"tingtingbackend/var"
 	"strconv"
+	"strings"
 )
 
 // ChapterDeleteHandlerFunc turns a function with the right signature into a chapter delete handler
@@ -66,13 +67,24 @@ func (o *ChapterDelete) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 		fmt.Println(err.Error())
 	}
 
-	fmt.Println("iconid is",*(Params.ChapterID))
-	var bid int64
-	bid,er := strconv.ParseInt(*(Params.ChapterID), 10, 64)
-	if er !=nil{
+	if (Params.ChapterID != nil) {
+		fmt.Println("iconid is", *(Params.ChapterID))
+		var bid int64
+		bid, er := strconv.ParseInt(*(Params.ChapterID), 10, 64)
+		if er != nil {
+
+		}
+		db.Exec("update chapters set status=1 where id=?", bid)
+	}
+	if (Params.ChapterIDs != nil){
+		//批量删除
+		ids := strings.Split((*(Params.ChapterIDs)),",")
+		for i:=0; i<len(ids); i++ {
+			db.Exec("update chapters set status=1 where id=?", ids[i])
+		}
+		// fmt.Println("update chapters set status=1 where id in ", *(Params.ChapterIDs))
 
 	}
-	db.Exec("update chapters set status=1 where id=?",bid)
 	//status
 	var status models.Response
 	status.UnmarshalBinary([]byte(_var.Response200(200,"ok")))

@@ -36,6 +36,8 @@ type ChapterDeleteParams struct {
 	  In: query
 	*/
 	ChapterID *string
+
+	ChapterIDs *string
 	/*当前后台登录id
 	  In: query
 	*/
@@ -52,6 +54,11 @@ func (o *ChapterDeleteParams) BindRequest(r *http.Request, route *middleware.Mat
 
 	qChapterID, qhkChapterID, _ := qs.GetOK("chapterId")
 	if err := o.bindChapterID(qChapterID, qhkChapterID, route.Formats); err != nil {
+		res = append(res, err)
+	}
+
+	qChapterIDs, qhkChapterIDs, _ := qs.GetOK("chapterIds")
+	if err := o.bindChapterIDs(qChapterIDs, qhkChapterIDs, route.Formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -76,6 +83,20 @@ func (o *ChapterDeleteParams) bindChapterID(rawData []string, hasKey bool, forma
 	}
 
 	o.ChapterID = &raw
+
+	return nil
+}
+
+func (o *ChapterDeleteParams) bindChapterIDs(rawData []string, hasKey bool, formats strfmt.Registry) error {
+	var raw string
+	if len(rawData) > 0 {
+		raw = rawData[len(rawData)-1]
+	}
+	if raw == "" { // empty values pass all other validations
+		return nil
+	}
+
+	o.ChapterIDs = &raw
 
 	return nil
 }
