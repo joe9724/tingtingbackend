@@ -55,7 +55,7 @@ func (o *NrUserDeleteParams) BindRequest(r *http.Request, route *middleware.Matc
 		res = append(res, err)
 	}
 
-	qUserid, qhkUserid, _ := qs.GetOK("userid")
+	qUserid, qhkUserid, _ := qs.GetOK("user_id")
 	if err := o.bindUserid(qUserid, qhkUserid, route.Formats); err != nil {
 		res = append(res, err)
 	}

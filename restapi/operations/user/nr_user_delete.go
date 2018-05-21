@@ -7,8 +7,12 @@ package user
 
 import (
 	"net/http"
-
+	_"github.com/jinzhu/gorm"
+	_ "github.com/jinzhu/gorm/dialects/mysql"
 	middleware "github.com/go-openapi/runtime/middleware"
+	"tingtingbackend/models"
+	"fmt"
+	"tingtingbackend/var"
 )
 
 // NrUserDeleteHandlerFunc turns a function with the right signature into a user delete handler
@@ -53,8 +57,25 @@ func (o *NrUserDelete) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	res := o.Handler.Handle(Params) // actually handle the request
+	/*res := o.Handler.Handle(Params) // actually handle the request
 
-	o.Context.Respond(rw, r, route.Produces, route, res)
+	o.Context.Respond(rw, r, route.Produces, route, res)*/
+	var ok UserDeleteOK
+	var response models.InlineResponse20018
 
+	db,err := _var.OpenConnection()
+	if err!=nil{
+		fmt.Println(err.Error())
+	}
+	defer db.Close()
+	fmt.Println("update users set status=1 where id=?",*Params.Userid)
+	db.Exec("update users set status=1 where id=?",*Params.Userid)
+
+	var status models.Response
+	status.UnmarshalBinary([]byte(_var.Response200(200,"ok")))
+	response.Status = &status
+
+	ok.SetPayload(&response)
+
+	o.Context.Respond(rw, r, route.Produces, route, ok)
 }

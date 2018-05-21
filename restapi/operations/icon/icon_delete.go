@@ -65,6 +65,7 @@ func (o *IconDelete) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	if err!=nil{
 		fmt.Println(err.Error())
 	}
+	defer db.Close()
 
 	fmt.Println("iconid is",*(Params.IconID))
 	var bid int64
