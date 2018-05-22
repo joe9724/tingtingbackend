@@ -73,7 +73,20 @@ func (o *WebDetail) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	status.UnmarshalBinary([]byte(_var.Response200(200,"ok")))
 	response.Status = &status
 	response.Web = &web
-
+	var Ds models.DashBoard
+	db.Raw("select * from dashboard where id=1").Find(&Ds)
+	//get hotalbums
+	var hotalbums []models.HotAlbum
+	db.Raw("select name,play_count as play_count from albums where status=0 order by play_count desc limit 0,3").Find(&hotalbums)
+	var allcount int64
+	db.Raw("select sum(play_count) as allcount from albums where status=0").Count(&allcount)
+	fmt.Println("allcount is",allcount)
+	for i:=0; i<len(hotalbums);i++  {
+		fmt.Println("playcount is",hotalbums[i].PlayCount)
+		hotalbums[i].Percent = hotalbums[i].PlayCount*100/allcount
+	}
+	Ds.HotAlbums = hotalbums
+	response.Dashboard = Ds
 	ok.SetPayload(&response)
 
 	o.Context.Respond(rw, r, route.Produces, route, ok)

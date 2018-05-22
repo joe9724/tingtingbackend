@@ -21,6 +21,28 @@ type InlineResponse2001513 struct {
 
 	// web
 	Web *Web `json:"web"`
+
+	Dashboard DashBoard `json:"dashboard"`
+}
+
+type DashBoard struct{
+	NumberNewUser int64 `json:"number_newuser"`
+	NumberTodayBuyAlbums int64 `json:"number_today_buy_albums"`
+	MoneyToday int64 `json:"money_today"`
+	NumberTodayRecord int64 `json:"number_today_record"`
+	NumberMonthBuyAlbums int64 `json:"number_month_buy_albums"`
+    NumberTodayAddCategory int64 `json:"number_today_add_category"`
+    NumberTodayAddAlbums int64 `json:"number_today_add_albums"`
+    NumberTodayAddBook int64 `json:"number_today_add_book"`
+    NumberTodayAddChapter int64 `json:"number_today_add_chapter"`
+    HotAlbums []HotAlbum `json:"hotalbums"`
+
+}
+
+type HotAlbum struct{
+	Name string `json:"name"`
+	Percent int64 `json:"percent"`
+	PlayCount int64 `json:"play_count"`
 }
 
 // Validate validates this inline response 200 1
