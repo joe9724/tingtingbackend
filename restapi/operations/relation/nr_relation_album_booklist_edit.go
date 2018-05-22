@@ -76,13 +76,17 @@ func (o *NrRelationAlbumBooklistEdit) ServeHTTP(rw http.ResponseWriter, r *http.
 	if (*(Params.Body.Action) == 0){ //添加映射
 		//先解析出bookis集合,样式 1,2,3,4,
 		if (!strings.Contains(books,",")){
+			var seedmodel SeedModel
+			db.Raw("select max(`order`)+1 as seed from album_book_relation").First(&seedmodel)
 			fmt.Println("1")
-			db.Exec("insert into album_book_relation(albumId,bookId) values(?,?)",Params.Body.AlbumID,books)
+			db.Exec("insert into album_book_relation(albumId,bookId,`order`) values(?,?,?)",Params.Body.AlbumID,books,seedmodel.Seed)
 			db.Exec("update albums set books_number=books_number+1 where id=?",Params.Body.AlbumID)
 		}else{
 			temp := strings.Split(books,",")
 			for k:=0;k< len(temp);k++ {
-				db.Exec("insert into album_book_relation(albumId,bookId) values(?,?)",Params.Body.AlbumID,temp[k])
+				var seedmodel SeedModel
+				db.Raw("select max(`order`)+1 as seed from book_chapter_relation").First(&seedmodel)
+				db.Exec("insert into album_book_relation(albumId,bookId,`order`) values(?,?,?)",Params.Body.AlbumID,temp[k],seedmodel.Seed)
 				fmt.Println("insert into album_book_relation(albumId,bookId) values(?,?)",Params.Body.AlbumID,temp[k])
 			}
 			db.Exec("update albums set books_number=albums_number+"+strconv.Itoa(len(temp))+" where id="+strconv.FormatInt(*(Params.Body.AlbumID),10))

@@ -90,8 +90,8 @@ func (o *BookList) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 		} else {
 			if Params.AlbumID != nil {
 				fmt.Println("2")
-				db.Table("books").Select("books.id, books.name").Joins("left join album_book_relation on books.id = album_book_relation.bookId").Where("album_book_relation.albumId =?", *Params.AlbumID).Where("books.status=?", 0).Where("album_book_relation.status =?", 0).Count(&count)
-				db.Table("books").Select("books.id, books.name").Joins("left join album_book_relation on books.id = album_book_relation.bookId").Where("album_book_relation.albumId =?", *Params.AlbumID).Where("books.status=?", 0).Where("album_book_relation.status =?", 0).Limit(*(Params.PageSize)).Offset(*(Params.PageIndex) * (*(Params.PageSize))).Find(&bookList)
+				db.Table("books").Select("album_book_relation.id, books.name, album_book_relation.order").Joins("left join album_book_relation on books.id = album_book_relation.bookId").Order("album_book_relation.order").Where("album_book_relation.albumId =?", *Params.AlbumID).Where("books.status=?", 0).Where("album_book_relation.status =?", 0).Count(&count)
+				db.Table("books").Select("album_book_relation.id, books.name, album_book_relation.order").Joins("left join album_book_relation on books.id = album_book_relation.bookId").Order("album_book_relation.order").Where("album_book_relation.albumId =?", *Params.AlbumID).Where("books.status=?", 0).Where("album_book_relation.status =?", 0).Limit(*(Params.PageSize)).Offset(*(Params.PageIndex) * (*(Params.PageSize))).Find(&bookList)
 			} else {
 				fmt.Println("3")
 				db.Table("books").Where(map[string]interface{}{"status": 0}).Count(&count)

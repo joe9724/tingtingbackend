@@ -53,6 +53,8 @@ type Book struct {
 
 	// time
 	Time int64 `json:"time"`
+
+	Order int64 `json:"order"`
 }
 
 // Validate validates this book

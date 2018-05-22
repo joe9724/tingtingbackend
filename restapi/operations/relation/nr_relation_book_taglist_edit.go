@@ -123,6 +123,10 @@ func (o *NrRelationBookTaglistEdit) ServeHTTP(rw http.ResponseWriter, r *http.Re
 		db.Exec("update book_chapter_relation set `order`=? where id=?",*(Params.Body.NewOrder),*(Params.Body.OriginID))
 		db.Exec("update book_chapter_relation set `order`=? where id=?",*(Params.Body.OriginOrder),*(Params.Body.NewID))
 
+	} else if (*(Params.Body.ActionCode) == 8) { //专辑下书本重新排序
+		fmt.Println("update album_book_relation set `order`=? where id=?",*(Params.Body.NewOrder),*(Params.Body.OriginID))
+		db.Exec("update album_book_relation set `order`=? where id=?",*(Params.Body.NewOrder),*(Params.Body.OriginID))
+		db.Exec("update album_book_relation set `order`=? where id=?",*(Params.Body.OriginOrder),*(Params.Body.NewID))
 	}
 
 	var status models.Response
