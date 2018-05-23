@@ -68,6 +68,8 @@ type FileUploadParams struct {
 	Val *string
 
 	Filename *string
+
+	BookId *int64
 }
 
 // BindRequest both binds and validates a request, it assumes that complex things implement a Validatable(strfmt.Registry) error interface
@@ -123,6 +125,11 @@ func (o *FileUploadParams) BindRequest(r *http.Request, route *middleware.Matche
 
 	fdUserid, fdhkUserid, _ := fds.GetOK("userid")
 	if err := o.bindUserid(fdUserid, fdhkUserid, route.Formats); err != nil {
+		res = append(res, err)
+	}
+
+	fdBookId, fdhkBookId, _ := fds.GetOK("bookId")
+	if err := o.bindBookId(fdBookId, fdhkBookId, route.Formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -235,6 +242,24 @@ func (o *FileUploadParams) bindUserid(rawData []string, hasKey bool, formats str
 		return errors.InvalidType("userid", "formData", "int64", raw)
 	}
 	o.Userid = &value
+
+	return nil
+}
+
+func (o *FileUploadParams) bindBookId(rawData []string, hasKey bool, formats strfmt.Registry) error {
+	var raw string
+	if len(rawData) > 0 {
+		raw = rawData[len(rawData)-1]
+	}
+	if raw == "" { // empty values pass all other validations
+		return nil
+	}
+
+	value, err := swag.ConvertInt64(raw)
+	if err != nil {
+		return errors.InvalidType("bookId", "query", "int64", raw)
+	}
+	o.BookId = &value
 
 	return nil
 }
