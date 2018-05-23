@@ -104,11 +104,12 @@ func (o *TagList) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 				}
 			}else{
 				if Params.BookId !=nil{
-					fmt.Println("3")
+					fmt.Println("5")
 					db.Table("tags").Select("tags.id, tags.name").Joins("left join tag_book_relation on tags.id = tag_book_relation.tagId").Where("tag_book_relation.bookId =?",*Params.BookId).Where("tags.status=?",0).Count(&count)
 					db.Table("tags").Select("tags.id, tags.name").Joins("left join tag_book_relation on tags.id = tag_book_relation.tagId").Where("tag_book_relation.bookId =?",*Params.BookId).Where("tags.status=?",0).Limit(*(Params.PageSize)).Offset(*(Params.PageIndex)*(*(Params.PageSize))).Find(&albumList)
+					fmt.Println("albumList is",len(albumList))
 				}else{
-					fmt.Println("4")
+					fmt.Println("6")
 					db.Table("tags").Where(map[string]interface{}{"status":0}).Count(&count)
 					db.Table("tags").Where(map[string]interface{}{"status":0}).Limit(*(Params.PageSize)).Offset(*(Params.PageIndex)*(*(Params.PageSize))).Find(&albumList)
 				}
