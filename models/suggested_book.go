@@ -44,7 +44,7 @@ type SuggestedBook struct {
 	ShowIcon bool `json:"showIcon,omitempty"`
 
 	// start time
-	StartTime string `json:"startTime"`
+	StartTime string `json:"start_time"`
 
 	// status
 	Status int64 `json:"status"`

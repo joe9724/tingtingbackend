@@ -76,7 +76,7 @@ func (o *NrRelationDefaultBookUpload) ServeHTTP(rw http.ResponseWriter, r *http.
 	}
 
 
-	db.Exec("insert into book_default_grade_relation(bookId,grade,startTime,status) values(?,?,?,?)",Params.Body.BookId,Params.Body.GradeRange,Params.Body.StartTime,Params.Body.Status)
+	db.Exec("insert into book_default_grade_relation(bookId,grade_range,startTime,status) values(?,?,?,?)",Params.Body.BookId,Params.Body.GradeRange,Params.Body.StartTime,Params.Body.Status)
 
 	status.UnmarshalBinary([]byte(_var.Response200(code,msg)))
 	response.Status = &status
