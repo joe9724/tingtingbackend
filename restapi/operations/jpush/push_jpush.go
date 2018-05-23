@@ -100,8 +100,8 @@ func (o *PushJpush) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	fmt.Println("Params.type is",*Params.Type)
 
 	fmt.Println("title is",Params.Title)
-	notice.SetAndroidNotice(&jpushclient.AndroidNotice{Alert: "title",Title:"听听悦读",Extras:structs.Map(extra)})
-	notice.SetIOSNotice(&jpushclient.IOSNotice{Alert: "Title",Sound:"default",Extras:structs.Map(extra)})
+	notice.SetAndroidNotice(&jpushclient.AndroidNotice{Alert: Params.Title,Title:"听听悦读",Extras:structs.Map(extra)})
+	notice.SetIOSNotice(&jpushclient.IOSNotice{Alert: Params.Title,Sound:"default",Extras:structs.Map(extra)})
 	//notice.SetWinPhoneNotice(&jpushclient.WinPhoneNotice{Alert: "WinPhoneNotice"})
 
 	//{"content":"xxxx", "type":0, "id":1234}
