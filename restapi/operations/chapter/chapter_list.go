@@ -87,21 +87,21 @@ func (o *ChapterList) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 		}else{
 			if (Params.Key != nil){
 				fmt.Println("4")
-				db.Raw("select chapters.id,chapters.name,chapters.play_count,chapters.status,chapters.time,books.name as book_name from chapters left join book_chapter_relation on chapters.id = book_chapter_relation.chapterId join books on book_chapter_relation.bookId=books.id where chapters.status=0 and chapters.name like '%" + *(Params.Key)+"%'").Limit(*(Params.PageSize)).Offset(*(Params.PageIndex)*(*(Params.PageSize))).Find(&chapterlist)
+				db.Raw("select chapters.id,chapters.name,chapters.play_count,chapters.status,chapters.time,books.name as book_name from chapters left join book_chapter_relation on chapters.id = book_chapter_relation.chapterId left join books on book_chapter_relation.bookId=books.id where chapters.status=0 and chapters.name like '%" + *(Params.Key)+"%'").Limit(*(Params.PageSize)).Offset(*(Params.PageIndex)*(*(Params.PageSize))).Find(&chapterlist)
 				//db.Raw("select count(id) from chapters where status=0").Count(&count)
-				db.Raw("select count(chapters.id) from chapters left join book_chapter_relation on chapters.id = book_chapter_relation.chapterId join books on book_chapter_relation.bookId=books.id where chapters.status=0 and chapters.name like '%" + *(Params.Key)+"%'").Count(&count)
+				db.Raw("select count(chapters.id) from chapters left join book_chapter_relation on chapters.id = book_chapter_relation.chapterId left join books on book_chapter_relation.bookId=books.id where chapters.status=0 and chapters.name like '%" + *(Params.Key)+"%'").Count(&count)
 				//db.Raw("select * from chapters where status=0 and name like '%" + *(Params.Key)+"%' order by id desc").Limit(*(Params.PageSize)).Offset(*(Params.PageIndex)*(*(Params.PageSize))).Find(&chapterlist)
 				//fmt.Println("select * from chapters where status=0 and name like '%" + *(Params.Key)+"%' order by id desc").Count(&count)
 				//db.Raw("select count(id) from chapters where status=0 and name like '%" + *(Params.Key)+"%' ").Count(&count)
-				fmt.Println("select chapters.id,chapters.name,chapters.play_count,chapters.status,chapters.time,books.name as book_name from chapters left join book_chapter_relation on chapters.id = book_chapter_relation.chapterId join books on book_chapter_relation.bookId=books.id where chapters.status=0 and chapters.name like '%" + *(Params.Key)+"%'")
+				fmt.Println("select chapters.id,chapters.name,chapters.play_count,chapters.status,chapters.time,books.name as book_name from chapters left join book_chapter_relation on chapters.id = book_chapter_relation.chapterId left join books on book_chapter_relation.bookId=books.id where chapters.status=0 and chapters.name like '%" + *(Params.Key)+"%'")
 				//db.Table("chapters").Where(map[string]interface{}{"status":0}).Count(&count)
 			}else{
 				fmt.Println("5")
 				//db.Table("chapters").Where(map[string]interface{}{"status":0}).Order("id desc").Limit(*(Params.PageSize)).Offset(*(Params.PageIndex)*(*(Params.PageSize))).Find(&chapterlist)
 				//db.Table("chapters").Where(map[string]interface{}{"status":0}).Count(&count)
-				db.Raw("select chapters.id,chapters.name,chapters.play_count,chapters.status,chapters.time,books.name as book_name from chapters left join book_chapter_relation on chapters.id = book_chapter_relation.chapterId join books on book_chapter_relation.bookId=books.id where chapters.status=0").Limit(*(Params.PageSize)).Offset(*(Params.PageIndex)*(*(Params.PageSize))).Find(&chapterlist)
+				db.Raw("select chapters.id,chapters.name,chapters.play_count,chapters.status,chapters.time,books.name as book_name from chapters left join book_chapter_relation on chapters.id = book_chapter_relation.chapterId left join books on book_chapter_relation.bookId=books.id where chapters.status=0").Limit(*(Params.PageSize)).Offset(*(Params.PageIndex)*(*(Params.PageSize))).Find(&chapterlist)
 				//db.Raw("select count(id) from chapters where status=0").Count(&count)
-				db.Raw("select count(chapters.id) from chapters left join book_chapter_relation on chapters.id = book_chapter_relation.chapterId join books on book_chapter_relation.bookId=books.id where chapters.status=0").Count(&count)
+				db.Raw("select count(chapters.id) from chapters left join book_chapter_relation on chapters.id = book_chapter_relation.chapterId left join books on book_chapter_relation.bookId=books.id where chapters.status=0").Count(&count)
 			}
 
 		}
