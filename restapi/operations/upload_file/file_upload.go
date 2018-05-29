@@ -117,12 +117,15 @@ func (o *FileUpload) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 			if(Params.Filename != nil){ //==nil说明是批量上传章节
 			title := strings.Split(*(Params.Filename),".")
 			db.Exec("insert into chapters(name,status,summary,url,time) values(?,?,?,?,?)",title[0],0,title[0],response.URL,time.Now().UnixNano() / 1000000000)
+			fmt.Println("insert.sql is insert into chapters(name,status,summary,url,time) values(?,?,?,?,?)",title[0],0,title[0],response.URL,time.Now().UnixNano() / 1000000000)
 			//判断是否传了书本id参数
 			if Params.BookId != nil {
 				//将新添加的章节映射到传入书本id
 				fmt.Println("add relation bookid is",Params.BookId)
 				var tempChapterId int64
-				db.Raw("select id from chapters where name=? order by id desc limit 0,1",title[0]).Find(tempChapterId)
+				db.Raw("select max(id) from chapters where name=? ",title[0]).Find(tempChapterId)
+				fmt.Println("select max(id) from chapters where name=? ",title[0])
+				fmt.Println("tempChapterId is",tempChapterId)
 				//添加映射关系
 				var seedmodel SeedModel1
 				db.Raw("select max(`order`)+1 as seed from book_chapter_relation").First(&seedmodel)
@@ -131,8 +134,12 @@ func (o *FileUpload) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 				db.Exec("update books set clips_number=clips_number+1 where id=?",*(Params.BookId))
 				fmt.Println("update books set clips_number=clips_number+1 where id=?",*(Params.BookId))
 
+			}else{
+				fmt.Println("bookId is nil")
 			}
 
+			}else{
+				fmt.Println("filename is nil")
 			}
 		} else {
 			if (Params.Type == nil) {
