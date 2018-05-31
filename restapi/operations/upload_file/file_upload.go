@@ -123,7 +123,7 @@ func (o *FileUpload) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 				//将新添加的章节映射到传入书本id
 				fmt.Println("add relation bookid is",Params.BookId)
 				var tempChapterId int64
-				db.Raw("select max(id) from chapters where name=? ",title[0]).Find(tempChapterId)
+				db.Raw("select max(id) from chapters where name=? ",title[0]).Count(&tempChapterId)
 				fmt.Println("select max(id) from chapters where name=? ",title[0])
 				fmt.Println("tempChapterId is",tempChapterId)
 				//添加映射关系
