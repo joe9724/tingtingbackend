@@ -86,6 +86,12 @@ func (o *WebDetail) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 		hotalbums[i].Percent = hotalbums[i].PlayCount*100/allcount
 	}
 	Ds.HotAlbums = hotalbums
+
+	//
+	var buyedAlbumsMonth []models.MonthAlbumModel
+	db.Raw("select album_count,money from everyday_deal_album WHERE DATE_FORMAT(createtime, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' )").Find(&buyedAlbumsMonth)
+	fmt.Println("buyedAlbumsMonth is",buyedAlbumsMonth)
+	Ds.MonthBuyedAlbum = buyedAlbumsMonth
 	response.Dashboard = Ds
 	ok.SetPayload(&response)
 

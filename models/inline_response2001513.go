@@ -36,6 +36,7 @@ type DashBoard struct{
     NumberTodayAddBook int64 `json:"number_today_add_book"`
     NumberTodayAddChapter int64 `json:"number_today_add_chapter"`
     HotAlbums []HotAlbum `json:"hotalbums"`
+    MonthBuyedAlbum []MonthAlbumModel `json:"month_buyed_album"`
 
 }
 
@@ -43,6 +44,11 @@ type HotAlbum struct{
 	Name string `json:"name"`
 	Percent int64 `json:"percent"`
 	PlayCount int64 `json:"play_count"`
+}
+
+type MonthAlbumModel struct{
+	AlbumCount int64 `json:"album_count"`
+	Money int64 `json:"money"`
 }
 
 // Validate validates this inline response 200 1
